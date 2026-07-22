@@ -580,6 +580,7 @@ let state = {
   users: [],
   subscribers: [],
   monthlyProducts: [],
+  monthlyMeta: {},
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
@@ -762,6 +763,8 @@ const I18N = {
     monthly_col_qty: "العدد (كرتون)",
     print_hint: "سيفتح هذا مربع طباعة المتصفح — اختر \"حفظ كـ PDF\" كوجهة الطباعة للحصول على ملف PDF.",
     toast_enter_product_name: "الرجاء كتابة اسم المنتج",
+    responsible_name_label: "اسم المسؤول",
+    responsible_name_placeholder: "اكتب اسمك هنا",
   },
   en: {
     control_panel: "Control Panel",
@@ -931,6 +934,8 @@ const I18N = {
     monthly_col_qty: "Qty (cartons)",
     print_hint: "This opens the browser's print dialog — choose \"Save as PDF\" as the destination to get a PDF file.",
     toast_enter_product_name: "Please write the product name",
+    responsible_name_label: "Responsible person",
+    responsible_name_placeholder: "Type your name here",
   }
 };
 
@@ -1026,6 +1031,9 @@ async function loadAll(){
 
   state.monthlyProducts = await storageGet("puck:monthlyProducts", null);
   if(state.monthlyProducts === null){ state.monthlyProducts = []; await storageSet("puck:monthlyProducts", state.monthlyProducts); }
+
+  state.monthlyMeta = await storageGet("puck:monthlyMeta", null);
+  if(state.monthlyMeta === null){ state.monthlyMeta = {}; await storageSet("puck:monthlyMeta", state.monthlyMeta); }
 
   applySettings();
   (state.settings.customFonts || []).forEach(f => registerFont(f.name, f.dataUrl));
@@ -1156,6 +1164,7 @@ function render(){
   else if(view.screen === "home") app.innerHTML = renderHomeScreen();
   else if(view.screen === "branch") app.innerHTML = renderBranchScreen(view.branchId);
   else if(view.screen === "monthly") app.innerHTML = renderMonthlyScreen();
+  else if(view.screen === "monthlyBranch") app.innerHTML = renderMonthlyBranchScreen(view.branchId);
   attachHomeEvents();
 }
 
@@ -1163,6 +1172,7 @@ function goLanding(){ view = { screen:"landing", branchId:null }; render(); }
 function goHome(){ view = { screen:"home", branchId:null }; render(); }
 function goBranch(id){ view = { screen:"branch", branchId:id }; render(); }
 function goMonthly(){ view = { screen:"monthly", branchId:null }; render(); }
+function goMonthlyBranch(id){ view = { screen:"monthlyBranch", branchId:id }; render(); }
 
 /* ---------------- LANDING (choose Daily / Monthly) ---------------- */
 function renderLandingScreen(){
@@ -1288,9 +1298,41 @@ function renderBranchScreen(branchId){
   `;
 }
 
-/* ---------------- MONTHLY INVENTORY ---------------- */
+/* ---------------- MONTHLY INVENTORY: branch picker ---------------- */
 function renderMonthlyScreen(){
-  const rowsHtml = state.monthlyProducts.length ? state.monthlyProducts.map(p => `
+  const branchesHtml = state.branches.length ? state.branches.map(b => {
+    const count = state.monthlyProducts.filter(p=>p.branchId===b.id).length;
+    return `<div class="branch-card" data-monthly-branch="${b.id}">
+      ${renderBranchIconHtml(b)}
+      <div class="name">${escapeHtml(b.name)}</div>
+      ${renderBranchNoticesHtml(b)}
+      <div class="count">${count} ${t('product_word')}</div>
+    </div>`;
+  }).join("") : `<div class="branch-empty">${t('no_branches_home')}</div>`;
+
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row">
+      <h2>${t('monthly_page_title')}</h2>
+    </div>
+    <div class="section-label" style="margin-top:10px;"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
+    <div class="branch-grid">${branchesHtml}</div>
+  `;
+}
+
+/* ---------------- MONTHLY INVENTORY: per-branch list ---------------- */
+function renderMonthlyBranchScreen(branchId){
+  const branch = state.branches.find(b=>b.id===branchId);
+  const products = state.monthlyProducts.filter(p=>p.branchId===branchId);
+  const meta = state.monthlyMeta[branchId] || { responsibleName: "" };
+
+  const rowsHtml = products.length ? products.map(p => `
     <div class="monthly-row">
       ${session.user ? `<button class="m-edit-btn" data-monthly-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
       <div class="m-info">
@@ -1306,21 +1348,26 @@ function renderMonthlyScreen(){
 
   return `
     <div class="topbar">
-      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <button class="back-btn" id="monthlyBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}
         <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="branch-title-row">
-      <h2>${t('monthly_page_title')}</h2>
+      <h2>${escapeHtml(branch ? branch.name : "")}</h2>
+      ${branch ? renderBranchNoticesHtml(branch) : ''}
     </div>
     <div class="monthly-wrap">
+      <div class="field" style="margin-bottom:18px;">
+        <label>${t('responsible_name_label')}</label>
+        <input type="text" id="responsibleNameInput" placeholder="${t('responsible_name_placeholder')}" value="${escapeHtml(meta.responsibleName||'')}">
+      </div>
       <div class="monthly-list">${rowsHtml}</div>
     </div>
     <div class="monthly-actions">
-      ${session.user ? `<button class="add-product-tile" id="monthlyAddBtn">${ICON.plus} ${t('add_new_product')}</button>` : ''}
-      <button class="btn-download" id="monthlyDownloadBtn">${ICON.download} ${t('download_word')}</button>
+      ${session.user ? `<button class="add-product-tile" id="monthlyAddBtn" data-branch="${branchId}">${ICON.plus} ${t('add_new_product')}</button>` : ''}
+      <button class="btn-download" id="monthlyDownloadBtn" data-branch="${branchId}">${ICON.download} ${t('download_word')}</button>
     </div>
   `;
 }
@@ -1332,6 +1379,8 @@ function attachHomeEvents(){
   if(backBtn) backBtn.onclick = goHome;
   const landingBackBtn = document.getElementById("landingBackBtn");
   if(landingBackBtn) landingBackBtn.onclick = goLanding;
+  const monthlyBackBtn = document.getElementById("monthlyBackBtn");
+  if(monthlyBackBtn) monthlyBackBtn.onclick = goMonthly;
   document.querySelectorAll("[data-goto]").forEach(el=>{
     el.onclick = ()=>{
       const dest = el.getAttribute("data-goto");
@@ -1339,8 +1388,11 @@ function attachHomeEvents(){
       else if(dest === "monthly") goMonthly();
     };
   });
-  document.querySelectorAll(".branch-card").forEach(el=>{
+  document.querySelectorAll(".branch-card[data-branch]").forEach(el=>{
     el.onclick = ()=> goBranch(el.getAttribute("data-branch"));
+  });
+  document.querySelectorAll("[data-monthly-branch]").forEach(el=>{
+    el.onclick = ()=> goMonthlyBranch(el.getAttribute("data-monthly-branch"));
   });
   document.querySelectorAll("#langToggle [data-lang]").forEach(btn=>{
     btn.onclick = ()=> setLang(btn.getAttribute("data-lang"));
@@ -1379,10 +1431,18 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-monthly-edit]").forEach(btn=>{
     btn.onclick = ()=> openMonthlyEditProductModal(btn.getAttribute("data-monthly-edit"));
   });
+  const responsibleNameInput = document.getElementById("responsibleNameInput");
+  if(responsibleNameInput) responsibleNameInput.onchange = async ()=>{
+    const bId = view.branchId;
+    if(!bId) return;
+    state.monthlyMeta[bId] = state.monthlyMeta[bId] || {};
+    state.monthlyMeta[bId].responsibleName = responsibleNameInput.value.trim();
+    await storageSet("puck:monthlyMeta", state.monthlyMeta);
+  };
   const monthlyAddBtn = document.getElementById("monthlyAddBtn");
-  if(monthlyAddBtn) monthlyAddBtn.onclick = ()=> openMonthlyAddChoiceModal();
+  if(monthlyAddBtn) monthlyAddBtn.onclick = ()=> openMonthlyAddChoiceModal(monthlyAddBtn.getAttribute("data-branch"));
   const monthlyDownloadBtn = document.getElementById("monthlyDownloadBtn");
-  if(monthlyDownloadBtn) monthlyDownloadBtn.onclick = ()=> downloadMonthlyPdf();
+  if(monthlyDownloadBtn) monthlyDownloadBtn.onclick = ()=> downloadMonthlyPdf(monthlyDownloadBtn.getAttribute("data-branch"));
 }
 
 function escapeHtml(str){
@@ -2437,7 +2497,7 @@ function getUniqueMonthlyProducts(){
   return Array.from(map.values()).sort((a,b)=> a.name.localeCompare(b.name, 'ar'));
 }
 
-function openMonthlyAddChoiceModal(){
+function openMonthlyAddChoiceModal(branchId){
   const wrap = document.createElement("div");
   wrap.className = "overlay";
   wrap.innerHTML = `
@@ -2462,11 +2522,11 @@ function openMonthlyAddChoiceModal(){
   document.body.appendChild(wrap);
   document.getElementById("closeMChoice").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
-  document.getElementById("mChoiceNew").onclick = ()=>{ wrap.remove(); openMonthlyNewProductModal(); };
-  document.getElementById("mChoicePrev").onclick = ()=>{ wrap.remove(); openMonthlyPreviousProductsModal(); };
+  document.getElementById("mChoiceNew").onclick = ()=>{ wrap.remove(); openMonthlyNewProductModal(branchId); };
+  document.getElementById("mChoicePrev").onclick = ()=>{ wrap.remove(); openMonthlyPreviousProductsModal(branchId); };
 }
 
-function openMonthlyNewProductModal(){
+function openMonthlyNewProductModal(branchId){
   const wrap = document.createElement("div");
   wrap.className = "overlay";
   wrap.innerHTML = `
@@ -2496,7 +2556,7 @@ function openMonthlyNewProductModal(){
     const name = document.getElementById("mnName").value.trim();
     if(!name){ toast(t('toast_enter_product_name')); return; }
     state.monthlyProducts.push({
-      id: uid(), name,
+      id: uid(), branchId, name,
       weightValue: parseInt(document.getElementById("mnWeightValue").value,10) || 0,
       weightUnit: document.getElementById("mnWeightUnit").value,
       qty: 0
@@ -2508,7 +2568,7 @@ function openMonthlyNewProductModal(){
   };
 }
 
-function openMonthlyPreviousProductsModal(){
+function openMonthlyPreviousProductsModal(branchId){
   const all = getUniqueMonthlyProducts();
   const picked = new Set();
   const wrap = document.createElement("div");
@@ -2561,7 +2621,7 @@ function openMonthlyPreviousProductsModal(){
       const src = all.find(p=>p.id===id);
       if(!src) return;
       state.monthlyProducts.push({
-        id: uid(), name: src.name,
+        id: uid(), branchId, name: src.name,
         weightValue: src.weightValue||0, weightUnit: src.weightUnit||"غ",
         qty: 0
       });
@@ -2623,7 +2683,7 @@ function openMonthlyEditProductModal(id){
   };
 }
 
-function downloadMonthlyPdf(){
+function downloadMonthlyPdf(branchId){
   let printArea = document.getElementById("monthlyPrintArea");
   if(!printArea){
     printArea = document.createElement("div");
@@ -2631,8 +2691,11 @@ function downloadMonthlyPdf(){
     printArea.className = "print-only";
     document.body.appendChild(printArea);
   }
+  const branch = state.branches.find(b=>b.id===branchId);
+  const meta = state.monthlyMeta[branchId] || {};
   const todayStr = new Date().toLocaleDateString(lang === "en" ? "en-US" : "ar-SA");
-  const rows = state.monthlyProducts.map(p=>`
+  const productsForBranch = state.monthlyProducts.filter(p=>p.branchId===branchId);
+  const rows = productsForBranch.map(p=>`
     <tr>
       <td>${escapeHtml(p.name)}</td>
       <td>${p.weightValue||0} ${unitLabel(p.weightUnit)}</td>
@@ -2641,6 +2704,8 @@ function downloadMonthlyPdf(){
   `).join("");
   printArea.innerHTML = `
     <h2>${t('monthly_print_title')}</h2>
+    <div class="p-date">${t('branch_label')}: ${escapeHtml(branch ? branch.name : "")}</div>
+    <div class="p-date">${t('responsible_name_label')}: ${escapeHtml(meta.responsibleName || "")}</div>
     <div class="p-date">${t('monthly_print_date')}: ${todayStr}</div>
     <table>
       <thead><tr><th>${t('monthly_col_product')}</th><th>${t('monthly_col_weight')}</th><th>${t('monthly_col_qty')}</th></tr></thead>
