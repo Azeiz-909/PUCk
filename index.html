@@ -765,6 +765,14 @@ const I18N = {
     toast_enter_product_name: "الرجاء كتابة اسم المنتج",
     responsible_name_label: "اسم المسؤول",
     responsible_name_placeholder: "اكتب اسمك هنا",
+    my_account_title: "تغيير اسم المستخدم وكلمة المرور",
+    my_account_hint: "غيّر اسم الدخول وكلمة المرور الخاصة بحسابك الحالي",
+    my_account_btn: "تعديل بياناتي",
+    current_password_label: "كلمة المرور الحالية",
+    optional_word: "اختياري",
+    toast_current_password_wrong: "كلمة المرور الحالية غير صحيحة",
+    toast_account_updated: "تم تحديث بيانات حسابك بنجاح",
+    toast_enter_username: "الرجاء إدخال اسم المستخدم",
   },
   en: {
     control_panel: "Control Panel",
@@ -936,6 +944,14 @@ const I18N = {
     toast_enter_product_name: "Please write the product name",
     responsible_name_label: "Responsible person",
     responsible_name_placeholder: "Type your name here",
+    my_account_title: "Change Username & Password",
+    my_account_hint: "Change the login username and password for your current account",
+    my_account_btn: "Edit my account",
+    current_password_label: "Current password",
+    optional_word: "optional",
+    toast_current_password_wrong: "Current password is incorrect",
+    toast_account_updated: "Your account was updated successfully",
+    toast_enter_username: "Please enter the username",
   }
 };
 
@@ -2072,6 +2088,11 @@ function renderUsersTab(){
   `).join("");
   return `
     <div class="panel-card">
+      <h4>${t('my_account_title')}</h4>
+      <p class="hint">${t('my_account_hint')}</p>
+      <button class="btn btn-primary btn-small" id="openMyAccountBtn">${ICON.edit} ${t('my_account_btn')}</button>
+    </div>
+    <div class="panel-card">
       <h4>${t('users_tab_title')}</h4>
       <table class="users-table">
         <thead><tr><th>${t('col_username')}</th><th>${t('col_status')}</th><th></th></tr></thead>
@@ -2114,6 +2135,55 @@ function attachUsersTabEvents(){
       renderAdminOverlay();
     };
   });
+  const myAccountBtn = document.getElementById("openMyAccountBtn");
+  if(myAccountBtn) myAccountBtn.onclick = ()=> openMyAccountModal();
+}
+
+/* ---------- MY ACCOUNT (change own username/password) ---------- */
+function openMyAccountModal(){
+  const user = state.users.find(u=>u.id===session.user.id);
+  if(!user) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMyAccount">&times;</button>
+      <h3>${ICON.edit} ${t('my_account_title')}</h3>
+      <div id="myAccountError"></div>
+      <div class="field"><label>${t('current_password_label')}</label><input id="maCurrentPass" type="password"></div>
+      <div class="field"><label>${t('username_label')}</label><input id="maUsername" type="text" value="${escapeHtml(user.username)}"></div>
+      <div class="field"><label>${t('new_password_label')} (${t('optional_word')})</label><input id="maNewPass1" type="password"></div>
+      <div class="field"><label>${t('confirm_password_label')}</label><input id="maNewPass2" type="password"></div>
+      <button class="btn btn-primary" id="maSaveBtn">${t('save_word')}</button>
+      <button class="btn btn-ghost" id="maCancelBtn" style="width:100%; margin-top:8px;">${t('cancel_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMyAccount").onclick = ()=> wrap.remove();
+  document.getElementById("maCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+
+  document.getElementById("maSaveBtn").onclick = async ()=>{
+    const errBox = document.getElementById("myAccountError");
+    const curPass = document.getElementById("maCurrentPass").value;
+    const newUsername = document.getElementById("maUsername").value.trim();
+    const newPass1 = document.getElementById("maNewPass1").value;
+    const newPass2 = document.getElementById("maNewPass2").value;
+
+    if(curPass !== user.password){ errBox.innerHTML = `<div class="error-msg">${t('toast_current_password_wrong')}</div>`; return; }
+    if(!newUsername){ errBox.innerHTML = `<div class="error-msg">${t('toast_enter_username')}</div>`; return; }
+    if(state.users.some(u=>u.id!==user.id && u.username===newUsername)){ errBox.innerHTML = `<div class="error-msg">${t('toast_user_exists')}</div>`; return; }
+    if(newPass1 || newPass2){
+      if(newPass1.length < 4){ errBox.innerHTML = `<div class="error-msg">${t('fc_err_short')}</div>`; return; }
+      if(newPass1 !== newPass2){ errBox.innerHTML = `<div class="error-msg">${t('fc_err_mismatch')}</div>`; return; }
+      user.password = newPass1;
+    }
+    user.username = newUsername;
+    await storageSet("puck:users", state.users);
+    wrap.remove();
+    toast(t('toast_account_updated'));
+    renderAdminOverlay();
+  };
 }
 
 /* ---------- APPEARANCE TAB ---------- */
