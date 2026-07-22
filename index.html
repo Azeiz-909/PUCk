@@ -83,23 +83,22 @@
   /* ---------- hero / home ---------- */
   .hero{
     position:relative; z-index:1;
-    padding:18px 20px 34px;
+    padding:10px 20px 30px;
     text-align:center;
   }
   .logo-wrap{
-    display:flex; justify-content:center; margin:6px auto 4px;
+    display:flex; justify-content:center; margin:4px auto 2px;
   }
   .logo-wrap img{ width:min(58vw, 230px); height:auto; filter:drop-shadow(0 12px 22px rgba(11,46,107,0.18)); }
   .hero-eyebrow{
-    font-family:var(--font-display); font-weight:700; letter-spacing:.3px;
-    color:var(--sky); font-size:13px; margin-top:2px;
+    font-family:var(--font-display); font-weight:900; letter-spacing:.4px;
+    color:var(--navy); font-size:19px; margin:0 0 2px;
+    text-shadow:0 1px 0 rgba(255,255,255,0.6);
   }
   .hero-title{
     font-family:var(--font-display); font-weight:900;
     color:var(--navy-deep); font-size:22px; margin:6px 0 0;
   }
-  .hero-sub{ color:#5C7episode; }
-  .hero-sub{ color:#5C7A9E; font-size:14px; margin-top:6px; }
 
   /* ---------- language toggle (compact, in topbar) ---------- */
   .lang-toggle{
@@ -177,6 +176,11 @@
   .branch-title-row p{ color:#7C93B8; font-size:13px; margin:0; }
   .branch-title-row .notices{ margin:8px 0 2px; }
   .branch-title-row .notice-line{ font-size:12.5px; font-weight:700; }
+  .notices-edit-link{
+    display:inline-flex; align-items:center; gap:5px; border:none; background:transparent;
+    color:var(--sky); font-family:var(--font-display); font-weight:700; font-size:11.5px;
+    cursor:pointer; padding:4px 8px; margin-top:4px;
+  }
 
   .product-grid{ display:grid; gap:18px; }
   .product-grid.cols-1{ grid-template-columns:1fr; max-width:420px; margin:0 auto; }
@@ -666,6 +670,7 @@ const I18N = {
     image_word: "الصورة",
     weight_label: "الوزن",
     save_word: "حفظ",
+    cancel_word: "إلغاء",
     home_layout_label: "طريقة عرض المنتجات",
     admin_back: "رجوع للوحة السريعة",
     manage_icon: "الأيقونة",
@@ -820,6 +825,7 @@ const I18N = {
     image_word: "Image",
     weight_label: "Weight",
     save_word: "Save",
+    cancel_word: "Cancel",
     home_layout_label: "Product display layout",
     admin_back: "Back to quick view",
     manage_icon: "Icon",
@@ -1087,10 +1093,9 @@ function renderHomeScreen(){
       ${langToggleHtml()}
     </div>
     <div class="hero">
-      <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
       <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
+      <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
       <h1 class="hero-title">${t('hero_title')}</h1>
-      <p class="hero-sub">${t('hero_sub')}</p>
     </div>
     <div class="section-label"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
     <div class="branch-grid">${branchesHtml}</div>
@@ -1151,7 +1156,7 @@ function renderBranchScreen(branchId){
       <div class="branch-title-row">
         <h2>${escapeHtml(branch ? branch.name : "")}</h2>
         ${branch ? renderBranchNoticesHtml(branch) : ''}
-        <p>${t('products_of_branch')} ${escapeHtml(branch ? branch.name : "")} ${t('current_word')}</p>
+        ${(session.user && branch) ? `<button class="notices-edit-link" data-manage-notices-inline="${branch.id}">${ICON.edit} ${t('manage_notices')}</button>` : ''}
       </div>
       <div class="branch-layout-row">
         <div class="layout-choice-row small">
@@ -1166,6 +1171,7 @@ function renderBranchScreen(branchId){
         </div>
       </div>
       <div class="product-grid cols-${cols}">${cardsHtml}</div>
+      ${(session.user && branch) ? `<div style="max-width:900px; margin:18px auto 0; padding:0 20px;"><button class="add-product-tile" data-quick-add-product="${branch.id}">${ICON.plus} ${t('add_new_product')}</button></div>` : ''}
     </div>
   `;
 }
@@ -1192,6 +1198,12 @@ function attachHomeEvents(){
   });
   document.querySelectorAll("[data-quick-edit]").forEach(btn=>{
     btn.onclick = (e)=>{ e.stopPropagation(); openQuickEditProductModal(btn.getAttribute("data-quick-edit")); };
+  });
+  document.querySelectorAll("[data-manage-notices-inline]").forEach(btn=>{
+    btn.onclick = ()=> openBranchNoticesModal(btn.getAttribute("data-manage-notices-inline"));
+  });
+  document.querySelectorAll("[data-quick-add-product]").forEach(btn=>{
+    btn.onclick = ()=> openQuickAddProductModal(btn.getAttribute("data-quick-add-product"));
   });
 }
 
@@ -2105,11 +2117,25 @@ function openQuickEditProductModal(productId){
         </div>
       </div>
       <button class="btn btn-primary" id="qeSaveBtn">${t('save_word')}</button>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button class="btn btn-ghost" id="qeCancelBtn" style="flex:1;">${t('cancel_word')}</button>
+        <button class="btn btn-danger" id="qeDeleteBtn" style="flex:1;">${ICON.trash} ${t('delete_product')}</button>
+      </div>
     </div>
   `;
   document.body.appendChild(wrap);
   document.getElementById("closeQuickEdit").onclick = ()=> wrap.remove();
+  document.getElementById("qeCancelBtn").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+
+  document.getElementById("qeDeleteBtn").onclick = async ()=>{
+    if(!confirm(t('confirm_delete_product'))) return;
+    state.products = state.products.filter(x=>x.id!==productId);
+    await storageSet("puck:products", state.products);
+    wrap.remove();
+    toast(t('toast_product_deleted'));
+    render();
+  };
 
   let pendingImage = null;
   document.getElementById("qeImageInput").onchange = (e)=>{
@@ -2134,6 +2160,89 @@ function openQuickEditProductModal(productId){
     await storageSet("puck:products", state.products);
     wrap.remove();
     toast(t('toast_change_saved'));
+    render();
+  };
+}
+
+/* ---------- QUICK ADD PRODUCT (directly from branch page, after login) ---------- */
+function openQuickAddProductModal(branchId){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeQuickAdd">&times;</button>
+      <h3>${ICON.plus} ${t('add_new_product')}</h3>
+      <div class="field"><label>${t('product_name_placeholder')}</label><input id="qaName" type="text" placeholder="${t('product_name_placeholder')}"></div>
+      <div class="field">
+        <label>${t('image_word')}</label>
+        <div class="thumb-upload" style="margin:0 auto;">
+          <img id="qaImgPreview" src="" alt="">
+          <input type="file" accept="image/*" id="qaImageInput">
+          <div class="up-hint">${ICON.upload} ${t('change_word')}</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>${t('weight_label')}</label>
+        <div class="weight-inputs">
+          <input type="number" min="0" id="qaWeightValue" value="0">
+          <select id="qaWeightUnit">
+            <option value="غ">${t('unit_g')}</option>
+            <option value="كغ">${t('unit_kg')}</option>
+          </select>
+        </div>
+      </div>
+      <div class="date-line" style="margin-bottom:14px; flex-wrap:wrap;">
+        <div class="grp"><span>${t('date_start')}</span>
+          <select id="qaStartDay">${dayOptionsHtml(1)}</select>
+          <select id="qaStartMonth">${monthOptionsHtml(1)}</select>
+          <span>${YEAR}</span>
+        </div>
+        <div class="grp"><span>${t('date_end')}</span>
+          <select id="qaEndDay">${dayOptionsHtml(28)}</select>
+          <select id="qaEndMonth">${monthOptionsHtml(12)}</select>
+          <span>${YEAR}</span>
+        </div>
+        <div class="grp"><span>${ICON.warn} ${t('alert_before')}</span>
+          <input type="number" min="0" max="120" style="width:56px;" id="qaAlertDays" value="7">
+          <span>${t('day_word')}</span>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="qaSaveBtn">${ICON.plus} ${t('add_word')}</button>
+      <button class="btn btn-ghost" id="qaCancelBtn" style="width:100%; margin-top:8px;">${t('cancel_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeQuickAdd").onclick = ()=> wrap.remove();
+  document.getElementById("qaCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+
+  let pendingImage = "";
+  document.getElementById("qaImageInput").onchange = (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    compressImageToDataUrl(file, 640).then(dataUrl=>{
+      pendingImage = dataUrl;
+      document.getElementById("qaImgPreview").src = dataUrl;
+    });
+  };
+
+  document.getElementById("qaSaveBtn").onclick = async ()=>{
+    const name = document.getElementById("qaName").value.trim() || t('default_new_product_name');
+    const newProduct = {
+      id: uid(), branchId,
+      name, image: pendingImage,
+      weightValue: parseInt(document.getElementById("qaWeightValue").value,10) || 0,
+      weightUnit: document.getElementById("qaWeightUnit").value,
+      startDay: parseInt(document.getElementById("qaStartDay").value,10),
+      startMonth: parseInt(document.getElementById("qaStartMonth").value,10),
+      endDay: parseInt(document.getElementById("qaEndDay").value,10),
+      endMonth: parseInt(document.getElementById("qaEndMonth").value,10),
+      alertDays: parseInt(document.getElementById("qaAlertDays").value,10) || 0,
+    };
+    state.products.push(newProduct);
+    await storageSet("puck:products", state.products);
+    wrap.remove();
+    toast(t('toast_product_added_edit'));
     render();
   };
 }
