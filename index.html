@@ -101,22 +101,26 @@
   .hero-sub{ color:#5C7episode; }
   .hero-sub{ color:#5C7A9E; font-size:14px; margin-top:6px; }
 
-  /* ---------- language toggle ---------- */
+  /* ---------- language toggle (compact, in topbar) ---------- */
   .lang-toggle{
-    display:inline-flex; align-items:center; gap:4px; margin:12px auto 0;
-    background:var(--white); border:1.5px solid var(--line); border-radius:12px; padding:4px;
+    display:inline-flex; align-items:center; gap:2px;
+    background:var(--white); border:1.5px solid var(--line); border-radius:9px; padding:2px;
     box-shadow:var(--shadow-card);
   }
   .lang-toggle button{
-    border:none; background:transparent; cursor:pointer; padding:7px 16px; border-radius:9px;
-    font-family:var(--font-display); font-weight:700; font-size:12.5px; color:var(--navy);
+    border:none; background:transparent; cursor:pointer; padding:5px 10px; border-radius:7px;
+    font-family:var(--font-display); font-weight:700; font-size:10.5px; color:var(--navy);
     transition:background .15s ease, color .15s ease;
   }
   .lang-toggle button.active{ background:var(--navy); color:#fff; }
 
-  /* ---------- home layout toggle (public) ---------- */
-  .home-layout-row{ margin:16px auto 0; max-width:300px; }
-  .home-layout-row .lbl-top{ text-align:center; font-size:11.5px; color:#7C93B8; margin-bottom:6px; font-weight:700; }
+  /* ---------- per-branch layout toggle (small, on branch page) ---------- */
+  .branch-layout-row{ margin:0 auto 22px; max-width:260px; }
+  .branch-layout-row .layout-choice-row.small{ gap:8px; }
+  .layout-opt.small{ padding:8px 6px; border-radius:10px; }
+  .layout-opt.small .preview{ margin-bottom:5px; }
+  .layout-opt.small .preview .bar{ width:14px; height:20px; border-radius:3px; }
+  .layout-opt.small .lbl{ font-size:10.5px; }
 
   /* ---------- quick edit (from public product cards) ---------- */
   .edit-badge-btn{
@@ -155,8 +159,13 @@
   }
   .branch-card:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(11,46,107,0.16); border-color:var(--sky-light); }
   .branch-card .daisy{ width:34px; height:34px; color:var(--sky); }
+  .branch-card .branch-icon-img{ width:40px; height:40px; object-fit:cover; border-radius:10px; }
+  .branch-card .branch-icon-emoji{ font-size:32px; line-height:1; }
+  .branch-card .branch-icon-color{ width:34px; height:34px; border-radius:50%; }
   .branch-card .name{ font-family:var(--font-display); font-weight:800; font-size:16px; color:var(--navy-deep); }
   .branch-card .count{ font-size:12px; color:#7C93B8; }
+  .notices{ display:flex; flex-direction:column; gap:3px; width:100%; align-items:center; }
+  .notice-line{ font-size:11px; line-height:1.4; word-break:break-word; text-align:center; }
   .branch-empty{
     max-width:760px; margin:0 auto; padding:40px 20px; text-align:center; color:#7C93B8; font-size:14px;
   }
@@ -166,6 +175,8 @@
   .branch-title-row{ text-align:center; margin-bottom:22px; }
   .branch-title-row h2{ font-family:var(--font-display); font-weight:900; color:var(--navy-deep); font-size:24px; margin:0 0 4px; }
   .branch-title-row p{ color:#7C93B8; font-size:13px; margin:0; }
+  .branch-title-row .notices{ margin:8px 0 2px; }
+  .branch-title-row .notice-line{ font-size:12.5px; font-weight:700; }
 
   .product-grid{ display:grid; gap:18px; }
   .product-grid.cols-1{ grid-template-columns:1fr; max-width:420px; margin:0 auto; }
@@ -274,6 +285,40 @@
   }
   .inline-add-row{ display:flex; gap:8px; margin-top:12px; }
   .inline-add-row input{ flex:1; padding:10px 12px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body); }
+
+  .chip-mini-btn{
+    border:1.5px solid var(--line); background:var(--white); border-radius:8px; width:26px; height:26px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--navy); font-size:13px; padding:0;
+  }
+  .icon-choice-row{ display:flex; gap:8px; margin-bottom:14px; }
+  .icon-choice-row button{
+    flex:1; padding:8px; border-radius:10px; border:1.5px solid var(--line); background:var(--white);
+    font-family:var(--font-display); font-weight:700; font-size:12px; color:var(--navy); cursor:pointer;
+  }
+  .icon-choice-row button.active{ background:var(--navy); color:#fff; border-color:var(--navy); }
+  .emoji-grid{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; max-height:160px; overflow-y:auto; }
+  .emoji-grid button{
+    width:38px; height:38px; font-size:19px; border-radius:9px; border:1.5px solid var(--line);
+    background:var(--white); cursor:pointer; display:flex; align-items:center; justify-content:center;
+  }
+  .emoji-grid button.active{ border-color:var(--sky); background:#F0F8FD; }
+  .color-swatch-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .color-swatch-row button{
+    width:32px; height:32px; border-radius:50%; border:2px solid var(--line); cursor:pointer; padding:0;
+  }
+  .color-swatch-row button.active{ border-color:var(--navy-deep); box-shadow:0 0 0 2px var(--white) inset; }
+
+  .notice-row{
+    display:flex; align-items:center; gap:10px; padding:9px 12px; border:1.5px solid var(--line);
+    border-radius:12px; margin-bottom:8px; background:var(--paper);
+  }
+  .notice-row .swatch{ width:14px; height:14px; border-radius:50%; flex-shrink:0; }
+  .notice-row .txt{ flex:1; font-size:13px; word-break:break-word; }
+  .notice-row button{ border:none; background:transparent; color:#B5522F; cursor:pointer; flex-shrink:0; }
+  .notice-form{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; align-items:center; }
+  .notice-form input[type="text"]{ flex:1; min-width:140px; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body); }
+  .notice-form input[type="color"]{ width:38px; height:38px; border:1.5px solid var(--line); border-radius:9px; padding:2px; cursor:pointer; }
+  .notice-form input[type="number"]{ width:64px; padding:9px 6px; border-radius:10px; border:1.5px solid var(--line); text-align:center; }
 
   .branch-select-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
   .branch-select-row button{
@@ -623,6 +668,28 @@ const I18N = {
     save_word: "حفظ",
     home_layout_label: "طريقة عرض المنتجات",
     admin_back: "رجوع للوحة السريعة",
+    manage_icon: "الأيقونة",
+    manage_notices: "التنويهات",
+    icon_modal_title: "أيقونة الفرع",
+    icon_type_default: "افتراضي",
+    icon_type_image: "صورة",
+    icon_type_emoji: "إيموجي",
+    icon_type_color: "لون",
+    upload_image_word: "رفع صورة",
+    choose_emoji_word: "اختر إيموجي",
+    choose_color_word: "اختر لونًا",
+    toast_icon_updated: "تم تحديث أيقونة الفرع",
+    notices_modal_title: "تنويهات الفرع",
+    notices_modal_hint: "تظهر هذه التنويهات تحت اسم الفرع في الصفحة الرئيسية",
+    notice_text_placeholder: "اكتب نص التنويه هنا...",
+    notice_color_label: "اللون",
+    notice_size_label: "حجم الخط",
+    add_notice_btn: "أضف تنبيه",
+    no_notices_yet: "لا توجد تنويهات بعد لهذا الفرع.",
+    toast_enter_notice_text: "الرجاء كتابة نص التنويه",
+    toast_notice_added: "تمت إضافة التنويه",
+    toast_notice_deleted: "تم حذف التنويه",
+    layout_title_branch: "طريقة عرض منتجات هذا الفرع",
   },
   en: {
     control_panel: "Control Panel",
@@ -755,6 +822,28 @@ const I18N = {
     save_word: "Save",
     home_layout_label: "Product display layout",
     admin_back: "Back to quick view",
+    manage_icon: "Icon",
+    manage_notices: "Notices",
+    icon_modal_title: "Branch Icon",
+    icon_type_default: "Default",
+    icon_type_image: "Image",
+    icon_type_emoji: "Emoji",
+    icon_type_color: "Color",
+    upload_image_word: "Upload image",
+    choose_emoji_word: "Choose an emoji",
+    choose_color_word: "Choose a color",
+    toast_icon_updated: "Branch icon updated",
+    notices_modal_title: "Branch Notices",
+    notices_modal_hint: "These notices appear under the branch name on the home page",
+    notice_text_placeholder: "Write the notice text here...",
+    notice_color_label: "Color",
+    notice_size_label: "Font size",
+    add_notice_btn: "Add Notice",
+    no_notices_yet: "No notices yet for this branch.",
+    toast_enter_notice_text: "Please write the notice text",
+    toast_notice_added: "Notice added",
+    toast_notice_deleted: "Notice deleted",
+    layout_title_branch: "Display layout for this branch's products",
   }
 };
 
@@ -788,10 +877,13 @@ function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toStr
 ========================================================= */
 function defaultBranches(){
   return [
-    { id: "panda", name: "بنده" },
-    { id: "othaim", name: "العثيم" },
+    { id: "panda", name: "بنده", columns: 2, notices: [], icon: { type: "daisy", value: "" } },
+    { id: "othaim", name: "العثيم", columns: 2, notices: [], icon: { type: "daisy", value: "" } },
   ];
 }
+function branchColumns(b){ return (b && (b.columns===1 || b.columns===2)) ? b.columns : 2; }
+function branchNotices(b){ return (b && Array.isArray(b.notices)) ? b.notices : []; }
+function branchIcon(b){ return (b && b.icon && b.icon.type) ? b.icon : { type:"daisy", value:"" }; }
 function defaultProducts(){
   return [
     { id: uid(), branchId: "panda", name: "جبنة كريمة", image: SEED_IMG.cream500, weightValue: 500, weightUnit: "غ", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
@@ -933,6 +1025,37 @@ function renderBgDaisies(){
   ).join("");
 }
 
+function renderBranchIconHtml(b){
+  const icon = branchIcon(b);
+  if(icon.type === "image" && icon.value) return `<img class="branch-icon-img" src="${icon.value}" alt="">`;
+  if(icon.type === "emoji" && icon.value) return `<div class="branch-icon-emoji">${escapeHtml(icon.value)}</div>`;
+  if(icon.type === "color" && icon.value) return `<div class="branch-icon-color" style="background:${escapeHtml(icon.value)};"></div>`;
+  return `<div class="daisy">${ICON.daisy}</div>`;
+}
+
+function renderBranchIconHtmlSmall(b){
+  const icon = branchIcon(b);
+  if(icon.type === "image" && icon.value) return `<img src="${icon.value}" style="width:16px;height:16px;object-fit:cover;border-radius:4px;">`;
+  if(icon.type === "emoji" && icon.value) return `<span style="font-size:14px;line-height:1;">${escapeHtml(icon.value)}</span>`;
+  if(icon.type === "color" && icon.value) return `<span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${escapeHtml(icon.value)};"></span>`;
+  return ICON.daisy;
+}
+
+function renderBranchNoticesHtml(b){
+  const notices = branchNotices(b);
+  if(!notices.length) return "";
+  return `<div class="notices">${notices.map(n=>`<div class="notice-line" style="color:${escapeHtml(n.color||'#5C7A9E')}; font-size:${parseInt(n.fontSize,10)||12}px;">${escapeHtml(n.text)}</div>`).join("")}</div>`;
+}
+
+function langToggleHtml(){
+  return `
+    <div class="lang-toggle" id="langToggle">
+      <button data-lang="ar" class="${lang==='ar'?'active':''}">${t('lang_toggle_ar')}</button>
+      <button data-lang="en" class="${lang==='en'?'active':''}">${t('lang_toggle_en')}</button>
+    </div>
+  `;
+}
+
 /* =========================================================
    ROOT RENDER / ROUTER
 ========================================================= */
@@ -951,8 +1074,9 @@ function renderHomeScreen(){
   const branchesHtml = state.branches.length ? state.branches.map(b => {
     const count = state.products.filter(p=>p.branchId===b.id).length;
     return `<div class="branch-card" data-branch="${b.id}">
-      <div class="daisy">${ICON.daisy}</div>
+      ${renderBranchIconHtml(b)}
       <div class="name">${escapeHtml(b.name)}</div>
+      ${renderBranchNoticesHtml(b)}
       <div class="count">${count} ${t('product_word')}</div>
     </div>`;
   }).join("") : `<div class="branch-empty">${t('no_branches_home')}</div>`;
@@ -960,32 +1084,15 @@ function renderHomeScreen(){
   return `
     <div class="topbar">
       <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
-      <div class="topbar-spacer"></div>
+      ${langToggleHtml()}
     </div>
     <div class="hero">
       <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
-      <div class="lang-toggle" id="langToggle">
-        <button data-lang="ar" class="${lang==='ar'?'active':''}">${t('lang_toggle_ar')}</button>
-        <button data-lang="en" class="${lang==='en'?'active':''}">${t('lang_toggle_en')}</button>
-      </div>
       <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
       <h1 class="hero-title">${t('hero_title')}</h1>
       <p class="hero-sub">${t('hero_sub')}</p>
     </div>
     <div class="section-label"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
-    <div class="home-layout-row">
-      <div class="lbl-top">${t('home_layout_label')}</div>
-      <div class="layout-choice-row">
-        <div class="layout-opt ${state.settings.columns===1?'active':''}" data-home-cols="1">
-          <div class="preview"><div class="bar" style="width:44px;"></div></div>
-          <div class="lbl">${t('layout_one_col')}</div>
-        </div>
-        <div class="layout-opt ${state.settings.columns===2?'active':''}" data-home-cols="2">
-          <div class="preview"><div class="bar"></div><div class="bar"></div></div>
-          <div class="lbl">${t('layout_two_col')}</div>
-        </div>
-      </div>
-    </div>
     <div class="branch-grid">${branchesHtml}</div>
   `;
 }
@@ -994,7 +1101,7 @@ function renderHomeScreen(){
 function renderBranchScreen(branchId){
   const branch = state.branches.find(b=>b.id===branchId);
   const products = state.products.filter(p=>p.branchId===branchId);
-  const cols = state.settings.columns === 1 ? 1 : 2;
+  const cols = branchColumns(branch);
 
   const cardsHtml = products.length ? products.map(p => {
     const info = expiryStatus(p);
@@ -1035,12 +1142,28 @@ function renderBranchScreen(branchId){
   return `
     <div class="topbar">
       <button class="back-btn" id="backBtn">${ICON.back} ${t('back')}</button>
-      <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
     </div>
     <div class="products-wrap">
       <div class="branch-title-row">
         <h2>${escapeHtml(branch ? branch.name : "")}</h2>
+        ${branch ? renderBranchNoticesHtml(branch) : ''}
         <p>${t('products_of_branch')} ${escapeHtml(branch ? branch.name : "")} ${t('current_word')}</p>
+      </div>
+      <div class="branch-layout-row">
+        <div class="layout-choice-row small">
+          <div class="layout-opt small ${cols===1?'active':''}" data-branch-cols="1">
+            <div class="preview"><div class="bar" style="width:26px;"></div></div>
+            <div class="lbl">${t('layout_one_col')}</div>
+          </div>
+          <div class="layout-opt small ${cols===2?'active':''}" data-branch-cols="2">
+            <div class="preview"><div class="bar"></div><div class="bar"></div></div>
+            <div class="lbl">${t('layout_two_col')}</div>
+          </div>
+        </div>
       </div>
       <div class="product-grid cols-${cols}">${cardsHtml}</div>
     </div>
@@ -1058,10 +1181,12 @@ function attachHomeEvents(){
   document.querySelectorAll("#langToggle [data-lang]").forEach(btn=>{
     btn.onclick = ()=> setLang(btn.getAttribute("data-lang"));
   });
-  document.querySelectorAll("[data-home-cols]").forEach(el=>{
+  document.querySelectorAll("[data-branch-cols]").forEach(el=>{
     el.onclick = async ()=>{
-      state.settings.columns = parseInt(el.getAttribute("data-home-cols"),10);
-      await storageSet("puck:settings", state.settings);
+      const branch = state.branches.find(b=>b.id===view.branchId);
+      if(!branch) return;
+      branch.columns = parseInt(el.getAttribute("data-branch-cols"),10);
+      await storageSet("puck:branches", state.branches);
       render();
     };
   });
@@ -1175,7 +1300,6 @@ function renderAdminOverlay(){
     {id:"products", label:t('tab_products')},
     {id:"users", label:t('tab_users')},
     {id:"appearance", label:t('tab_appearance')},
-    {id:"layout", label:t('tab_layout')},
   ];
   el.innerHTML = `
     <div class="admin-shell">
@@ -1206,7 +1330,6 @@ function renderAdminTab(tab){
   if(tab==="products") return renderProductsTab();
   if(tab==="users") return renderUsersTab();
   if(tab==="appearance") return renderAppearanceTab();
-  if(tab==="layout") return renderLayoutTab();
   if(tab==="whatsapp") return renderWhatsappTab();
   return "";
 }
@@ -1215,8 +1338,10 @@ function renderAdminTab(tab){
 function renderBranchesTab(){
   const chips = state.branches.map(b=>`
     <div class="chip">
-      <span class="daisy" style="width:14px;height:14px;color:var(--sky)">${ICON.daisy}</span>
+      <span class="daisy" style="width:14px;height:14px;color:var(--sky)">${renderBranchIconHtmlSmall(b)}</span>
       ${escapeHtml(b.name)}
+      <button class="chip-mini-btn" data-manage-icon="${b.id}" title="${t('manage_icon')}">🖼</button>
+      <button class="chip-mini-btn" data-manage-notices="${b.id}" title="${t('manage_notices')}">🔔</button>
       <button data-del-branch="${b.id}" title="${t('delete_branch_title')}">${ICON.trash}</button>
     </div>
   `).join("");
@@ -1243,7 +1368,7 @@ function attachBranchesTabEvents(){
     const nameInput = document.getElementById("newBranchName");
     const name = nameInput.value.trim();
     if(!name){ toast(t('toast_enter_branch_name')); return; }
-    state.branches.push({ id: uid(), name });
+    state.branches.push({ id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" } });
     await storageSet("puck:branches", state.branches);
     toast(t('toast_branch_added'));
     renderAdminOverlay();
@@ -1260,6 +1385,175 @@ function attachBranchesTabEvents(){
       renderAdminOverlay();
     };
   });
+  document.querySelectorAll("[data-manage-icon]").forEach(b=>{
+    b.onclick = ()=> openBranchIconModal(b.getAttribute("data-manage-icon"));
+  });
+  document.querySelectorAll("[data-manage-notices]").forEach(b=>{
+    b.onclick = ()=> openBranchNoticesModal(b.getAttribute("data-manage-notices"));
+  });
+}
+
+/* ---------- BRANCH ICON MODAL ---------- */
+const EMOJI_CHOICES = ["🏬","🛒","🏪","🏢","🧀","🥛","🍞","🥩","🍫","🥫","🍎","🧊","📍","⭐","🔥","🎯","🐼","🌿","💎","🛍"];
+const COLOR_CHOICES = ["#3DA5E0","#0B2E6B","#F6A623","#6FBE44","#D64545","#8E5CE0","#E05C9C","#2FB6A8"];
+
+function openBranchIconModal(branchId){
+  const branch = state.branches.find(b=>b.id===branchId);
+  if(!branch) return;
+  let cur = Object.assign({type:"daisy", value:""}, branchIcon(branch));
+  let pendingImage = null;
+
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+
+  function subSectionHtml(){
+    if(cur.type === "image"){
+      return `
+        <div class="field" style="text-align:center;">
+          <div class="thumb-upload" style="margin:0 auto;">
+            <img id="biImgPreview" src="${cur.value||''}" alt="">
+            <input type="file" accept="image/*" id="biImageInput">
+            <div class="up-hint">${ICON.upload} ${t('upload_image_word')}</div>
+          </div>
+        </div>`;
+    }
+    if(cur.type === "emoji"){
+      return `
+        <p class="hint" style="margin-bottom:0;">${t('choose_emoji_word')}</p>
+        <div class="emoji-grid" id="biEmojiGrid">
+          ${EMOJI_CHOICES.map(e=>`<button data-emoji="${e}" class="${cur.value===e?'active':''}" type="button">${e}</button>`).join("")}
+        </div>`;
+    }
+    if(cur.type === "color"){
+      return `
+        <p class="hint" style="margin-bottom:0;">${t('choose_color_word')}</p>
+        <div class="color-swatch-row" id="biColorRow">
+          ${COLOR_CHOICES.map(c=>`<button data-color="${c}" class="${cur.value===c?'active':''}" type="button" style="background:${c};"></button>`).join("")}
+          <input type="color" id="biCustomColor" value="${cur.value && cur.value.startsWith('#') ? cur.value : '#3DA5E0'}">
+        </div>`;
+    }
+    return `<p class="hint" style="margin-bottom:0;">${ICON.daisy}</p>`;
+  }
+
+  function draw(){
+    wrap.innerHTML = `
+      <div class="modal">
+        <button class="close-x" id="closeIcon">&times;</button>
+        <h3>${t('icon_modal_title')}</h3>
+        <div class="icon-choice-row">
+          <button data-itype="daisy" class="${cur.type==='daisy'?'active':''}" type="button">${t('icon_type_default')}</button>
+          <button data-itype="image" class="${cur.type==='image'?'active':''}" type="button">${t('icon_type_image')}</button>
+          <button data-itype="emoji" class="${cur.type==='emoji'?'active':''}" type="button">${t('icon_type_emoji')}</button>
+          <button data-itype="color" class="${cur.type==='color'?'active':''}" type="button">${t('icon_type_color')}</button>
+        </div>
+        <div id="biSubSection">${subSectionHtml()}</div>
+        <button class="btn btn-primary" id="biSaveBtn" style="margin-top:16px;">${t('save_word')}</button>
+      </div>
+    `;
+    wire();
+  }
+
+  function wire(){
+    document.getElementById("closeIcon").onclick = ()=> wrap.remove();
+    wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+    wrap.querySelectorAll("[data-itype]").forEach(btn=>{
+      btn.onclick = ()=>{ cur.type = btn.getAttribute("data-itype"); pendingImage = null; draw(); };
+    });
+    const imgInput = document.getElementById("biImageInput");
+    if(imgInput) imgInput.onchange = (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      compressImageToDataUrl(file, 300).then(dataUrl=>{
+        pendingImage = dataUrl;
+        document.getElementById("biImgPreview").src = dataUrl;
+      });
+    };
+    const emojiGrid = document.getElementById("biEmojiGrid");
+    if(emojiGrid) emojiGrid.querySelectorAll("[data-emoji]").forEach(btn=>{
+      btn.onclick = ()=>{ cur.value = btn.getAttribute("data-emoji"); draw(); };
+    });
+    const colorRow = document.getElementById("biColorRow");
+    if(colorRow){
+      colorRow.querySelectorAll("[data-color]").forEach(btn=>{
+        btn.onclick = ()=>{ cur.value = btn.getAttribute("data-color"); draw(); };
+      });
+      const customColor = document.getElementById("biCustomColor");
+      if(customColor) customColor.oninput = ()=>{ cur.value = customColor.value; };
+    }
+    document.getElementById("biSaveBtn").onclick = async ()=>{
+      if(cur.type === "image" && pendingImage) cur.value = pendingImage;
+      branch.icon = { type: cur.type, value: cur.value || "" };
+      await storageSet("puck:branches", state.branches);
+      wrap.remove();
+      toast(t('toast_icon_updated'));
+      renderAdminOverlay();
+    };
+  }
+
+  document.body.appendChild(wrap);
+  draw();
+}
+
+/* ---------- BRANCH NOTICES MODAL ---------- */
+function openBranchNoticesModal(branchId){
+  const branch = state.branches.find(b=>b.id===branchId);
+  if(!branch) return;
+  branch.notices = branchNotices(branch);
+
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+
+  function listHtml(){
+    if(!branch.notices.length) return `<p class="hint">${t('no_notices_yet')}</p>`;
+    return branch.notices.map(n=>`
+      <div class="notice-row">
+        <span class="swatch" style="background:${escapeHtml(n.color||'#5C7A9E')};"></span>
+        <span class="txt" style="color:${escapeHtml(n.color||'#5C7A9E')}; font-size:${parseInt(n.fontSize,10)||12}px;">${escapeHtml(n.text)}</span>
+        <button data-del-notice="${n.id}" type="button">${ICON.trash}</button>
+      </div>
+    `).join("");
+  }
+
+  function draw(){
+    wrap.innerHTML = `
+      <div class="modal wide">
+        <button class="close-x" id="closeNotices">&times;</button>
+        <h3>${t('notices_modal_title')}</h3>
+        <p class="hint">${t('notices_modal_hint')}</p>
+        <div id="noticesList">${listHtml()}</div>
+        <div class="notice-form">
+          <input type="text" id="niText" placeholder="${t('notice_text_placeholder')}">
+          <input type="color" id="niColor" value="#5C7A9E" title="${t('notice_color_label')}">
+          <input type="number" id="niSize" value="12" min="9" max="28" title="${t('notice_size_label')}">
+          <button class="btn btn-primary btn-small" id="niAddBtn">${ICON.plus} ${t('add_notice_btn')}</button>
+        </div>
+      </div>
+    `;
+    document.getElementById("closeNotices").onclick = ()=> wrap.remove();
+    wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+    wrap.querySelectorAll("[data-del-notice]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        const id = btn.getAttribute("data-del-notice");
+        branch.notices = branch.notices.filter(n=>n.id!==id);
+        await storageSet("puck:branches", state.branches);
+        toast(t('toast_notice_deleted'));
+        draw();
+      };
+    });
+    document.getElementById("niAddBtn").onclick = async ()=>{
+      const text = document.getElementById("niText").value.trim();
+      if(!text){ toast(t('toast_enter_notice_text')); return; }
+      const color = document.getElementById("niColor").value;
+      const fontSize = parseInt(document.getElementById("niSize").value,10) || 12;
+      branch.notices.push({ id: uid(), text, color, fontSize });
+      await storageSet("puck:branches", state.branches);
+      toast(t('toast_notice_added'));
+      draw();
+    };
+  }
+
+  document.body.appendChild(wrap);
+  draw();
 }
 
 /* ---------- PRODUCTS TAB ---------- */
@@ -1887,7 +2181,6 @@ function attachAdminTabEvents(tab){
   if(tab==="products") attachProductsTabEvents();
   if(tab==="users") attachUsersTabEvents();
   if(tab==="appearance") attachAppearanceTabEvents();
-  if(tab==="layout") attachLayoutTabEvents();
   if(tab==="whatsapp") attachWhatsappTabEvents();
 }
 
