@@ -169,6 +169,58 @@
     max-width:760px; margin:0 auto; padding:40px 20px; text-align:center; color:#7C93B8; font-size:14px;
   }
 
+  /* ---------- inventory choice (landing) ---------- */
+  .inventory-choice-row{
+    display:flex; gap:18px; max-width:520px; margin:0 auto 40px; padding:0 20px;
+  }
+  .inventory-opt{
+    flex:1; background:var(--white); border:2px solid var(--line); border-radius:var(--radius-md);
+    padding:30px 16px; text-align:center; cursor:pointer; box-shadow:var(--shadow-card);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .inventory-opt:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(11,46,107,0.16); border-color:var(--sky); }
+  .inventory-opt .ico{ width:38px; height:38px; margin:0 auto 12px; color:var(--sky); }
+  .inventory-opt .lbl{ font-family:var(--font-display); font-weight:900; font-size:18px; color:var(--navy-deep); }
+
+  /* ---------- monthly inventory ---------- */
+  .monthly-wrap{ max-width:640px; margin:0 auto; padding:0 20px 50px; }
+  .monthly-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+  .monthly-row{
+    display:flex; align-items:center; gap:12px; background:var(--white); border:1px solid var(--line);
+    border-radius:14px; padding:14px 16px; box-shadow:var(--shadow-card);
+  }
+  .monthly-row .m-info{ flex:1; min-width:0; }
+  .monthly-row .m-name{ font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--navy-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .monthly-row .m-weight{ font-size:12.5px; color:#7C93B8; margin-top:2px; }
+  .monthly-row .m-qty-group{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .monthly-row .m-qty-group input{
+    width:64px; padding:8px 6px; text-align:center; border-radius:10px; border:1.5px solid var(--line);
+    font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--navy-deep);
+  }
+  .monthly-row .m-qty-group .carton-lbl{ font-size:12.5px; color:#7C93B8; }
+  .monthly-row .m-edit-btn{
+    width:30px; height:30px; border-radius:50%; border:1.5px solid var(--sky); background:var(--white);
+    color:var(--sky); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .monthly-actions{ display:flex; flex-direction:column; gap:10px; max-width:640px; margin:0 auto; }
+  .btn-download{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    padding:14px; border-radius:14px; border:none; background:var(--navy); color:#fff;
+    font-family:var(--font-display); font-weight:800; font-size:15px; cursor:pointer;
+  }
+
+  /* ---------- print-only area ---------- */
+  .print-only{ display:none; }
+  @media print{
+    body > *:not(.print-only){ display:none !important; }
+    .print-only{ display:block !important; padding:24px; direction:rtl; }
+    .print-only h2{ font-family:var(--font-display); margin-bottom:4px; }
+    .print-only .p-date{ color:#555; font-size:13px; margin-bottom:18px; }
+    .print-only table{ width:100%; border-collapse:collapse; }
+    .print-only th, .print-only td{ border:1px solid #333; padding:8px 10px; text-align:center; font-size:13px; }
+    .print-only th{ background:#eee; }
+  }
+
   /* ---------- product grid (public) ---------- */
   .products-wrap{ max-width:900px; margin:0 auto; padding:8px 20px 60px; position:relative; z-index:1; }
   .branch-title-row{ text-align:center; margin-bottom:22px; }
@@ -527,9 +579,10 @@ let state = {
   products: [],
   users: [],
   subscribers: [],
+  monthlyProducts: [],
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
-let view = { screen: "home", branchId: null };
+let view = { screen: "landing", branchId: null };
 let session = { user: null };
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null };
 
@@ -695,6 +748,20 @@ const I18N = {
     toast_notice_added: "تمت إضافة التنويه",
     toast_notice_deleted: "تم حذف التنويه",
     layout_title_branch: "طريقة عرض منتجات هذا الفرع",
+    inventory_word: "جرد",
+    daily_word: "يومي",
+    monthly_word: "شهري",
+    monthly_page_title: "الجرد الشهري",
+    carton_word: "كرتون",
+    download_word: "تنزيل",
+    monthly_empty: "لا توجد منتجات بعد في الجرد الشهري.",
+    monthly_print_title: "قائمة الجرد الشهري",
+    monthly_print_date: "التاريخ",
+    monthly_col_product: "المنتج",
+    monthly_col_weight: "الوزن",
+    monthly_col_qty: "العدد (كرتون)",
+    print_hint: "سيفتح هذا مربع طباعة المتصفح — اختر \"حفظ كـ PDF\" كوجهة الطباعة للحصول على ملف PDF.",
+    toast_enter_product_name: "الرجاء كتابة اسم المنتج",
   },
   en: {
     control_panel: "Control Panel",
@@ -850,6 +917,20 @@ const I18N = {
     toast_notice_added: "Notice added",
     toast_notice_deleted: "Notice deleted",
     layout_title_branch: "Display layout for this branch's products",
+    inventory_word: "Inventory",
+    daily_word: "Daily",
+    monthly_word: "Monthly",
+    monthly_page_title: "Monthly Inventory",
+    carton_word: "carton",
+    download_word: "Download",
+    monthly_empty: "No products yet in the monthly inventory.",
+    monthly_print_title: "Monthly Inventory List",
+    monthly_print_date: "Date",
+    monthly_col_product: "Product",
+    monthly_col_weight: "Weight",
+    monthly_col_qty: "Qty (cartons)",
+    print_hint: "This opens the browser's print dialog — choose \"Save as PDF\" as the destination to get a PDF file.",
+    toast_enter_product_name: "Please write the product name",
   }
 };
 
@@ -943,6 +1024,9 @@ async function loadAll(){
   state.subscribers = await storageGet("puck:subscribers", null);
   if(state.subscribers === null){ state.subscribers = []; await storageSet("puck:subscribers", state.subscribers); }
 
+  state.monthlyProducts = await storageGet("puck:monthlyProducts", null);
+  if(state.monthlyProducts === null){ state.monthlyProducts = []; await storageSet("puck:monthlyProducts", state.monthlyProducts); }
+
   applySettings();
   (state.settings.customFonts || []).forEach(f => registerFont(f.name, f.dataUrl));
   renderBgDaisies();
@@ -1022,6 +1106,7 @@ const ICON = {
   search: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>`,
   check: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   edit: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9" stroke-linecap="round"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  download: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12M6 10l6 6 6-6M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 };
 
 function renderBgDaisies(){
@@ -1067,15 +1152,44 @@ function langToggleHtml(){
 ========================================================= */
 function render(){
   const app = document.getElementById("app");
-  if(view.screen === "home") app.innerHTML = renderHomeScreen();
+  if(view.screen === "landing") app.innerHTML = renderLandingScreen();
+  else if(view.screen === "home") app.innerHTML = renderHomeScreen();
   else if(view.screen === "branch") app.innerHTML = renderBranchScreen(view.branchId);
+  else if(view.screen === "monthly") app.innerHTML = renderMonthlyScreen();
   attachHomeEvents();
 }
 
+function goLanding(){ view = { screen:"landing", branchId:null }; render(); }
 function goHome(){ view = { screen:"home", branchId:null }; render(); }
 function goBranch(id){ view = { screen:"branch", branchId:id }; render(); }
+function goMonthly(){ view = { screen:"monthly", branchId:null }; render(); }
 
-/* ---------------- HOME ---------------- */
+/* ---------------- LANDING (choose Daily / Monthly) ---------------- */
+function renderLandingScreen(){
+  return `
+    <div class="topbar">
+      <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      ${langToggleHtml()}
+    </div>
+    <div class="hero">
+      <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
+      <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
+    </div>
+    <div class="section-label"><span class="line"></span> ${t('inventory_word')} <span class="line"></span></div>
+    <div class="inventory-choice-row">
+      <div class="inventory-opt" data-goto="home">
+        <div class="ico" style="font-size:34px;">📅</div>
+        <div class="lbl">${t('daily_word')}</div>
+      </div>
+      <div class="inventory-opt" data-goto="monthly">
+        <div class="ico" style="font-size:34px;">🗓️</div>
+        <div class="lbl">${t('monthly_word')}</div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------------- DAILY (branches) ---------------- */
 function renderHomeScreen(){
   const branchesHtml = state.branches.length ? state.branches.map(b => {
     const count = state.products.filter(p=>p.branchId===b.id).length;
@@ -1089,15 +1203,13 @@ function renderHomeScreen(){
 
   return `
     <div class="topbar">
-      <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
-      ${langToggleHtml()}
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
     </div>
-    <div class="hero">
-      <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
-      <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
-      <h1 class="hero-title">${t('hero_title')}</h1>
-    </div>
-    <div class="section-label"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
+    <div class="section-label" style="margin-top:26px;"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
     <div class="branch-grid">${branchesHtml}</div>
   `;
 }
@@ -1176,11 +1288,57 @@ function renderBranchScreen(branchId){
   `;
 }
 
+/* ---------------- MONTHLY INVENTORY ---------------- */
+function renderMonthlyScreen(){
+  const rowsHtml = state.monthlyProducts.length ? state.monthlyProducts.map(p => `
+    <div class="monthly-row">
+      ${session.user ? `<button class="m-edit-btn" data-monthly-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+      <div class="m-info">
+        <div class="m-name">${escapeHtml(p.name)}</div>
+        <div class="m-weight">${p.weightValue||0} ${unitLabel(p.weightUnit)}</div>
+      </div>
+      <div class="m-qty-group">
+        <input type="number" min="0" max="200" value="${p.qty||0}" data-monthly-qty="${p.id}">
+        <span class="carton-lbl">${t('carton_word')}</span>
+      </div>
+    </div>
+  `).join("") : `<div class="branch-empty">${t('monthly_empty')}</div>`;
+
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row">
+      <h2>${t('monthly_page_title')}</h2>
+    </div>
+    <div class="monthly-wrap">
+      <div class="monthly-list">${rowsHtml}</div>
+    </div>
+    <div class="monthly-actions">
+      ${session.user ? `<button class="add-product-tile" id="monthlyAddBtn">${ICON.plus} ${t('add_new_product')}</button>` : ''}
+      <button class="btn-download" id="monthlyDownloadBtn">${ICON.download} ${t('download_word')}</button>
+    </div>
+  `;
+}
+
 function attachHomeEvents(){
   const gearBtn = document.getElementById("gearBtn");
   if(gearBtn) gearBtn.onclick = ()=>{ session.user ? openAdminPanel() : openLoginModal(); };
   const backBtn = document.getElementById("backBtn");
   if(backBtn) backBtn.onclick = goHome;
+  const landingBackBtn = document.getElementById("landingBackBtn");
+  if(landingBackBtn) landingBackBtn.onclick = goLanding;
+  document.querySelectorAll("[data-goto]").forEach(el=>{
+    el.onclick = ()=>{
+      const dest = el.getAttribute("data-goto");
+      if(dest === "home") goHome();
+      else if(dest === "monthly") goMonthly();
+    };
+  });
   document.querySelectorAll(".branch-card").forEach(el=>{
     el.onclick = ()=> goBranch(el.getAttribute("data-branch"));
   });
@@ -1205,6 +1363,26 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-quick-add-product]").forEach(btn=>{
     btn.onclick = ()=> openQuickAddProductModal(btn.getAttribute("data-quick-add-product"));
   });
+  document.querySelectorAll("[data-monthly-qty]").forEach(inp=>{
+    inp.onchange = async ()=>{
+      const id = inp.getAttribute("data-monthly-qty");
+      const p = state.monthlyProducts.find(x=>x.id===id);
+      if(!p) return;
+      let v = parseInt(inp.value,10);
+      if(isNaN(v)) v = 0;
+      v = Math.max(0, Math.min(200, v));
+      inp.value = v;
+      p.qty = v;
+      await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    };
+  });
+  document.querySelectorAll("[data-monthly-edit]").forEach(btn=>{
+    btn.onclick = ()=> openMonthlyEditProductModal(btn.getAttribute("data-monthly-edit"));
+  });
+  const monthlyAddBtn = document.getElementById("monthlyAddBtn");
+  if(monthlyAddBtn) monthlyAddBtn.onclick = ()=> openMonthlyAddChoiceModal();
+  const monthlyDownloadBtn = document.getElementById("monthlyDownloadBtn");
+  if(monthlyDownloadBtn) monthlyDownloadBtn.onclick = ()=> downloadMonthlyPdf();
 }
 
 function escapeHtml(str){
@@ -2245,6 +2423,232 @@ function openQuickAddProductModal(branchId){
     toast(t('toast_product_added_edit'));
     render();
   };
+}
+
+/* =========================================================
+   MONTHLY INVENTORY - product management
+========================================================= */
+function getUniqueMonthlyProducts(){
+  const map = new Map();
+  state.monthlyProducts.forEach(p=>{
+    if(!p.name || !p.name.trim()) return;
+    map.set(p.name.trim(), p);
+  });
+  return Array.from(map.values()).sort((a,b)=> a.name.localeCompare(b.name, 'ar'));
+}
+
+function openMonthlyAddChoiceModal(){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMChoice">&times;</button>
+      <h3>${ICON.plus} ${t('add_product_title')}</h3>
+      <p class="hint">${t('choose_add_method')}</p>
+      <div class="add-choice-row">
+        <div class="add-choice-opt" id="mChoiceNew">
+          <div class="ico">${ICON.plus}</div>
+          <div class="lbl">${t('choice_new_lbl')}</div>
+          <div class="sub">${t('choice_new_sub')}</div>
+        </div>
+        <div class="add-choice-opt" id="mChoicePrev">
+          <div class="ico">${ICON.search}</div>
+          <div class="lbl">${t('choice_prev_lbl')}</div>
+          <div class="sub">${t('choice_prev_sub')}</div>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMChoice").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("mChoiceNew").onclick = ()=>{ wrap.remove(); openMonthlyNewProductModal(); };
+  document.getElementById("mChoicePrev").onclick = ()=>{ wrap.remove(); openMonthlyPreviousProductsModal(); };
+}
+
+function openMonthlyNewProductModal(){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMNew">&times;</button>
+      <h3>${ICON.plus} ${t('add_new_product')}</h3>
+      <div class="field"><label>${t('product_name_placeholder')}</label><input id="mnName" type="text" placeholder="${t('product_name_placeholder')}"></div>
+      <div class="field">
+        <label>${t('weight_label')}</label>
+        <div class="weight-inputs">
+          <input type="number" min="0" id="mnWeightValue" value="0">
+          <select id="mnWeightUnit">
+            <option value="غ">${t('unit_g')}</option>
+            <option value="كغ">${t('unit_kg')}</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="mnSaveBtn">${ICON.plus} ${t('add_word')}</button>
+      <button class="btn btn-ghost" id="mnCancelBtn" style="width:100%; margin-top:8px;">${t('cancel_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMNew").onclick = ()=> wrap.remove();
+  document.getElementById("mnCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("mnSaveBtn").onclick = async ()=>{
+    const name = document.getElementById("mnName").value.trim();
+    if(!name){ toast(t('toast_enter_product_name')); return; }
+    state.monthlyProducts.push({
+      id: uid(), name,
+      weightValue: parseInt(document.getElementById("mnWeightValue").value,10) || 0,
+      weightUnit: document.getElementById("mnWeightUnit").value,
+      qty: 0
+    });
+    await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    wrap.remove();
+    toast(t('toast_product_added_edit'));
+    render();
+  };
+}
+
+function openMonthlyPreviousProductsModal(){
+  const all = getUniqueMonthlyProducts();
+  const picked = new Set();
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal wide">
+      <button class="close-x" id="closeMPrev">&times;</button>
+      <h3>${ICON.search} ${t('prev_modal_title')}</h3>
+      <p class="hint">${t('prev_modal_hint')}</p>
+      <div class="prev-search">
+        <input id="mPrevSearchInput" type="text" placeholder="${t('search_placeholder')}">
+        ${ICON.search}
+      </div>
+      <div class="prev-list" id="mPrevList"></div>
+      <button class="btn btn-primary" id="mPrevConfirmBtn">${ICON.plus} ${t('add_selected')} (<span id="mPrevCount">0</span>)</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+
+  function renderList(filter){
+    const q = (filter||"").trim().toLowerCase();
+    const items = all.filter(p=> !q || p.name.toLowerCase().includes(q));
+    const listEl = document.getElementById("mPrevList");
+    listEl.innerHTML = items.length ? items.map(p=>`
+      <div class="prev-item">
+        <div class="info">
+          <div class="n">${escapeHtml(p.name)}</div>
+          <div class="w">${p.weightValue||0} ${unitLabel(p.weightUnit)}</div>
+        </div>
+        <button class="prev-pick-btn ${picked.has(p.id)?'picked':''}" data-pick="${p.id}">${picked.has(p.id) ? ICON.check : ICON.plus}</button>
+      </div>
+    `).join("") : `<p class="hint">${t('no_matching_results')}</p>`;
+    listEl.querySelectorAll("[data-pick]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.getAttribute("data-pick");
+        if(picked.has(id)) picked.delete(id); else picked.add(id);
+        renderList(document.getElementById("mPrevSearchInput").value);
+        document.getElementById("mPrevCount").textContent = picked.size;
+      };
+    });
+  }
+  renderList("");
+
+  document.getElementById("mPrevSearchInput").oninput = (e)=> renderList(e.target.value);
+  document.getElementById("closeMPrev").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("mPrevConfirmBtn").onclick = async ()=>{
+    if(picked.size === 0){ toast(t('toast_select_at_least_one')); return; }
+    picked.forEach(id=>{
+      const src = all.find(p=>p.id===id);
+      if(!src) return;
+      state.monthlyProducts.push({
+        id: uid(), name: src.name,
+        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"غ",
+        qty: 0
+      });
+    });
+    await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    wrap.remove();
+    toast(`${t('toast_added_n_products_prefix')} ${picked.size} ${t('product_word')}`);
+    render();
+  };
+}
+
+function openMonthlyEditProductModal(id){
+  const p = state.monthlyProducts.find(x=>x.id===id);
+  if(!p) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMEdit">&times;</button>
+      <h3>${ICON.edit} ${t('quick_edit_title')}</h3>
+      <div class="field"><label>${t('product_name_placeholder')}</label><input id="meName" type="text" value="${escapeHtml(p.name)}"></div>
+      <div class="field">
+        <label>${t('weight_label')}</label>
+        <div class="weight-inputs">
+          <input type="number" min="0" id="meWeightValue" value="${p.weightValue||0}">
+          <select id="meWeightUnit">
+            <option value="غ" ${p.weightUnit==='غ'?'selected':''}>${t('unit_g')}</option>
+            <option value="كغ" ${p.weightUnit==='كغ'?'selected':''}>${t('unit_kg')}</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="meSaveBtn">${t('save_word')}</button>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button class="btn btn-ghost" id="meCancelBtn" style="flex:1;">${t('cancel_word')}</button>
+        <button class="btn btn-danger" id="meDeleteBtn" style="flex:1;">${ICON.trash} ${t('delete_product')}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMEdit").onclick = ()=> wrap.remove();
+  document.getElementById("meCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("meDeleteBtn").onclick = async ()=>{
+    if(!confirm(t('confirm_delete_product'))) return;
+    state.monthlyProducts = state.monthlyProducts.filter(x=>x.id!==id);
+    await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    wrap.remove();
+    toast(t('toast_product_deleted'));
+    render();
+  };
+  document.getElementById("meSaveBtn").onclick = async ()=>{
+    p.name = document.getElementById("meName").value.trim() || p.name;
+    p.weightValue = parseInt(document.getElementById("meWeightValue").value,10) || 0;
+    p.weightUnit = document.getElementById("meWeightUnit").value;
+    await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    wrap.remove();
+    toast(t('toast_change_saved'));
+    render();
+  };
+}
+
+function downloadMonthlyPdf(){
+  let printArea = document.getElementById("monthlyPrintArea");
+  if(!printArea){
+    printArea = document.createElement("div");
+    printArea.id = "monthlyPrintArea";
+    printArea.className = "print-only";
+    document.body.appendChild(printArea);
+  }
+  const todayStr = new Date().toLocaleDateString(lang === "en" ? "en-US" : "ar-SA");
+  const rows = state.monthlyProducts.map(p=>`
+    <tr>
+      <td>${escapeHtml(p.name)}</td>
+      <td>${p.weightValue||0} ${unitLabel(p.weightUnit)}</td>
+      <td>${p.qty||0}</td>
+    </tr>
+  `).join("");
+  printArea.innerHTML = `
+    <h2>${t('monthly_print_title')}</h2>
+    <div class="p-date">${t('monthly_print_date')}: ${todayStr}</div>
+    <table>
+      <thead><tr><th>${t('monthly_col_product')}</th><th>${t('monthly_col_weight')}</th><th>${t('monthly_col_qty')}</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  `;
+  toast(t('print_hint'));
+  setTimeout(()=> window.print(), 300);
 }
 
 function openSubscribeModal(){
