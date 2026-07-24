@@ -107,6 +107,12 @@
     color:var(--navy-deep); font-size:22px; margin:6px 0 0;
   }
 
+  /* ---------- forced login page ---------- */
+  .login-page-wrap{
+    max-width:360px; margin:10px auto 40px; padding:24px 22px; background:var(--white);
+    border:1px solid var(--line); border-radius:var(--radius-md); box-shadow:var(--shadow-card);
+  }
+
   /* ---------- language toggle (compact, in topbar) ---------- */
   .lang-toggle{
     display:inline-flex; align-items:center; gap:2px;
@@ -200,6 +206,14 @@
   .inventory-opt:hover{ transform:translateY(-4px); box-shadow:0 14px 28px rgba(11,46,107,0.16); border-color:var(--sky); }
   .inventory-opt .ico{ width:38px; height:38px; margin:0 auto 12px; color:var(--sky); }
   .inventory-opt .lbl{ font-family:var(--font-display); font-weight:900; font-size:18px; color:var(--navy-deep); }
+  .new-update-tag{
+    display:flex; align-items:center; gap:6px; justify-content:center; margin-top:8px;
+    font-size:11.5px; font-weight:800; color:var(--danger);
+  }
+  .new-update-tag .dot{
+    width:8px; height:8px; border-radius:50%; background:var(--danger); flex-shrink:0;
+    animation:pulseAlert 1.7s ease-in-out infinite;
+  }
 
   /* ---------- monthly inventory ---------- */
   .monthly-wrap{ max-width:640px; margin:0 auto; padding:0 20px 50px; }
@@ -625,6 +639,8 @@ let state = {
   monthlyProducts: [],
   monthlyMeta: {},
   messages: [],
+  planogram: { image: "", notes: "", updatedAt: 0, updatedBy: "" },
+  planogramSeen: {},
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
@@ -858,6 +874,13 @@ const I18N = {
     employee_account_title: "حسابي",
     no_messages_yet: "لا توجد رسائل بعد",
     close_word: "إغلاق",
+    planogram_word: "بلانوجرام",
+    new_update_label: "يوجد تحديث جديد",
+    edit_planogram_title: "تعديل البلانوجرام",
+    planogram_notes_label: "ملاحظات",
+    planogram_empty: "لم يتم إضافة بلانوجرام بعد.",
+    last_updated_label: "آخر تحديث",
+    toast_planogram_updated: "تم تحديث البلانوجرام",
   },
   en: {
     control_panel: "Control Panel",
@@ -1076,6 +1099,13 @@ const I18N = {
     employee_account_title: "My Account",
     no_messages_yet: "No messages yet",
     close_word: "Close",
+    planogram_word: "Planogram",
+    new_update_label: "New update available",
+    edit_planogram_title: "Edit Planogram",
+    planogram_notes_label: "Notes",
+    planogram_empty: "No planogram added yet.",
+    last_updated_label: "Last updated",
+    toast_planogram_updated: "Planogram updated",
   }
 };
 
@@ -1223,6 +1253,12 @@ async function loadAll(){
   state.messages = await storageGet("puck:messages", null);
   if(state.messages === null){ state.messages = []; await storageSet("puck:messages", state.messages); }
 
+  state.planogram = await storageGet("puck:planogram", null);
+  if(state.planogram === null){ state.planogram = { image: "", notes: "", updatedAt: 0, updatedBy: "" }; await storageSet("puck:planogram", state.planogram); }
+
+  state.planogramSeen = await storageGet("puck:planogramSeen", null);
+  if(state.planogramSeen === null){ state.planogramSeen = {}; await storageSet("puck:planogramSeen", state.planogramSeen); }
+
   applySettings();
   (state.settings.customFonts || []).forEach(f => registerFont(f.name, f.dataUrl));
   renderBgDaisies();
@@ -1357,15 +1393,29 @@ function bellButtonHtml(){
 ========================================================= */
 function render(){
   const app = document.getElementById("app");
+  if(!session.user){
+    app.innerHTML = renderLoginScreen();
+    attachLoginScreenEvents();
+    return;
+  }
   if(view.screen === "landing") app.innerHTML = renderLandingScreen();
   else if(view.screen === "home") app.innerHTML = renderHomeScreen();
   else if(view.screen === "branch") app.innerHTML = renderBranchScreen(view.branchId);
   else if(view.screen === "branchExpired") app.innerHTML = renderBranchExpiredScreen(view.branchId);
   else if(view.screen === "monthly") app.innerHTML = renderMonthlyScreen();
   else if(view.screen === "monthlyBranch") app.innerHTML = renderMonthlyBranchScreen(view.branchId);
+  else if(view.screen === "planogram") app.innerHTML = renderPlanogramScreen();
   attachHomeEvents();
 }
 
+function goPlanogram(){
+  view = { screen:"planogram", branchId:null };
+  if(session.user && userRole(session.user)==="employee"){
+    state.planogramSeen[session.user.id] = Date.now();
+    storageSet("puck:planogramSeen", state.planogramSeen);
+  }
+  render();
+}
 function goBranchExpired(id){ view = { screen:"branchExpired", branchId:id }; render(); }
 function goLanding(){ view = { screen:"landing", branchId:null }; render(); }
 function goHome(){ view = { screen:"home", branchId:null }; render(); }
@@ -1375,6 +1425,8 @@ function goMonthlyBranch(id){ view = { screen:"monthlyBranch", branchId:id }; re
 
 /* ---------------- LANDING (choose Daily / Monthly) ---------------- */
 function renderLandingScreen(){
+  const hasNewPlanogram = session.user && userRole(session.user)==="employee" &&
+    state.planogram.updatedAt > (state.planogramSeen[session.user.id] || 0) && state.planogram.updatedAt > 0;
   return `
     <div class="topbar">
       <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
@@ -1393,6 +1445,14 @@ function renderLandingScreen(){
       <div class="inventory-opt" data-goto="monthly">
         <div class="ico" style="font-size:34px;">🗓️</div>
         <div class="lbl">${t('monthly_word')}</div>
+      </div>
+    </div>
+    <div class="section-label"><span class="line"></span> ${t('planogram_word')} <span class="line"></span></div>
+    <div class="inventory-choice-row" style="max-width:280px;">
+      <div class="inventory-opt" data-goto="planogram">
+        <div class="ico" style="font-size:34px;">🗺️</div>
+        <div class="lbl">${t('planogram_word')}</div>
+        ${hasNewPlanogram ? `<div class="new-update-tag"><span class="dot"></span>${t('new_update_label')}</div>` : ''}
       </div>
     </div>
   `;
@@ -1627,10 +1687,37 @@ function renderMonthlyBranchScreen(branchId){
   `;
 }
 
+/* ---------------- PLANOGRAM ---------------- */
+function renderPlanogramScreen(){
+  const canEditPlanogram = canEdit() && session.user && ["manager","bigboss"].includes(userRole(session.user));
+  const hasContent = state.planogram.image || state.planogram.notes;
+  const updatedStr = state.planogram.updatedAt ? new Date(state.planogram.updatedAt).toLocaleString(lang==='ar'?'ar-SA':'en-US') : "";
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}${bellButtonHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row">
+      <h2>${t('planogram_word')}</h2>
+      ${updatedStr ? `<p>${t('last_updated_label')}: ${updatedStr}${state.planogram.updatedBy?' — '+escapeHtml(state.planogram.updatedBy):''}</p>` : ''}
+    </div>
+    <div class="monthly-wrap">
+      ${hasContent ? `
+        ${state.planogram.image ? `<img src="${state.planogram.image}" alt="Planogram" style="width:100%; border-radius:14px; border:1px solid var(--line); margin-bottom:16px;">` : ''}
+        ${state.planogram.notes ? `<div class="msg-text" style="white-space:pre-wrap;">${escapeHtml(state.planogram.notes)}</div>` : ''}
+      ` : `<div class="branch-empty">${t('planogram_empty')}</div>`}
+      ${canEditPlanogram ? `<button class="add-product-tile" id="editPlanogramBtn" style="margin-top:18px;">${ICON.edit} ${t('edit_planogram_title')}</button>` : ''}
+    </div>
+  `;
+}
+
 function attachHomeEvents(){
   const gearBtn = document.getElementById("gearBtn");
   if(gearBtn) gearBtn.onclick = ()=>{
-    if(!session.user) return openLoginModal();
+    if(!session.user) return render();
     const role = userRole(session.user);
     if(role === "bigboss") return openAdminPanel();
     if(role === "manager"){ session.viewOnly = false; return openManagerDashboard(); }
@@ -1642,6 +1729,8 @@ function attachHomeEvents(){
   if(landingBackBtn) landingBackBtn.onclick = goLanding;
   const employeeBellBtn = document.getElementById("employeeBellBtn");
   if(employeeBellBtn) employeeBellBtn.onclick = ()=> openEmployeeNotificationsModal();
+  const editPlanogramBtn = document.getElementById("editPlanogramBtn");
+  if(editPlanogramBtn) editPlanogramBtn.onclick = ()=> openPlanogramEditModal();
   const monthlyBackBtn = document.getElementById("monthlyBackBtn");
   if(monthlyBackBtn) monthlyBackBtn.onclick = goMonthly;
   const expiredBackBtn = document.getElementById("expiredBackBtn");
@@ -1654,6 +1743,7 @@ function attachHomeEvents(){
       const dest = el.getAttribute("data-goto");
       if(dest === "home") goHome();
       else if(dest === "monthly") goMonthly();
+      else if(dest === "planogram") goPlanogram();
     };
   });
   document.querySelectorAll(".branch-card[data-branch]").forEach(el=>{
@@ -1727,63 +1817,68 @@ function dayOptionsHtml(selected){
 /* =========================================================
    LOGIN MODAL
 ========================================================= */
-function openLoginModal(){
-  let loginRole = "employee";
-  const wrap = document.createElement("div");
-  wrap.className = "overlay";
-  wrap.id = "loginOverlay";
+let loginRole = "employee";
 
-  function draw(){
-    wrap.innerHTML = `
-      <div class="modal">
-        <button class="close-x" id="closeLogin">&times;</button>
-        <h3>${t('login_title')}</h3>
-        <p class="hint">${t('login_hint')}</p>
-        <div class="role-choice-row">
-          <button data-role="employee" class="${loginRole==='employee'?'active':''}" type="button">${t('role_employee')}</button>
-          <button data-role="manager" class="${loginRole==='manager'?'active':''}" type="button">${t('role_manager')}</button>
-        </div>
-        <div id="loginError"></div>
-        <div class="field"><label>${t('username_label')}</label><input id="loginUser" type="text" autocomplete="off"></div>
-        <div class="field"><label>${t('password_label')}</label><input id="loginPass" type="password"></div>
-        <button class="btn btn-primary" id="loginSubmit">${t('login_submit')}</button>
+function renderLoginScreen(){
+  return `
+    <div class="hero">
+      <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
+      <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
+    </div>
+    <div class="login-page-wrap">
+      <h3 style="text-align:center;">${t('login_title')}</h3>
+      <p class="hint" style="text-align:center;">${t('login_hint')}</p>
+      <div class="role-choice-row">
+        <button data-role="employee" class="${loginRole==='employee'?'active':''}" type="button">${t('role_employee')}</button>
+        <button data-role="manager" class="${loginRole==='manager'?'active':''}" type="button">${t('role_manager')}</button>
       </div>
-    `;
-    wire();
-  }
+      <div id="loginError"></div>
+      <div class="field"><label>${t('username_label')}</label><input id="loginUser" type="text" autocomplete="off"></div>
+      <div class="field"><label>${t('password_label')}</label><input id="loginPass" type="password"></div>
+      <button class="btn btn-primary" id="loginSubmit" style="width:100%;">${t('login_submit')}</button>
+      <div style="text-align:center; margin-top:16px;">${langToggleHtml()}</div>
+    </div>
+  `;
+}
 
-  function wire(){
-    document.getElementById("closeLogin").onclick = ()=> wrap.remove();
-    wrap.onclick = (e)=>{ if(e.target === wrap) wrap.remove(); };
-    wrap.querySelectorAll("[data-role]").forEach(btn=>{
-      btn.onclick = ()=>{ loginRole = btn.getAttribute("data-role"); draw(); };
-    });
-    document.getElementById("loginSubmit").onclick = ()=>{
-      const u = document.getElementById("loginUser").value.trim();
-      const p = document.getElementById("loginPass").value;
-      const user = state.users.find(x=>x.username === u && x.password === p);
-      const errBox = document.getElementById("loginError");
-      if(!user){
-        errBox.innerHTML = `<div class="error-msg">${t('login_error')}</div>`;
-        return;
-      }
-      const role = userRole(user);
-      if(loginRole === "employee" && role !== "employee"){
-        errBox.innerHTML = `<div class="error-msg">${t('login_wrong_role_employee')}</div>`;
-        return;
-      }
-      if(loginRole === "manager" && role === "employee"){
-        errBox.innerHTML = `<div class="error-msg">${t('login_wrong_role_manager')}</div>`;
-        return;
-      }
-      wrap.remove();
-      if(user.mustChange){ openForceChangeModal(user); }
-      else{ session.user = user; session.viewOnly = false; render(); afterLoginCheck(user); }
-    };
-  }
-
-  document.body.appendChild(wrap);
-  draw();
+function attachLoginScreenEvents(){
+  document.querySelectorAll("[data-role]").forEach(btn=>{
+    btn.onclick = ()=>{ loginRole = btn.getAttribute("data-role"); render(); };
+  });
+  document.querySelectorAll("#langToggle [data-lang]").forEach(btn=>{
+    btn.onclick = ()=> setLang(btn.getAttribute("data-lang"));
+  });
+  const submit = ()=>{
+    const u = document.getElementById("loginUser").value.trim();
+    const p = document.getElementById("loginPass").value;
+    const user = state.users.find(x=>x.username === u && x.password === p);
+    const errBox = document.getElementById("loginError");
+    if(!user){
+      errBox.innerHTML = `<div class="error-msg">${t('login_error')}</div>`;
+      return;
+    }
+    const role = userRole(user);
+    if(loginRole === "employee" && role !== "employee"){
+      errBox.innerHTML = `<div class="error-msg">${t('login_wrong_role_employee')}</div>`;
+      return;
+    }
+    if(loginRole === "manager" && role === "employee"){
+      errBox.innerHTML = `<div class="error-msg">${t('login_wrong_role_manager')}</div>`;
+      return;
+    }
+    if(user.mustChange){ openForceChangeModal(user); return; }
+    session.user = user;
+    session.viewOnly = false;
+    view = { screen:"landing", branchId:null };
+    render();
+    afterLoginCheck(user);
+  };
+  const submitBtn = document.getElementById("loginSubmit");
+  if(submitBtn) submitBtn.onclick = submit;
+  ["loginUser","loginPass"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.onkeydown = (e)=>{ if(e.key === "Enter") submit(); };
+  });
 }
 
 function afterLoginCheck(user){
@@ -2068,6 +2163,58 @@ function openNotificationDetailModal(messageId){
   document.getElementById("closeMsgDetail").onclick = ()=> wrap.remove();
   document.getElementById("closeMsgDetailBtn").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+}
+
+/* =========================================================
+   PLANOGRAM EDIT (managers & bigboss only)
+========================================================= */
+function openPlanogramEditModal(){
+  let pendingImage = state.planogram.image || "";
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closePlanoEdit">&times;</button>
+      <h3>${ICON.edit} ${t('edit_planogram_title')}</h3>
+      <div class="field" style="text-align:center;">
+        <div class="thumb-upload" style="width:100%; height:160px; margin:0 auto;">
+          <img id="planoImgPreview" src="${state.planogram.image||''}" alt="">
+          <input type="file" accept="image/*" id="planoImageInput">
+          <div class="up-hint">${ICON.upload} ${t('upload_image_word')}</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>${t('planogram_notes_label')}</label>
+        <textarea id="planoNotes" rows="5" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);">${escapeHtml(state.planogram.notes||'')}</textarea>
+      </div>
+      <button class="btn btn-primary" id="planoSaveBtn" style="width:100%;">${t('save_word')}</button>
+      <button class="btn btn-ghost" id="planoCancelBtn" style="width:100%; margin-top:8px;">${t('cancel_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closePlanoEdit").onclick = ()=> wrap.remove();
+  document.getElementById("planoCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("planoImageInput").onchange = (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    compressImageToDataUrl(file, 1000).then(dataUrl=>{
+      pendingImage = dataUrl;
+      document.getElementById("planoImgPreview").src = dataUrl;
+    });
+  };
+  document.getElementById("planoSaveBtn").onclick = async ()=>{
+    state.planogram = {
+      image: pendingImage,
+      notes: document.getElementById("planoNotes").value.trim(),
+      updatedAt: Date.now(),
+      updatedBy: session.user.username
+    };
+    await storageSet("puck:planogram", state.planogram);
+    wrap.remove();
+    toast(t('toast_planogram_updated'));
+    render();
+  };
 }
 
 /* =========================================================
