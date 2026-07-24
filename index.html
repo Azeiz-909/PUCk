@@ -137,6 +137,11 @@
     border-radius:9px; background:var(--danger); color:#fff; font-size:10px; font-weight:800;
     display:flex; align-items:center; justify-content:center; line-height:1;
   }
+  .viewonly-back-btn{
+    display:flex; align-items:center; gap:6px; border:none; background:var(--sun);
+    color:var(--navy-deep); font-family:var(--font-display); font-weight:800; font-size:12.5px;
+    cursor:pointer; padding:9px 14px; border-radius:10px; box-shadow:0 6px 14px rgba(246,166,35,0.4);
+  }
 
   /* ---------- per-branch layout toggle (small, on branch page) ---------- */
   .branch-layout-row{ margin:0 auto 22px; max-width:260px; }
@@ -241,6 +246,13 @@
     padding:14px; border-radius:14px; border:none; background:var(--navy); color:#fff;
     font-family:var(--font-display); font-weight:800; font-size:15px; cursor:pointer;
   }
+  .send-alert-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    padding:16px; border-radius:14px; border:none; background:var(--danger); color:#fff;
+    font-family:var(--font-display); font-weight:900; font-size:16px; cursor:pointer;
+    box-shadow:0 10px 22px rgba(214,69,69,0.35);
+  }
+  .send-alert-btn svg{ width:20px; height:20px; }
 
   /* ---------- print-only area ---------- */
   .print-only{ display:none; }
@@ -789,6 +801,11 @@ const I18N = {
     cancel_word: "إلغاء",
     home_layout_label: "طريقة عرض المنتجات",
     admin_back: "رجوع للوحة السريعة",
+    back_to_manager_dashboard: "رجوع للوحة المدير",
+    send_notification_btn: "إرسال تنبيه",
+    all_employees_word: "كل الموظفين",
+    specific_employees_word: "موظفون معينون",
+    toast_select_at_least_one_employee: "اختر موظفًا واحدًا على الأقل",
     manage_icon: "الأيقونة",
     manage_notices: "التنويهات",
     icon_modal_title: "أيقونة الفرع",
@@ -1014,6 +1031,11 @@ const I18N = {
     cancel_word: "Cancel",
     home_layout_label: "Product display layout",
     admin_back: "Back to quick view",
+    back_to_manager_dashboard: "Back to manager dashboard",
+    send_notification_btn: "Send Notification",
+    all_employees_word: "All Employees",
+    specific_employees_word: "Specific Employees",
+    toast_select_at_least_one_employee: "Select at least one employee",
     manage_icon: "Icon",
     manage_notices: "Notices",
     icon_modal_title: "Branch Icon",
@@ -1262,6 +1284,7 @@ async function loadAll(){
   applySettings();
   (state.settings.customFonts || []).forEach(f => registerFont(f.name, f.dataUrl));
   renderBgDaisies();
+  try{ history.replaceState({ view }, "", "#" + view.screen); }catch(e){}
   render();
 }
 
@@ -1377,6 +1400,11 @@ function langToggleHtml(){
   `;
 }
 
+function viewOnlyBackButtonHtml(){
+  if(!session.viewOnly) return "";
+  return `<button class="viewonly-back-btn" id="viewOnlyBackBtn">${ICON.back} ${t('back_to_manager_dashboard')}</button>`;
+}
+
 function bellButtonHtml(){
   if(!session.user || userRole(session.user) !== "employee") return "";
   const unread = state.messages.filter(m=>m.toUserId===session.user.id && !m.read).length;
@@ -1408,20 +1436,32 @@ function render(){
   attachHomeEvents();
 }
 
+function navigate(newView){
+  view = newView;
+  try{ history.pushState({ view: newView }, "", "#" + newView.screen); }catch(e){}
+  render();
+}
+
 function goPlanogram(){
-  view = { screen:"planogram", branchId:null };
   if(session.user && userRole(session.user)==="employee"){
     state.planogramSeen[session.user.id] = Date.now();
     storageSet("puck:planogramSeen", state.planogramSeen);
   }
-  render();
+  navigate({ screen:"planogram", branchId:null });
 }
-function goBranchExpired(id){ view = { screen:"branchExpired", branchId:id }; render(); }
-function goLanding(){ view = { screen:"landing", branchId:null }; render(); }
-function goHome(){ view = { screen:"home", branchId:null }; render(); }
-function goBranch(id){ view = { screen:"branch", branchId:id }; render(); }
-function goMonthly(){ view = { screen:"monthly", branchId:null }; render(); }
-function goMonthlyBranch(id){ view = { screen:"monthlyBranch", branchId:id }; render(); }
+function goBranchExpired(id){ navigate({ screen:"branchExpired", branchId:id }); }
+function goLanding(){ navigate({ screen:"landing", branchId:null }); }
+function goHome(){ navigate({ screen:"home", branchId:null }); }
+function goBranch(id){ navigate({ screen:"branch", branchId:id }); }
+function goMonthly(){ navigate({ screen:"monthly", branchId:null }); }
+function goMonthlyBranch(id){ navigate({ screen:"monthlyBranch", branchId:id }); }
+
+window.addEventListener("popstate", (e)=>{
+  if(!session.user) return;
+  if(e.state && e.state.view){ view = e.state.view; }
+  else{ view = { screen:"landing", branchId:null }; }
+  render();
+});
 
 /* ---------------- LANDING (choose Daily / Monthly) ---------------- */
 function renderLandingScreen(){
@@ -1429,7 +1469,7 @@ function renderLandingScreen(){
     state.planogram.updatedAt > (state.planogramSeen[session.user.id] || 0) && state.planogram.updatedAt > 0;
   return `
     <div class="topbar">
-      <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       ${langToggleHtml()}${bellButtonHtml()}
     </div>
     <div class="hero">
@@ -1475,7 +1515,7 @@ function renderHomeScreen(){
       <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}${bellButtonHtml()}
-        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="section-label" style="margin-top:26px;"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
@@ -1534,7 +1574,7 @@ function renderBranchScreen(branchId){
       <button class="back-btn" id="backBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}${bellButtonHtml()}
-        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="products-wrap">
@@ -1600,7 +1640,7 @@ function renderBranchExpiredScreen(branchId){
       <button class="back-btn" id="expiredBackBtn" data-back-branch="${branchId}">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}${bellButtonHtml()}
-        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="products-wrap">
@@ -1630,7 +1670,7 @@ function renderMonthlyScreen(){
       <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}${bellButtonHtml()}
-        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="branch-title-row">
@@ -1666,7 +1706,7 @@ function renderMonthlyBranchScreen(branchId){
       <button class="back-btn" id="monthlyBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}${bellButtonHtml()}
-        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="branch-title-row">
@@ -1697,7 +1737,7 @@ function renderPlanogramScreen(){
       <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
         ${langToggleHtml()}${bellButtonHtml()}
-        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
     <div class="branch-title-row">
@@ -1731,6 +1771,8 @@ function attachHomeEvents(){
   if(employeeBellBtn) employeeBellBtn.onclick = ()=> openEmployeeNotificationsModal();
   const editPlanogramBtn = document.getElementById("editPlanogramBtn");
   if(editPlanogramBtn) editPlanogramBtn.onclick = ()=> openPlanogramEditModal();
+  const viewOnlyBackBtn = document.getElementById("viewOnlyBackBtn");
+  if(viewOnlyBackBtn) viewOnlyBackBtn.onclick = ()=>{ session.viewOnly = false; openManagerDashboard(); };
   const monthlyBackBtn = document.getElementById("monthlyBackBtn");
   if(monthlyBackBtn) monthlyBackBtn.onclick = goMonthly;
   const expiredBackBtn = document.getElementById("expiredBackBtn");
@@ -1869,8 +1911,7 @@ function attachLoginScreenEvents(){
     if(user.mustChange){ openForceChangeModal(user); return; }
     session.user = user;
     session.viewOnly = false;
-    view = { screen:"landing", branchId:null };
-    render();
+    navigate({ screen:"landing", branchId:null });
     afterLoginCheck(user);
   };
   const submitBtn = document.getElementById("loginSubmit");
@@ -1914,7 +1955,7 @@ function openForceChangeModal(user){
     session.user = user;
     session.viewOnly = false;
     toast(t('toast_pass_updated'));
-    render();
+    navigate({ screen:"landing", branchId:null });
     afterLoginCheck(user);
   };
 }
@@ -2032,7 +2073,10 @@ function renderManagerDashboard(){
     <div class="admin-shell">
       <div class="admin-top">
         <h2>${ICON.gear} ${t('manager_dashboard_title')}</h2>
-        <button class="logout-btn" id="managerLogoutBtn">${ICON.logout} ${t('logout')}</button>
+        <div style="display:flex; gap:8px;">
+          <button class="admin-back-btn" id="managerBackBtn">${ICON.back} ${t('admin_back')}</button>
+          <button class="logout-btn" id="managerLogoutBtn">${ICON.logout} ${t('logout')}</button>
+        </div>
       </div>
       <div class="admin-tabs">
         <button class="admin-tab ${managerUI.tab==='accounts'?'active':''}" data-mtab="accounts">${t('tab_accounts')}</button>
@@ -2041,6 +2085,7 @@ function renderManagerDashboard(){
       <div class="admin-content" id="managerContent"></div>
     </div>
   `;
+  document.getElementById("managerBackBtn").onclick = ()=> closeManagerDashboard();
   document.getElementById("managerLogoutBtn").onclick = ()=>{
     session.user=null; session.viewOnly=false;
     closeManagerDashboard();
@@ -2062,6 +2107,9 @@ function renderManagerAccountsTab(){
     </div>
   `).join("") : `<p class="hint">${t('no_employee_accounts')}</p>`;
   return `
+    <div class="panel-card">
+      <button class="send-alert-btn" id="openSendAlertBtn">${ICON.bell} ${t('send_notification_btn')}</button>
+    </div>
     <div class="panel-card">
       <h4>${t('tab_accounts')}</h4>
       ${rows}
@@ -2098,9 +2146,11 @@ function attachManagerTabEvents(tab){
     document.querySelectorAll("[data-message-account]").forEach(btn=>{
       btn.onclick = ()=>{
         const emp = state.users.find(u=>u.id===btn.getAttribute("data-message-account"));
-        if(emp) openComposeMessageModal(emp);
+        if(emp) openComposeMessageModal([emp.id]);
       };
     });
+    const sendAlertBtn = document.getElementById("openSendAlertBtn");
+    if(sendAlertBtn) sendAlertBtn.onclick = ()=> openComposeMessageModal([]);
   }else{
     document.querySelectorAll("[data-view-msg]").forEach(row=>{
       row.onclick = ()=> openNotificationDetailModal(row.getAttribute("data-view-msg"));
@@ -2108,37 +2158,73 @@ function attachManagerTabEvents(tab){
   }
 }
 
-function openComposeMessageModal(toUser){
+function openComposeMessageModal(presetIds){
+  const employees = state.users.filter(u=>userRole(u)==="employee");
+  let mode = "specific";
+  const picked = new Set(presetIds || []);
   const wrap = document.createElement("div");
   wrap.className = "overlay";
-  wrap.innerHTML = `
-    <div class="modal">
-      <button class="close-x" id="closeCompose">&times;</button>
-      <h3>${ICON.edit} ${t('compose_message_title')}</h3>
-      <p class="hint">${t('sent_to_label')}: ${escapeHtml(toUser.username)}</p>
-      <div id="composeError"></div>
-      <div class="field"><label>${t('message_ar_label')}</label><textarea id="msgAr" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="rtl"></textarea></div>
-      <div class="field"><label>${t('message_en_label')}</label><textarea id="msgEn" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="ltr"></textarea></div>
-      <button class="btn btn-primary" id="sendMsgBtn" style="width:100%;">${ICON.plus} ${t('send_message_btn')}</button>
-    </div>
-  `;
-  document.body.appendChild(wrap);
-  document.getElementById("closeCompose").onclick = ()=> wrap.remove();
-  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
-  document.getElementById("sendMsgBtn").onclick = async ()=>{
-    const textAr = document.getElementById("msgAr").value.trim();
-    const textEn = document.getElementById("msgEn").value.trim();
-    const errBox = document.getElementById("composeError");
-    if(!textAr && !textEn){ errBox.innerHTML = `<div class="error-msg">${t('toast_fill_one_message')}</div>`; return; }
-    state.messages.push({
-      id: uid(), toUserId: toUser.id, toUsername: toUser.username,
-      fromUsername: session.user.username, textAr, textEn,
-      createdAt: Date.now(), read: false, readAt: null
+
+  function draw(){
+    const listHtml = employees.length ? employees.map(u=>`
+      <label class="hide-toggle-row" style="margin:0 0 6px;">
+        <input type="checkbox" data-pick-emp="${u.id}" ${picked.has(u.id)?'checked':''}>
+        <span>${escapeHtml(u.username)}</span>
+      </label>
+    `).join("") : `<p class="hint">${t('no_employee_accounts')}</p>`;
+
+    wrap.innerHTML = `
+      <div class="modal">
+        <button class="close-x" id="closeCompose">&times;</button>
+        <h3>${ICON.bell} ${t('compose_message_title')}</h3>
+        <div class="role-choice-row">
+          <button data-mode="all" class="${mode==='all'?'active':''}" type="button">${t('all_employees_word')}</button>
+          <button data-mode="specific" class="${mode==='specific'?'active':''}" type="button">${t('specific_employees_word')}</button>
+        </div>
+        ${mode==='specific' ? `<div style="max-height:150px; overflow-y:auto; margin-bottom:14px;">${listHtml}</div>` : ''}
+        <div id="composeError"></div>
+        <div class="field"><label>${t('message_ar_label')}</label><textarea id="msgAr" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="rtl"></textarea></div>
+        <div class="field"><label>${t('message_en_label')}</label><textarea id="msgEn" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="ltr"></textarea></div>
+        <button class="btn btn-primary" id="sendMsgBtn" style="width:100%;">${ICON.plus} ${t('send_message_btn')}</button>
+      </div>
+    `;
+    wire();
+  }
+
+  function wire(){
+    document.getElementById("closeCompose").onclick = ()=> wrap.remove();
+    wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+    wrap.querySelectorAll("[data-mode]").forEach(btn=>{
+      btn.onclick = ()=>{ mode = btn.getAttribute("data-mode"); draw(); };
     });
-    await storageSet("puck:messages", state.messages);
-    wrap.remove();
-    toast(t('toast_message_sent'));
-  };
+    wrap.querySelectorAll("[data-pick-emp]").forEach(cb=>{
+      cb.onchange = ()=>{
+        const id = cb.getAttribute("data-pick-emp");
+        if(cb.checked) picked.add(id); else picked.delete(id);
+      };
+    });
+    document.getElementById("sendMsgBtn").onclick = async ()=>{
+      const textAr = document.getElementById("msgAr").value.trim();
+      const textEn = document.getElementById("msgEn").value.trim();
+      const errBox = document.getElementById("composeError");
+      if(!textAr && !textEn){ errBox.innerHTML = `<div class="error-msg">${t('toast_fill_one_message')}</div>`; return; }
+      const targets = mode === "all" ? employees : employees.filter(u=>picked.has(u.id));
+      if(!targets.length){ errBox.innerHTML = `<div class="error-msg">${t('toast_select_at_least_one_employee')}</div>`; return; }
+      targets.forEach(u=>{
+        state.messages.push({
+          id: uid(), toUserId: u.id, toUsername: u.username,
+          fromUsername: session.user.username, textAr, textEn,
+          createdAt: Date.now(), read: false, readAt: null
+        });
+      });
+      await storageSet("puck:messages", state.messages);
+      wrap.remove();
+      toast(t('toast_message_sent'));
+    };
+  }
+
+  document.body.appendChild(wrap);
+  draw();
 }
 
 function openNotificationDetailModal(messageId){
