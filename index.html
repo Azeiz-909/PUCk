@@ -120,6 +120,18 @@
   }
   .lang-toggle button.active{ background:var(--navy); color:#fff; }
 
+  /* ---------- employee notification bell ---------- */
+  .bell-btn{
+    position:relative; width:38px; height:38px; border-radius:50%;
+    border:1.5px solid var(--line); background:var(--white); color:var(--navy);
+    display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:var(--shadow-card);
+  }
+  .bell-badge{
+    position:absolute; top:-4px; right:-4px; min-width:17px; height:17px; padding:0 3px;
+    border-radius:9px; background:var(--danger); color:#fff; font-size:10px; font-weight:800;
+    display:flex; align-items:center; justify-content:center; line-height:1;
+  }
+
   /* ---------- per-branch layout toggle (small, on branch page) ---------- */
   .branch-layout-row{ margin:0 auto 22px; max-width:260px; }
   .branch-layout-row .layout-choice-row.small{ gap:8px; }
@@ -359,6 +371,12 @@
     display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--navy); font-size:13px; padding:0;
   }
   .icon-choice-row{ display:flex; gap:8px; margin-bottom:14px; }
+  .role-choice-row{ display:flex; gap:8px; margin-bottom:16px; }
+  .role-choice-row button{
+    flex:1; padding:10px; border-radius:10px; border:1.5px solid var(--line); background:var(--white);
+    font-family:var(--font-display); font-weight:800; font-size:13px; color:var(--navy); cursor:pointer;
+  }
+  .role-choice-row button.active{ background:var(--navy); color:#fff; border-color:var(--navy); }
   .icon-choice-row button{
     flex:1; padding:8px; border-radius:10px; border:1.5px solid var(--line); background:var(--white);
     font-family:var(--font-display); font-weight:700; font-size:12px; color:var(--navy); cursor:pointer;
@@ -385,6 +403,18 @@
   .notice-row button{ border:none; background:transparent; color:#B5522F; cursor:pointer; flex-shrink:0; }
   .notice-form{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; align-items:center; }
   .notice-form input[type="text"]{ flex:1; min-width:140px; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body); }
+
+  /* ---------- manager/employee messages ---------- */
+  .notice-card{
+    border:1.5px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:12px; background:var(--paper);
+  }
+  .notice-card-meta{ font-size:11.5px; color:#7C93B8; margin-bottom:8px; font-weight:700; }
+  .msg-block{ margin-bottom:8px; }
+  .msg-lang-lbl{ font-size:10.5px; color:#7C93B8; font-weight:700; margin-bottom:2px; }
+  .msg-text{
+    font-size:14px; color:var(--navy-deep); line-height:1.6; background:var(--white);
+    border:1px solid var(--line); border-radius:10px; padding:9px 12px; word-break:break-word;
+  }
   .notice-form input[type="color"]{ width:38px; height:38px; border:1.5px solid var(--line); border-radius:9px; padding:2px; cursor:pointer; }
   .notice-form input[type="number"]{ width:64px; padding:9px 6px; border-radius:10px; border:1.5px solid var(--line); text-align:center; }
 
@@ -594,10 +624,13 @@ let state = {
   subscribers: [],
   monthlyProducts: [],
   monthlyMeta: {},
+  messages: [],
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
-let session = { user: null };
+let session = { user: null, viewOnly: false };
+let managerUI = { tab: "accounts" };
+function canEdit(){ return !!(session.user && !session.viewOnly); }
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null };
 
 /* =========================================================
@@ -793,6 +826,38 @@ const I18N = {
     expired_products_label: "منتجات منتهية",
     expired_products_page_title: "المنتجات المنتهية",
     no_expired_products: "لا توجد منتجات منتهية حاليًا لهذا الفرع.",
+    role_employee: "موظفين",
+    role_manager: "مدراء",
+    login_wrong_role_employee: "هذا الحساب ليس حساب موظف",
+    login_wrong_role_manager: "هذا الحساب ليس حساب مدير",
+    notifications_word: "التنبيهات",
+    message_from_manager_title: "رسالة من المدير",
+    original_text_label: "النص الأصلي",
+    mark_as_read_label: "قرأت ووافقت",
+    manager_dashboard_title: "لوحة المدير",
+    tab_accounts: "الحسابات",
+    tab_notifications: "التنبيهات",
+    view_word: "مشاهدة",
+    message_word: "رسالة",
+    compose_message_title: "إرسال رسالة",
+    message_ar_label: "الرسالة (عربي)",
+    message_en_label: "الرسالة (إنجليزي)",
+    send_message_btn: "إرسال",
+    toast_message_sent: "تم إرسال الرسالة",
+    toast_fill_one_message: "الرجاء كتابة الرسالة بلغة واحدة على الأقل",
+    no_employee_accounts: "لا يوجد موظفون بعد",
+    no_notifications_sent: "لم ترسل أي تنبيهات بعد",
+    read_status_read: "مقروءة",
+    read_status_unread: "غير مقروءة",
+    sent_to_label: "أُرسلت إلى",
+    sent_at_label: "وقت الإرسال",
+    read_at_label: "وقت القراءة",
+    role_label: "الدور",
+    role_option_employee: "موظف",
+    role_option_manager: "مدير",
+    employee_account_title: "حسابي",
+    no_messages_yet: "لا توجد رسائل بعد",
+    close_word: "إغلاق",
   },
   en: {
     control_panel: "Control Panel",
@@ -979,6 +1044,38 @@ const I18N = {
     expired_products_label: "Expired products",
     expired_products_page_title: "Expired Products",
     no_expired_products: "No expired products currently for this branch.",
+    role_employee: "Employees",
+    role_manager: "Managers",
+    login_wrong_role_employee: "This account is not an employee account",
+    login_wrong_role_manager: "This account is not a manager account",
+    notifications_word: "Notifications",
+    message_from_manager_title: "Message from Manager",
+    original_text_label: "Original text",
+    mark_as_read_label: "Read & acknowledged",
+    manager_dashboard_title: "Manager Dashboard",
+    tab_accounts: "Accounts",
+    tab_notifications: "Notifications",
+    view_word: "View",
+    message_word: "Message",
+    compose_message_title: "Send Message",
+    message_ar_label: "Message (Arabic)",
+    message_en_label: "Message (English)",
+    send_message_btn: "Send",
+    toast_message_sent: "Message sent",
+    toast_fill_one_message: "Please write the message in at least one language",
+    no_employee_accounts: "No employees yet",
+    no_notifications_sent: "You haven't sent any notifications yet",
+    read_status_read: "Read",
+    read_status_unread: "Unread",
+    sent_to_label: "Sent to",
+    sent_at_label: "Sent at",
+    read_at_label: "Read at",
+    role_label: "Role",
+    role_option_employee: "Employee",
+    role_option_manager: "Manager",
+    employee_account_title: "My Account",
+    no_messages_yet: "No messages yet",
+    close_word: "Close",
   }
 };
 
@@ -1028,7 +1125,17 @@ function defaultProducts(){
   ];
 }
 function defaultUsers(){
-  return [ { id: uid(), username: "admin", password: "puck2026", mustChange: false, isAdmin: true, isDefault: true } ];
+  return [
+    { id: uid(), username: "BIGBOSS", password: "1234", role: "bigboss", mustChange: false, isAdmin: true, isDefault: true },
+    { id: uid(), username: "BOSS", password: "1234", role: "manager", mustChange: false, isAdmin: false, isDefault: false },
+    { id: uid(), username: "FARS", password: "1234", role: "employee", mustChange: false, isAdmin: false, isDefault: false },
+  ];
+}
+function userRole(u){
+  if(!u) return "employee";
+  if(u.role) return u.role;
+  if(u.isDefault) return "bigboss";
+  return "employee";
 }
 
 /* =========================================================
@@ -1113,6 +1220,9 @@ async function loadAll(){
   state.monthlyMeta = await storageGet("puck:monthlyMeta", null);
   if(state.monthlyMeta === null){ state.monthlyMeta = {}; await storageSet("puck:monthlyMeta", state.monthlyMeta); }
 
+  state.messages = await storageGet("puck:messages", null);
+  if(state.messages === null){ state.messages = []; await storageSet("puck:messages", state.messages); }
+
   applySettings();
   (state.settings.customFonts || []).forEach(f => registerFont(f.name, f.dataUrl));
   renderBgDaisies();
@@ -1190,6 +1300,7 @@ const ICON = {
   check: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   edit: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9" stroke-linecap="round"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   download: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12M6 10l6 6 6-6M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  bell: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 };
 
 function renderBgDaisies(){
@@ -1230,6 +1341,17 @@ function langToggleHtml(){
   `;
 }
 
+function bellButtonHtml(){
+  if(!session.user || userRole(session.user) !== "employee") return "";
+  const unread = state.messages.filter(m=>m.toUserId===session.user.id && !m.read).length;
+  return `
+    <button class="bell-btn" id="employeeBellBtn" title="${t('notifications_word')}">
+      ${ICON.bell}
+      ${unread>0 ? `<span class="bell-badge">${unread}</span>` : ''}
+    </button>
+  `;
+}
+
 /* =========================================================
    ROOT RENDER / ROUTER
 ========================================================= */
@@ -1256,7 +1378,7 @@ function renderLandingScreen(){
   return `
     <div class="topbar">
       <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
-      ${langToggleHtml()}
+      ${langToggleHtml()}${bellButtonHtml()}
     </div>
     <div class="hero">
       <div class="logo-wrap"><img src="${LOGO_SRC}" alt="Puck"></div>
@@ -1292,7 +1414,7 @@ function renderHomeScreen(){
     <div class="topbar">
       <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
-        ${langToggleHtml()}
+        ${langToggleHtml()}${bellButtonHtml()}
         <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
@@ -1304,7 +1426,7 @@ function renderHomeScreen(){
 /* ---------------- BRANCH PRODUCTS ---------------- */
 function renderBranchScreen(branchId){
   const branch = state.branches.find(b=>b.id===branchId);
-  const products = state.products.filter(p=>p.branchId===branchId && (!p.hidden || session.user));
+  const products = state.products.filter(p=>p.branchId===branchId && (!p.hidden || canEdit()));
   const cols = branchColumns(branch);
   const expiredCount = state.products.filter(p=>p.branchId===branchId && !p.hidden && expiryStatus(p).status==="expired").length;
 
@@ -1328,7 +1450,7 @@ function renderBranchScreen(branchId){
       <div class="product-media">
         <img src="${p.image || ''}" alt="${escapeHtml(p.name)}">
         <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>
-        ${session.user ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+        ${canEdit() ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
       </div>
       <div class="product-body">
         <div class="product-name">${escapeHtml(p.name)}</div>
@@ -1351,7 +1473,7 @@ function renderBranchScreen(branchId){
     <div class="topbar">
       <button class="back-btn" id="backBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
-        ${langToggleHtml()}
+        ${langToggleHtml()}${bellButtonHtml()}
         <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
@@ -1359,7 +1481,7 @@ function renderBranchScreen(branchId){
       <div class="branch-title-row">
         <h2>${escapeHtml(branch ? branch.name : "")}</h2>
         ${branch ? renderBranchNoticesHtml(branch) : ''}
-        ${(session.user && branch) ? `<button class="notices-edit-link" data-manage-notices-inline="${branch.id}">${ICON.edit} ${t('manage_notices')}</button>` : ''}
+        ${(canEdit() && branch) ? `<button class="notices-edit-link" data-manage-notices-inline="${branch.id}">${ICON.edit} ${t('manage_notices')}</button>` : ''}
       </div>
       <div class="branch-layout-row">
         <div class="layout-choice-row small">
@@ -1375,7 +1497,7 @@ function renderBranchScreen(branchId){
       </div>
       ${expiredCount>0 ? `<div class="expired-alert-bar" data-goto-expired="${branchId}">${ICON.warn} ${t('expired_products_label')} (${expiredCount})</div>` : ''}
       <div class="product-grid cols-${cols}">${cardsHtml}</div>
-      ${(session.user && branch) ? `<div style="max-width:900px; margin:18px auto 0; padding:0 20px;"><button class="add-product-tile" data-quick-add-product="${branch.id}">${ICON.plus} ${t('add_new_product')}</button></div>` : ''}
+      ${(canEdit() && branch) ? `<div style="max-width:900px; margin:18px auto 0; padding:0 20px;"><button class="add-product-tile" data-quick-add-product="${branch.id}">${ICON.plus} ${t('add_new_product')}</button></div>` : ''}
     </div>
   `;
 }
@@ -1394,7 +1516,7 @@ function renderBranchExpiredScreen(branchId){
       <div class="product-media">
         <img src="${p.image || ''}" alt="${escapeHtml(p.name)}">
         <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>
-        ${session.user ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+        ${canEdit() ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
       </div>
       <div class="product-body">
         <div class="product-name">${escapeHtml(p.name)}</div>
@@ -1417,7 +1539,7 @@ function renderBranchExpiredScreen(branchId){
     <div class="topbar">
       <button class="back-btn" id="expiredBackBtn" data-back-branch="${branchId}">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
-        ${langToggleHtml()}
+        ${langToggleHtml()}${bellButtonHtml()}
         <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
@@ -1447,7 +1569,7 @@ function renderMonthlyScreen(){
     <div class="topbar">
       <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
-        ${langToggleHtml()}
+        ${langToggleHtml()}${bellButtonHtml()}
         <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
@@ -1467,7 +1589,7 @@ function renderMonthlyBranchScreen(branchId){
 
   const rowsHtml = products.length ? products.map(p => `
     <div class="monthly-row">
-      ${session.user ? `<button class="m-edit-btn" data-monthly-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+      ${canEdit() ? `<button class="m-edit-btn" data-monthly-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
       <div class="m-info">
         <div class="m-name">${escapeHtml(p.name)}</div>
         <div class="m-weight">${p.weightValue||0} ${unitLabel(p.weightUnit)}</div>
@@ -1483,7 +1605,7 @@ function renderMonthlyBranchScreen(branchId){
     <div class="topbar">
       <button class="back-btn" id="monthlyBackBtn">${ICON.back} ${t('back')}</button>
       <div style="display:flex; align-items:center; gap:8px;">
-        ${langToggleHtml()}
+        ${langToggleHtml()}${bellButtonHtml()}
         <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
       </div>
     </div>
@@ -1499,7 +1621,7 @@ function renderMonthlyBranchScreen(branchId){
       <div class="monthly-list">${rowsHtml}</div>
     </div>
     <div class="monthly-actions">
-      ${session.user ? `<button class="add-product-tile" id="monthlyAddBtn" data-branch="${branchId}">${ICON.plus} ${t('add_new_product')}</button>` : ''}
+      ${canEdit() ? `<button class="add-product-tile" id="monthlyAddBtn" data-branch="${branchId}">${ICON.plus} ${t('add_new_product')}</button>` : ''}
       <button class="btn-download" id="monthlyDownloadBtn" data-branch="${branchId}">${ICON.download} ${t('download_word')}</button>
     </div>
   `;
@@ -1507,11 +1629,19 @@ function renderMonthlyBranchScreen(branchId){
 
 function attachHomeEvents(){
   const gearBtn = document.getElementById("gearBtn");
-  if(gearBtn) gearBtn.onclick = ()=>{ session.user ? openAdminPanel() : openLoginModal(); };
+  if(gearBtn) gearBtn.onclick = ()=>{
+    if(!session.user) return openLoginModal();
+    const role = userRole(session.user);
+    if(role === "bigboss") return openAdminPanel();
+    if(role === "manager"){ session.viewOnly = false; return openManagerDashboard(); }
+    return openEmployeeAccountModal();
+  };
   const backBtn = document.getElementById("backBtn");
   if(backBtn) backBtn.onclick = goHome;
   const landingBackBtn = document.getElementById("landingBackBtn");
   if(landingBackBtn) landingBackBtn.onclick = goLanding;
+  const employeeBellBtn = document.getElementById("employeeBellBtn");
+  if(employeeBellBtn) employeeBellBtn.onclick = ()=> openEmployeeNotificationsModal();
   const monthlyBackBtn = document.getElementById("monthlyBackBtn");
   if(monthlyBackBtn) monthlyBackBtn.onclick = goMonthly;
   const expiredBackBtn = document.getElementById("expiredBackBtn");
@@ -1598,36 +1728,68 @@ function dayOptionsHtml(selected){
    LOGIN MODAL
 ========================================================= */
 function openLoginModal(){
+  let loginRole = "employee";
   const wrap = document.createElement("div");
   wrap.className = "overlay";
   wrap.id = "loginOverlay";
-  wrap.innerHTML = `
-    <div class="modal">
-      <button class="close-x" id="closeLogin">&times;</button>
-      <h3>${t('login_title')}</h3>
-      <p class="hint">${t('login_hint')}</p>
-      <div id="loginError"></div>
-      <div class="field"><label>${t('username_label')}</label><input id="loginUser" type="text" autocomplete="off"></div>
-      <div class="field"><label>${t('password_label')}</label><input id="loginPass" type="password"></div>
-      <button class="btn btn-primary" id="loginSubmit">${t('login_submit')}</button>
-    </div>
-  `;
+
+  function draw(){
+    wrap.innerHTML = `
+      <div class="modal">
+        <button class="close-x" id="closeLogin">&times;</button>
+        <h3>${t('login_title')}</h3>
+        <p class="hint">${t('login_hint')}</p>
+        <div class="role-choice-row">
+          <button data-role="employee" class="${loginRole==='employee'?'active':''}" type="button">${t('role_employee')}</button>
+          <button data-role="manager" class="${loginRole==='manager'?'active':''}" type="button">${t('role_manager')}</button>
+        </div>
+        <div id="loginError"></div>
+        <div class="field"><label>${t('username_label')}</label><input id="loginUser" type="text" autocomplete="off"></div>
+        <div class="field"><label>${t('password_label')}</label><input id="loginPass" type="password"></div>
+        <button class="btn btn-primary" id="loginSubmit">${t('login_submit')}</button>
+      </div>
+    `;
+    wire();
+  }
+
+  function wire(){
+    document.getElementById("closeLogin").onclick = ()=> wrap.remove();
+    wrap.onclick = (e)=>{ if(e.target === wrap) wrap.remove(); };
+    wrap.querySelectorAll("[data-role]").forEach(btn=>{
+      btn.onclick = ()=>{ loginRole = btn.getAttribute("data-role"); draw(); };
+    });
+    document.getElementById("loginSubmit").onclick = ()=>{
+      const u = document.getElementById("loginUser").value.trim();
+      const p = document.getElementById("loginPass").value;
+      const user = state.users.find(x=>x.username === u && x.password === p);
+      const errBox = document.getElementById("loginError");
+      if(!user){
+        errBox.innerHTML = `<div class="error-msg">${t('login_error')}</div>`;
+        return;
+      }
+      const role = userRole(user);
+      if(loginRole === "employee" && role !== "employee"){
+        errBox.innerHTML = `<div class="error-msg">${t('login_wrong_role_employee')}</div>`;
+        return;
+      }
+      if(loginRole === "manager" && role === "employee"){
+        errBox.innerHTML = `<div class="error-msg">${t('login_wrong_role_manager')}</div>`;
+        return;
+      }
+      wrap.remove();
+      if(user.mustChange){ openForceChangeModal(user); }
+      else{ session.user = user; session.viewOnly = false; render(); afterLoginCheck(user); }
+    };
+  }
+
   document.body.appendChild(wrap);
-  document.getElementById("closeLogin").onclick = ()=> wrap.remove();
-  wrap.onclick = (e)=>{ if(e.target === wrap) wrap.remove(); };
-  document.getElementById("loginSubmit").onclick = ()=>{
-    const u = document.getElementById("loginUser").value.trim();
-    const p = document.getElementById("loginPass").value;
-    const user = state.users.find(x=>x.username === u && x.password === p);
-    const errBox = document.getElementById("loginError");
-    if(!user){
-      errBox.innerHTML = `<div class="error-msg">${t('login_error')}</div>`;
-      return;
-    }
-    wrap.remove();
-    if(user.mustChange){ openForceChangeModal(user); }
-    else{ session.user = user; render(); }
-  };
+  draw();
+}
+
+function afterLoginCheck(user){
+  if(userRole(user) !== "employee") return;
+  const hasUnread = state.messages.some(m=>m.toUserId===user.id && !m.read);
+  if(hasUnread) openEmployeeNotificationsModal();
 }
 
 function openForceChangeModal(user){
@@ -1655,9 +1817,257 @@ function openForceChangeModal(user){
     await storageSet("puck:users", state.users);
     wrap.remove();
     session.user = user;
+    session.viewOnly = false;
     toast(t('toast_pass_updated'));
     render();
+    afterLoginCheck(user);
   };
+}
+
+/* =========================================================
+   EMPLOYEE ACCOUNT MODAL (simple: logout only)
+========================================================= */
+function openEmployeeAccountModal(){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeEmpAcc">&times;</button>
+      <h3>${ICON.gear} ${t('employee_account_title')}</h3>
+      <p class="hint">${escapeHtml(session.user ? session.user.username : "")}</p>
+      <button class="btn btn-danger" id="empLogoutBtn" style="width:100%;">${ICON.logout} ${t('logout')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeEmpAcc").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("empLogoutBtn").onclick = ()=>{
+    session.user = null; session.viewOnly = false;
+    wrap.remove();
+    goLanding();
+  };
+}
+
+/* =========================================================
+   EMPLOYEE NOTIFICATIONS ("رسالة من المدير")
+========================================================= */
+function messageBodyHtml(m){
+  let html = "";
+  if(m.textAr && m.textEn){
+    html += `<div class="msg-block"><div class="msg-lang-lbl">العربية</div><div class="msg-text">${escapeHtml(m.textAr)}</div></div>`;
+    html += `<div class="msg-block"><div class="msg-lang-lbl">English</div><div class="msg-text">${escapeHtml(m.textEn)}</div></div>`;
+  }else if(m.textAr){
+    html += `<div class="msg-block"><div class="msg-lang-lbl">${t('original_text_label')} (عربي)</div><div class="msg-text">${escapeHtml(m.textAr)}</div></div>`;
+  }else if(m.textEn){
+    html += `<div class="msg-block"><div class="msg-lang-lbl">${t('original_text_label')} (English)</div><div class="msg-text">${escapeHtml(m.textEn)}</div></div>`;
+  }
+  return html;
+}
+
+function openEmployeeNotificationsModal(){
+  if(!session.user) return;
+  const myMessages = state.messages.filter(m=>m.toUserId===session.user.id).sort((a,b)=> b.createdAt - a.createdAt);
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+
+  function draw(){
+    const listHtml = myMessages.length ? myMessages.map(m=>`
+      <div class="notice-card">
+        <div class="notice-card-meta">${escapeHtml(m.fromUsername)} — ${new Date(m.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</div>
+        ${messageBodyHtml(m)}
+        <label class="hide-toggle-row" style="margin-top:10px;">
+          <input type="checkbox" data-mark-read="${m.id}" ${m.read?'checked':''} ${m.read?'disabled':''}>
+          <span>${t('mark_as_read_label')}</span>
+        </label>
+      </div>
+    `).join("") : `<p class="hint">${t('no_messages_yet')}</p>`;
+
+    wrap.innerHTML = `
+      <div class="modal wide">
+        <button class="close-x" id="closeEmpMsg">&times;</button>
+        <h3>${ICON.bell} ${t('message_from_manager_title')}</h3>
+        <div id="empMsgList">${listHtml}</div>
+        <button class="btn btn-ghost" id="closeEmpMsgBtn" style="width:100%; margin-top:10px;">${t('close_word')}</button>
+      </div>
+    `;
+    document.getElementById("closeEmpMsg").onclick = ()=> wrap.remove();
+    document.getElementById("closeEmpMsgBtn").onclick = ()=> wrap.remove();
+    wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+    wrap.querySelectorAll("[data-mark-read]").forEach(cb=>{
+      cb.onchange = async ()=>{
+        const id = cb.getAttribute("data-mark-read");
+        const m = state.messages.find(x=>x.id===id);
+        if(!m) return;
+        m.read = true;
+        m.readAt = Date.now();
+        await storageSet("puck:messages", state.messages);
+        draw();
+        render();
+      };
+    });
+  }
+
+  document.body.appendChild(wrap);
+  draw();
+}
+
+/* =========================================================
+   MANAGER DASHBOARD ("لوحة المدير")
+========================================================= */
+function openManagerDashboard(){
+  managerUI.tab = "accounts";
+  renderManagerDashboard();
+}
+
+function closeManagerDashboard(){
+  const el = document.getElementById("managerOverlay");
+  if(el) el.remove();
+  render();
+}
+
+function renderManagerDashboard(){
+  let el = document.getElementById("managerOverlay");
+  if(!el){
+    el = document.createElement("div");
+    el.className = "overlay admin-overlay-full";
+    el.id = "managerOverlay";
+    document.body.appendChild(el);
+  }
+  el.innerHTML = `
+    <div class="admin-shell">
+      <div class="admin-top">
+        <h2>${ICON.gear} ${t('manager_dashboard_title')}</h2>
+        <button class="logout-btn" id="managerLogoutBtn">${ICON.logout} ${t('logout')}</button>
+      </div>
+      <div class="admin-tabs">
+        <button class="admin-tab ${managerUI.tab==='accounts'?'active':''}" data-mtab="accounts">${t('tab_accounts')}</button>
+        <button class="admin-tab ${managerUI.tab==='notifications'?'active':''}" data-mtab="notifications">${t('tab_notifications')}</button>
+      </div>
+      <div class="admin-content" id="managerContent"></div>
+    </div>
+  `;
+  document.getElementById("managerLogoutBtn").onclick = ()=>{
+    session.user=null; session.viewOnly=false;
+    closeManagerDashboard();
+  };
+  el.querySelectorAll(".admin-tab").forEach(b=>{
+    b.onclick = ()=>{ managerUI.tab = b.getAttribute("data-mtab"); renderManagerDashboard(); };
+  });
+  document.getElementById("managerContent").innerHTML = managerUI.tab==="accounts" ? renderManagerAccountsTab() : renderManagerNotificationsTab();
+  attachManagerTabEvents(managerUI.tab);
+}
+
+function renderManagerAccountsTab(){
+  const employees = state.users.filter(u=>userRole(u)==="employee");
+  const rows = employees.length ? employees.map(u=>`
+    <div class="notice-row" style="align-items:center;">
+      <span class="txt" style="font-weight:800;">${escapeHtml(u.username)}</span>
+      <button class="btn btn-ghost btn-small" data-view-account="${u.id}">${ICON.search} ${t('view_word')}</button>
+      <button class="btn btn-primary btn-small" data-message-account="${u.id}">${ICON.edit} ${t('message_word')}</button>
+    </div>
+  `).join("") : `<p class="hint">${t('no_employee_accounts')}</p>`;
+  return `
+    <div class="panel-card">
+      <h4>${t('tab_accounts')}</h4>
+      ${rows}
+    </div>
+  `;
+}
+
+function renderManagerNotificationsTab(){
+  const mine = state.messages.filter(m=>m.fromUsername===session.user.username).sort((a,b)=> b.createdAt-a.createdAt);
+  const rows = mine.length ? mine.map(m=>`
+    <div class="notice-row" style="align-items:center; cursor:pointer;" data-view-msg="${m.id}">
+      <span class="swatch" style="background:${m.read?'var(--leaf)':'var(--danger)'};"></span>
+      <span class="txt">${t('sent_to_label')}: <b>${escapeHtml(m.toUsername)}</b> — ${new Date(m.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</span>
+      <span style="font-size:11px; font-weight:800; color:${m.read?'var(--leaf)':'var(--danger)'};">${m.read?t('read_status_read'):t('read_status_unread')}</span>
+    </div>
+  `).join("") : `<p class="hint">${t('no_notifications_sent')}</p>`;
+  return `
+    <div class="panel-card">
+      <h4>${t('tab_notifications')}</h4>
+      ${rows}
+    </div>
+  `;
+}
+
+function attachManagerTabEvents(tab){
+  if(tab === "accounts"){
+    document.querySelectorAll("[data-view-account]").forEach(btn=>{
+      btn.onclick = ()=>{
+        session.viewOnly = true;
+        closeManagerDashboard();
+        goLanding();
+      };
+    });
+    document.querySelectorAll("[data-message-account]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const emp = state.users.find(u=>u.id===btn.getAttribute("data-message-account"));
+        if(emp) openComposeMessageModal(emp);
+      };
+    });
+  }else{
+    document.querySelectorAll("[data-view-msg]").forEach(row=>{
+      row.onclick = ()=> openNotificationDetailModal(row.getAttribute("data-view-msg"));
+    });
+  }
+}
+
+function openComposeMessageModal(toUser){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeCompose">&times;</button>
+      <h3>${ICON.edit} ${t('compose_message_title')}</h3>
+      <p class="hint">${t('sent_to_label')}: ${escapeHtml(toUser.username)}</p>
+      <div id="composeError"></div>
+      <div class="field"><label>${t('message_ar_label')}</label><textarea id="msgAr" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="rtl"></textarea></div>
+      <div class="field"><label>${t('message_en_label')}</label><textarea id="msgEn" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="ltr"></textarea></div>
+      <button class="btn btn-primary" id="sendMsgBtn" style="width:100%;">${ICON.plus} ${t('send_message_btn')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeCompose").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("sendMsgBtn").onclick = async ()=>{
+    const textAr = document.getElementById("msgAr").value.trim();
+    const textEn = document.getElementById("msgEn").value.trim();
+    const errBox = document.getElementById("composeError");
+    if(!textAr && !textEn){ errBox.innerHTML = `<div class="error-msg">${t('toast_fill_one_message')}</div>`; return; }
+    state.messages.push({
+      id: uid(), toUserId: toUser.id, toUsername: toUser.username,
+      fromUsername: session.user.username, textAr, textEn,
+      createdAt: Date.now(), read: false, readAt: null
+    });
+    await storageSet("puck:messages", state.messages);
+    wrap.remove();
+    toast(t('toast_message_sent'));
+  };
+}
+
+function openNotificationDetailModal(messageId){
+  const m = state.messages.find(x=>x.id===messageId);
+  if(!m) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMsgDetail">&times;</button>
+      <h3>${ICON.bell} ${t('tab_notifications')}</h3>
+      <p class="hint">${t('sent_to_label')}: ${escapeHtml(m.toUsername)}</p>
+      ${messageBodyHtml(m)}
+      <p class="hint" style="margin-top:12px;">
+        ${t('sent_at_label')}: ${new Date(m.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}<br>
+        ${m.read ? `${t('read_at_label')}: ${new Date(m.readAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}` : t('read_status_unread')}
+      </p>
+      <button class="btn btn-ghost" id="closeMsgDetailBtn" style="width:100%;">${t('close_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMsgDetail").onclick = ()=> wrap.remove();
+  document.getElementById("closeMsgDetailBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
 }
 
 /* =========================================================
@@ -2205,9 +2615,11 @@ function compressImageToDataUrl(file, maxDim){
 
 /* ---------- USERS TAB ---------- */
 function renderUsersTab(){
+  const roleLabel = (u)=> userRole(u)==="manager" ? t('role_option_manager') : t('role_option_employee');
   const rows = state.users.map(u=>`
     <tr>
       <td>${escapeHtml(u.username)}${u.isDefault?` <span style="color:#7C93B8;font-size:11px;">${t('primary_admin_tag')}</span>`:''}</td>
+      <td>${u.isDefault ? 'BIGBOSS' : roleLabel(u)}</td>
       <td><span class="status-pill ${u.mustChange?'pending':'active'}">${u.mustChange?t('status_pending'):t('status_active')}</span></td>
       <td>${u.isDefault ? '' : `<button class="btn btn-danger btn-small" data-del-user="${u.id}">${ICON.trash} ${t('delete_word')}</button>`}</td>
     </tr>
@@ -2221,12 +2633,16 @@ function renderUsersTab(){
     <div class="panel-card">
       <h4>${t('users_tab_title')}</h4>
       <table class="users-table">
-        <thead><tr><th>${t('col_username')}</th><th>${t('col_status')}</th><th></th></tr></thead>
+        <thead><tr><th>${t('col_username')}</th><th>${t('role_label')}</th><th>${t('col_status')}</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
       </table>
       <div class="add-user-form">
         <input id="newUsername" type="text" placeholder="${t('new_username_placeholder')}">
         <input id="newUserCode" type="text" placeholder="${t('new_user_code_placeholder')}">
+        <select id="newUserRole">
+          <option value="employee">${t('role_option_employee')}</option>
+          <option value="manager">${t('role_option_manager')}</option>
+        </select>
         <button class="btn btn-ghost btn-small" id="genCodeBtn">${t('gen_code')}</button>
         <button class="btn btn-primary btn-small" id="addUserBtn">${ICON.plus} ${t('add_user')}</button>
       </div>
@@ -2244,9 +2660,10 @@ function attachUsersTabEvents(){
   if(addBtn) addBtn.onclick = async ()=>{
     const username = document.getElementById("newUsername").value.trim();
     const code = document.getElementById("newUserCode").value.trim();
+    const role = document.getElementById("newUserRole").value;
     if(!username || !code){ toast(t('toast_enter_user_code')); return; }
     if(state.users.some(u=>u.username===username)){ toast(t('toast_user_exists')); return; }
-    state.users.push({ id: uid(), username, password: code, mustChange: true, isAdmin: false, isDefault: false });
+    state.users.push({ id: uid(), username, password: code, role, mustChange: true, isAdmin: false, isDefault: false });
     await storageSet("puck:users", state.users);
     toast(t('toast_user_added_share') + code);
     renderAdminOverlay();
