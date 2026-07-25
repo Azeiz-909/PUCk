@@ -797,6 +797,8 @@ const I18N = {
     toast_user_added_share: "تمت إضافة المستخدم، شارك معه الرمز المؤقت: ",
     confirm_delete_user: "هل تريد حذف هذا المستخدم؟",
     toast_user_deleted: "تم حذف المستخدم",
+    edit_word: "تعديل",
+    edit_user_title: "تعديل بيانات الموظف",
     font_type_title: "نوع الخط",
     font_family_label: "عائلة الخط",
     font_weight_label: "وزن الخط",
@@ -1038,6 +1040,8 @@ const I18N = {
     toast_user_added_share: "User added, share the temporary code with them: ",
     confirm_delete_user: "Delete this user?",
     toast_user_deleted: "User deleted",
+    edit_word: "Edit",
+    edit_user_title: "Edit employee details",
     font_type_title: "Font Type",
     font_family_label: "Font family",
     font_weight_label: "Font weight",
@@ -3030,7 +3034,9 @@ function renderUsersTab(){
       <td>${u.employeeNumber ? escapeHtml(u.employeeNumber) : '—'}</td>
       <td>${u.isDefault ? 'BIGBOSS' : roleLabel(u)}</td>
       <td><span class="status-pill ${u.mustChange?'pending':'active'}">${u.mustChange?t('status_pending'):t('status_active')}</span></td>
-      <td>${u.isDefault ? '' : `<button class="btn btn-danger btn-small" data-del-user="${u.id}">${ICON.trash} ${t('delete_word')}</button>`}</td>
+      <td>
+        ${u.isDefault ? '' : `<button class="btn btn-ghost btn-small" data-edit-user="${u.id}">${ICON.edit} ${t('edit_word')}</button> <button class="btn btn-danger btn-small" data-del-user="${u.id}">${ICON.trash} ${t('delete_word')}</button>`}
+      </td>
     </tr>
   `).join("");
   return `
@@ -3089,8 +3095,50 @@ function attachUsersTabEvents(){
       renderAdminOverlay();
     };
   });
+  document.querySelectorAll("[data-edit-user]").forEach(b=>{
+    b.onclick = ()=> openEditUserModal(b.getAttribute("data-edit-user"));
+  });
   const myAccountBtn = document.getElementById("openMyAccountBtn");
   if(myAccountBtn) myAccountBtn.onclick = ()=> openMyAccountModal();
+}
+
+/* ---------- EDIT USER (BIGBOSS: edit employee username / employee number) ---------- */
+function openEditUserModal(id){
+  const user = state.users.find(u=>u.id===id);
+  if(!user) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="euClose">&times;</button>
+      <h3>${ICON.edit} ${t('edit_user_title')}</h3>
+      <div id="euError"></div>
+      <div class="field"><label>${t('username_label')}</label><input id="euUsername" type="text" value="${escapeHtml(user.username)}"></div>
+      <div class="field"><label>${t('employee_number_label')}</label><input id="euEmployeeNumber" type="text" value="${escapeHtml(user.employeeNumber||'')}"></div>
+      <button class="btn btn-primary" id="euSaveBtn">${t('save_word')}</button>
+      <button class="btn btn-ghost" id="euCancelBtn" style="width:100%; margin-top:8px;">${t('cancel_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("euClose").onclick = ()=> wrap.remove();
+  document.getElementById("euCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+
+  document.getElementById("euSaveBtn").onclick = async ()=>{
+    const errBox = document.getElementById("euError");
+    const newUsername = document.getElementById("euUsername").value.trim();
+    const newEmployeeNumber = document.getElementById("euEmployeeNumber").value.trim();
+
+    if(!newUsername){ errBox.innerHTML = `<div class="error-msg">${t('toast_enter_username')}</div>`; return; }
+    if(state.users.some(u=>u.id!==user.id && u.username===newUsername)){ errBox.innerHTML = `<div class="error-msg">${t('toast_user_exists')}</div>`; return; }
+
+    user.username = newUsername;
+    user.employeeNumber = newEmployeeNumber;
+    await storageSet("puck:users", state.users);
+    wrap.remove();
+    toast(t('toast_account_updated'));
+    renderAdminOverlay();
+  };
 }
 
 /* ---------- MY ACCOUNT (change own username/password) ---------- */
