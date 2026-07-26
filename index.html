@@ -60,6 +60,7 @@
   }
   .bg-daisies svg{ position:absolute; opacity:0.05; }
   .bg-daisies img{ position:absolute; opacity:0.05; object-fit:contain; }
+  #app{ position:relative; z-index:1; }
 
   /* ---------- top bar ---------- */
   .topbar{
@@ -244,25 +245,130 @@
   .planogram-item-meta{ font-size:11.5px; color:#7C9A8B; margin-top:8px; }
   .planogram-item-actions{ display:flex; gap:8px; margin-top:10px; }
 
+  /* ---------- daily documentation ---------- */
+  .doc-capture-card{
+    background:var(--white); border:1px solid var(--line); border-radius:16px;
+    box-shadow:var(--shadow-card); padding:18px 16px; max-width:640px; margin:0 auto 20px;
+  }
+  .doc-thumb-strip{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .doc-thumb-item{ position:relative; width:74px; height:74px; border-radius:10px; overflow:hidden; border:1.5px solid var(--line); }
+  .doc-thumb-item img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .doc-thumb-remove{
+    position:absolute; top:2px; left:2px; width:20px; height:20px; border-radius:50%; border:none;
+    background:rgba(14,69,38,0.75); color:#fff; font-size:14px; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .doc-entry-card{
+    background:var(--white); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow-card); padding:14px 16px; margin-bottom:14px; max-width:640px; margin-left:auto; margin-right:auto;
+  }
+  .doc-entry-meta{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; font-size:11.5px; color:#7C9A8B; margin-bottom:8px; }
+  .doc-entry-hours{ font-weight:700; color:var(--sky); }
+  .doc-entry-note{ font-size:13.5px; color:var(--navy-deep); background:var(--paper); border-radius:9px; padding:8px 10px; margin-bottom:10px; white-space:pre-wrap; }
+  .doc-entry-photos{ display:flex; gap:8px; flex-wrap:wrap; }
+  .doc-entry-photo{ width:90px; height:90px; object-fit:cover; border-radius:10px; border:1px solid var(--line); }
+  .doc-alert-btn{
+    display:flex; align-items:center; gap:6px; margin-top:12px; border:1.5px solid var(--sky); background:var(--white);
+    color:var(--sky); border-radius:10px; padding:8px 14px; font-family:var(--font-display); font-weight:700;
+    font-size:13px; cursor:pointer;
+  }
+  .doc-emp-row{ flex-wrap:wrap; gap:10px; }
+  .doc-thumb-row{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .doc-mini-thumb{ width:38px; height:38px; object-fit:cover; border-radius:8px; border:1px solid var(--line); cursor:pointer; }
+  .doc-thumb-more{ font-size:11.5px; font-weight:800; color:var(--navy); background:var(--sky-light); border-radius:8px; padding:3px 7px; }
+
   /* ---------- monthly inventory ---------- */
   .monthly-wrap{ max-width:640px; margin:0 auto; padding:0 20px 50px; }
-  .monthly-list{ display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
   .monthly-row{
-    display:flex; align-items:center; gap:12px; background:var(--white); border:1px solid var(--line);
+    display:flex; flex-direction:column; gap:10px; background:var(--white); border:1px solid var(--line);
     border-radius:14px; padding:14px 16px; box-shadow:var(--shadow-card);
   }
-  .monthly-row .m-info{ flex:1; min-width:0; }
-  .monthly-row .m-name{ font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--navy-deep); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .monthly-row .m-weight{ font-size:12.5px; color:#7C9A8B; margin-top:2px; }
-  .monthly-row .m-qty-group{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
-  .monthly-row .m-qty-group input{
-    width:64px; padding:8px 6px; text-align:center; border-radius:10px; border:1.5px solid var(--line);
-    font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--navy-deep);
-  }
-  .monthly-row .m-qty-group .carton-lbl{ font-size:12.5px; color:#7C9A8B; }
+  .monthly-row .m-info{ flex:1; min-width:0; display:flex; align-items:flex-start; gap:10px; }
+  .monthly-row .m-info-text{ flex:1; min-width:0; }
+  .monthly-row .m-name-ar{ font-family:var(--font-display); font-weight:800; font-size:15px; color:var(--navy-deep); line-height:1.35; }
+  .monthly-row .m-name-en{ font-family:var(--font-body); font-weight:500; font-size:12.5px; color:#5D77A0; margin-top:2px; text-align:inherit; line-height:1.3; }
+  .monthly-row .m-weight{ font-size:11.5px; color:#7C93B8; margin-top:5px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+  .monthly-row .m-weight .tag{ background:var(--paper); border:1px solid var(--line); border-radius:7px; padding:2px 7px; font-weight:700; }
   .monthly-row .m-edit-btn{
     width:30px; height:30px; border-radius:50%; border:1.5px solid var(--sky); background:var(--white);
     color:var(--sky); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .monthly-row .m-dup-btn{
+    width:30px; height:30px; border-radius:50%; border:1.5px solid var(--leaf); background:var(--white);
+    color:var(--leaf); display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .monthly-row .m-del-btn{
+    width:30px; height:30px; border-radius:50%; border:1.5px solid #E0654E; background:var(--white);
+    color:#E0654E; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0;
+  }
+  .monthly-row .m-row-actions{ display:flex; flex-direction:column; gap:6px; flex-shrink:0; }
+  .monthly-row .m-seq{
+    flex-shrink:0; width:24px; height:24px; border-radius:50%; background:var(--navy);
+    color:#fff; font-family:var(--font-display); font-weight:800; font-size:11.5px;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .monthly-row.filled{ border-color:var(--leaf); box-shadow:0 6px 16px rgba(111,190,68,0.16); }
+  .monthly-row .m-shelf-back-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    padding-top:10px; border-top:1px dashed var(--line);
+  }
+  @media (max-width:480px){ .monthly-row .m-shelf-back-grid{ grid-template-columns:1fr; } }
+  .monthly-row .m-loc-block{
+    background:var(--paper); border:1px solid var(--line); border-radius:10px; padding:9px 10px;
+    display:flex; flex-direction:column; gap:7px;
+  }
+  .monthly-row .m-loc-title{
+    font-family:var(--font-display); font-weight:800; font-size:12px; color:var(--navy-deep);
+    display:flex; align-items:center; gap:5px;
+  }
+  .monthly-row .m-loc-title .en-tag{ font-size:10px; color:#7C93B8; font-weight:700; direction:ltr; }
+  .monthly-row .m-field{ display:flex; flex-direction:column; gap:4px; }
+  .monthly-row .m-field > span{ font-size:11px; color:#7C93B8; font-weight:700; }
+  .monthly-row .m-field .m-select-row{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .monthly-row select{
+    padding:7px 8px; border-radius:9px; border:1.5px solid var(--line); background:var(--white);
+    font-family:var(--font-display); font-weight:700; font-size:12.5px; color:var(--navy-deep); cursor:pointer;
+  }
+  .monthly-row select.qty-select{ min-width:58px; text-align:center; font-size:14px; }
+  .monthly-row select:disabled, .monthly-row input:disabled{ opacity:.6; cursor:default; }
+  .monthly-row .carton-lbl{ font-size:11.5px; color:#7C93B8; }
+  .monthly-row .m-notes-row{
+    display:grid; grid-template-columns:1fr 1fr; gap:10px; padding-top:8px;
+  }
+  @media (max-width:480px){ .monthly-row .m-notes-row{ grid-template-columns:1fr; } }
+  .monthly-row .m-notes-row input[type="text"]{
+    width:100%; padding:8px 9px; border-radius:9px; border:1.5px solid var(--line); background:var(--white);
+    font-size:12.5px; color:var(--navy-deep); font-family:var(--font-body);
+  }
+
+  /* ---------- monthly category groups (accordion) ---------- */
+  .monthly-groups, .product-groups{ display:flex; flex-direction:column; gap:10px; margin-bottom:18px; max-width:900px; margin-left:auto; margin-right:auto; }
+  details.monthly-group, details.product-group{
+    background:var(--white); border:1px solid var(--line); border-radius:16px;
+    box-shadow:var(--shadow-card); overflow:hidden;
+  }
+  details.monthly-group[open], details.product-group[open]{ box-shadow:var(--shadow-soft); }
+  details.monthly-group summary, details.product-group summary{
+    list-style:none; cursor:pointer; padding:14px 16px; display:flex; align-items:center; gap:10px;
+    justify-content:space-between; -webkit-tap-highlight-color:transparent;
+  }
+  details.monthly-group summary::-webkit-details-marker, details.product-group summary::-webkit-details-marker{ display:none; }
+  .mg-title{ min-width:0; flex:1; }
+  .mg-title .ar{ font-family:var(--font-display); font-weight:800; font-size:14.5px; color:var(--navy-deep); }
+  .mg-title .en{ font-size:11.5px; color:#7C93B8; margin-top:1px; direction:ltr; text-align:inherit; }
+  .mg-meta{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .mg-count{
+    font-family:var(--font-display); font-weight:800; font-size:11.5px; color:var(--navy);
+    background:var(--sky-light); border-radius:8px; padding:3px 8px; white-space:nowrap;
+  }
+  .mg-count.has-filled{ background:var(--leaf); color:#fff; }
+  .mg-chevron{ width:20px; height:20px; color:var(--sky); flex-shrink:0; transition:transform .2s ease; }
+  details.monthly-group[open] .mg-chevron, details.product-group[open] .mg-chevron{ transform:rotate(180deg); }
+  .mg-body{ padding:0 14px 14px; display:flex; flex-direction:column; gap:10px; }
+  .product-groups .mg-body{ padding:0 12px 14px; }
+  .product-groups .product-grid{ margin:0; }
+  .monthly-catalog-hint{
+    text-align:center; font-size:12.5px; color:#7C93B8; margin:0 0 16px; padding:0 10px; line-height:1.6;
   }
   .monthly-actions{ display:flex; flex-direction:column; gap:10px; max-width:640px; margin:0 auto; }
   .btn-download{
@@ -281,13 +387,15 @@
   /* ---------- print-only area ---------- */
   .print-only{ display:none; }
   @media print{
+    @page{ size: landscape; margin:10mm; }
     body > *:not(.print-only){ display:none !important; }
-    .print-only{ display:block !important; padding:24px; direction:rtl; }
+    .print-only{ display:block !important; padding:10px; direction:rtl; }
     .print-only h2{ font-family:var(--font-display); margin-bottom:4px; }
-    .print-only .p-date{ color:#555; font-size:13px; margin-bottom:18px; }
-    .print-only table{ width:100%; border-collapse:collapse; }
-    .print-only th, .print-only td{ border:1px solid #333; padding:8px 10px; text-align:center; font-size:13px; }
+    .print-only .p-date{ color:#555; font-size:12px; margin-bottom:6px; }
+    .print-only table{ width:100%; border-collapse:collapse; margin-top:10px; }
+    .print-only th, .print-only td{ border:1px solid #333; padding:4px 5px; text-align:center; font-size:10.5px; }
     .print-only th{ background:#eee; }
+    .print-only td.p-group-row, .print-only tr.p-group-row td{ background:#dfe9f5; font-weight:800; text-align:start; }
   }
 
   /* ---------- product grid (public) ---------- */
@@ -331,7 +439,8 @@
     font-size:10.5px; padding:3px 9px; border-radius:8px;
   }
   .product-body{ padding:14px 18px 20px; }
-  .product-name{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--navy-deep); text-align:center; margin-bottom:14px; }
+  .product-name{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--navy-deep); text-align:center; margin-bottom:4px; }
+  .product-name-en{ font-family:var(--font-body); font-weight:500; font-size:12px; color:#7C93B8; text-align:center; margin-bottom:14px; direction:ltr; }
   .date-row{ display:flex; gap:10px; }
   .date-box{
     flex:1; background:var(--paper); border:1px solid var(--line);
@@ -344,13 +453,14 @@
   /* ---------- modals / overlays ---------- */
   .overlay{
     position:fixed; inset:0; background:rgba(14,69,38,0.46);
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:flex-start; justify-content:center;
     z-index:100; padding:16px; backdrop-filter:blur(2px);
+    overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
   }
   .modal{
     background:var(--white); border-radius:20px; width:100%; max-width:380px;
     padding:26px 24px; box-shadow:0 24px 60px rgba(14,69,38,0.35);
-    position:relative;
+    position:relative; margin:24px auto;
   }
   .modal h3{ font-family:var(--font-display); font-weight:800; color:var(--navy-deep); margin:0 0 4px; font-size:18px; text-align:center; }
   .modal .hint{ text-align:center; color:#7C9A8B; font-size:12.5px; margin:0 0 18px; }
@@ -654,6 +764,13 @@ const YEAR = 2026;
 const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 function curMonths(){ return lang === "en" ? MONTHS_EN : MONTHS_AR; }
+
+/* =========================================================
+   MONTHLY INVENTORY — PRODUCT CATALOG (from source sheet)
+   Each group mirrors a category from the uploaded market list.
+   Items keep their original SKU and Arabic/English naming.
+========================================================= */
+const PRODUCT_CATALOG = [{"id":"g1-puck-cheese-cream","titleAr":"بوك جبن كريمي","titleEn":"Puck Cheese Cream","items":[{"id":"p602238","sku":"602238","ar":"كاسات بوك 1100 جم","en":"Puck Blue Jar 1100G","weightValue":1100,"weightUnit":"g"},{"id":"p592474","sku":"592474","ar":"كاسات بوك 130 جم","en":"Puck Blue Jar 130G","weightValue":130,"weightUnit":"g"},{"id":"p592479","sku":"592479","ar":"كاسات بوك 230 جم","en":"Puck Blue Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p798952","sku":"798952","ar":"الدسم قلیل كاسات بوك 240 جم","en":"Puck Blue Jar 240G - LF","weightValue":240,"weightUnit":"g"},{"id":"p798955","sku":"798955","ar":"الدسم قلیل كاسات بوك 500 جم","en":"Puck Blue Jar 500G - LF","weightValue":500,"weightUnit":"g"},{"id":"p602061","sku":"602061","ar":"برومو كاسات بوك 500 جم","en":"Puck Blue Jar 500G - Promo","weightValue":500,"weightUnit":"g"},{"id":"p602059","sku":"602059","ar":"كاسات بوك 500 جم","en":"Puck Blue Jar 500G - Single","weightValue":500,"weightUnit":"g"},{"id":"p588330","sku":"588330","ar":"دي فایتمین كاسات بوك 500 جم","en":"Puck Blue Jar 500G - Vit D","weightValue":500,"weightUnit":"g"},{"id":"p592349","sku":"592349","ar":"برومو كاسات بوك 900 جم","en":"Puck Blue Jar 900G - Promo","weightValue":900,"weightUnit":"g"},{"id":"p592348","sku":"592348","ar":"كاسات بوك 900 جم","en":"Puck Blue Jar 900G - Single","weightValue":900,"weightUnit":"g"},{"id":"p584323","sku":"584323","ar":"كاسات بوك برومو الدسم قلیل 500 جم","en":"Puck Blue Jar 2*500G - Low Fat Promo","weightValue":500,"weightUnit":"g"},{"id":"p798967","sku":"798967","ar":"شیدار كاسات بوك 500 جم","en":"Puck Gold Jar 500G","weightValue":500,"weightUnit":"g"},{"id":"p584322","sku":"584322","ar":"شیدار كاسات بوك برومو 500 جم","en":"Puck Gold Jar 500G Promo","weightValue":500,"weightUnit":"g"},{"id":"p798922","sku":"798922","ar":"سكویز بوك 400 جم","en":"Puck Squeeze 400G","weightValue":400,"weightUnit":"g"},{"id":"p599593","sku":"599593","ar":"سكویز بوك 750 جم","en":"Puck Squeeze 750G","weightValue":750,"weightUnit":"g"},{"id":"p608399","sku":"608399","ar":"سكویز بوك 200 جم","en":"Puck Squeeze 200G","weightValue":200,"weightUnit":"g"}]},{"id":"g2-kraft-cheese-jars","titleAr":"شیدر جبن كرافت","titleEn":"KRAFT CHEESE JARS","items":[{"id":"p88759","sku":"88759","ar":"كاسات كرفت 140 جم","en":"Kraft Gold Jar 140G","weightValue":140,"weightUnit":"g"},{"id":"p88760","sku":"88760","ar":"كاسات كرفت 230 جم","en":"Kraft Gold Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p586372","sku":"586372","ar":"الدسم قلیل كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Low Fat","weightValue":480,"weightUnit":"g"},{"id":"p88766","sku":"88766","ar":"برومو كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Promo","weightValue":480,"weightUnit":"g"},{"id":"p88761","sku":"88761","ar":"كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Single","weightValue":480,"weightUnit":"g"},{"id":"p88767","sku":"88767","ar":"برومو كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Promo","weightValue":870,"weightUnit":"g"},{"id":"p88762","sku":"88762","ar":"كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Single","weightValue":870,"weightUnit":"g"},{"id":"p88765","sku":"88765","ar":"*3كاسات كرفت برومو 230 جم","en":"Kraft Gold Jar 3*4*230G Promo","weightValue":230,"weightUnit":"g"},{"id":"p88763","sku":"88763","ar":"سكویز كرفت 440 جم","en":"Kraft Gold Squeeze 440G","weightValue":440,"weightUnit":"g"},{"id":"p88764","sku":"88764","ar":"سكویز كرفت 790 جم","en":"Kraft Gold Squeeze 790G","weightValue":790,"weightUnit":"g"}]},{"id":"g3-kraft-slices-cheddar-pac","titleAr":"شرائح جبن كرافت","titleEn":"KRAFT SLICES & cheddar packets","items":[{"id":"p702145","sku":"702145","ar":"شرائح كرفت 200 جم","en":"Kraft Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p702146","sku":"702146","ar":"لیت شرائح كرفت 200 جم","en":"Kraft Sclices 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p701741","sku":"701741","ar":"شرائح كرفت 400 جم","en":"Kraft Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p701742","sku":"701742","ar":"لیت شرائح كرفت 400 جم","en":"Kraft Sclices 400G - Light","weightValue":400,"weightUnit":"g"},{"id":"p81388","sku":"81388","ar":"بلوك جبنھ كرفت 250 جم","en":"Kraft Cheddar Packets 250G","weightValue":250,"weightUnit":"g"},{"id":"p81389","sku":"81389","ar":"بلوك جبنھ كرفت 500 جم","en":"Kraft Cheddar Packets 500G","weightValue":500,"weightUnit":"g"}]},{"id":"g4-kraft-tins","titleAr":"علب كرافت","titleEn":"KRAFT TINS","items":[{"id":"p88770","sku":"88770","ar":"علب كرفت 100 جم","en":"Kraft Can 100G","weightValue":100,"weightUnit":"g"},{"id":"p88773","sku":"88773","ar":"برومو علب كرفت 100 جم","en":"Kraft Can 100G - Promo 6 Pcs","weightValue":100,"weightUnit":"g"},{"id":"p88771","sku":"88771","ar":"علب كرفت 190 جم","en":"Kraft Can 190G","weightValue":190,"weightUnit":"g"},{"id":"p88769","sku":"88769","ar":"علب كرفت 50 جم","en":"Kraft Can 50G","weightValue":50,"weightUnit":"g"},{"id":"p88772","sku":"88772","ar":"برومو علب كرفت 50 جم","en":"Kraft Can 50G - Promo 8 Pcs","weightValue":50,"weightUnit":"g"}]},{"id":"g5-puck-sqare-triangles-tub","titleAr":"لبنھ /حلوم جبن/ مثلث جبن /مربع بن","titleEn":"Puck Sqare/ Triangles/Tubs/Hollomi & Labnehs","items":[{"id":"p601480","sku":"601480","ar":"مربعات بوك 108 جم","en":"Puck Square 108G","weightValue":108,"weightUnit":"g"},{"id":"p601479","sku":"601479","ar":"مربعات بوك 216 جم","en":"Puck Square 216G","weightValue":216,"weightUnit":"g"},{"id":"p601478","sku":"601478","ar":"مربعات بوك 432 جم","en":"Puck Square 432G","weightValue":432,"weightUnit":"g"},{"id":"p601378","sku":"601378","ar":"مثلثات بوك 120 جم","en":"Puck Triangles 120G","weightValue":120,"weightUnit":"g"},{"id":"p601382","sku":"601382","ar":"برومو مثلثات بوك 120 جم","en":"Puck Triangles 120G - Promo","weightValue":120,"weightUnit":"g"},{"id":"p601380","sku":"601380","ar":"مثلثات بوك 240 جم","en":"Puck Triangles 240G","weightValue":240,"weightUnit":"g"},{"id":"p599370","sku":"599370","ar":"مثلثات بوك 360 جم","en":"Puck Triangles 360G","weightValue":360,"weightUnit":"g"},{"id":"p599497","sku":"599497","ar":"مثلثات بوك 480 جم","en":"Puck Triangles 480G","weightValue":480,"weightUnit":"g"},{"id":"p596684","sku":"596684","ar":"عادي طبق جبن بوك 200 جم","en":"Puck CC Tub 200G","weightValue":200,"weightUnit":"g"},{"id":"p596690","sku":"596690","ar":"واعشاب ثوم طبق جبن بوك 200 جم","en":"Puck CC Tub 200G - Garlic & Herbs","weightValue":200,"weightUnit":"g"},{"id":"p596700","sku":"596700","ar":"لیت طبق جبن بوك 200 جم","en":"Puck CC Tub 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p596704","sku":"596704","ar":"بالزیتون طبق جبن بوك 200 جم","en":"Puck CC Tub 200G - Olive","weightValue":200,"weightUnit":"g"},{"id":"p596754","sku":"596754","ar":"عادي طبق جبن بوك 300 جم","en":"Puck CC Tub 300G","weightValue":300,"weightUnit":"g"},{"id":"p596762","sku":"596762","ar":"بالزیتون طبق جبن بوك 300 جم","en":"Puck CC Tub 300G - Olive","weightValue":300,"weightUnit":"g"},{"id":"p598056","sku":"598056","ar":"طبق جبن بوك عضوي 150 جم","en":"Puck CC Tub 150G - Organic","weightValue":150,"weightUnit":"g"},{"id":"p603152","sku":"603152","ar":"حلومي جبن بوك 200 جم","en":"Puck Halloumi 200G","weightValue":200,"weightUnit":"g"},{"id":"p603708","sku":"603708","ar":"حلومي جبن بوك الدسم قلیل 200 جم","en":"Puck Halloumi 200G light","weightValue":200,"weightUnit":"g"},{"id":"p605300","sku":"605300","ar":"حلومي جبن الثلث البقرات 200 جم","en":"TTC Grill Chease 200G","weightValue":200,"weightUnit":"g"},{"id":"p799117","sku":"799117","ar":"لبنھ بوك 180 جم","en":"Puck Labneh 180g","weightValue":180,"weightUnit":"g"},{"id":"p586094","sku":"586094","ar":"زعتر لبنھ بوك 180 جم","en":"Puck Labneh 180g - Zaater","weightValue":180,"weightUnit":"g"},{"id":"p799120","sku":"799120","ar":"لبنھ بوك 400 جم","en":"Puck Labneh 400g","weightValue":400,"weightUnit":"g"},{"id":"p799123","sku":"799123","ar":"لبنھ بوك 650 جم","en":"Puck Labneh 650g","weightValue":650,"weightUnit":"g"},{"id":"p599575","sku":"599575","ar":"لبنانیة وصفة لبنھ بوك 400 جم","en":"Puck Labneh 400g-Lebanese recipe","weightValue":400,"weightUnit":"g"},{"id":"p599585","sku":"599585","ar":"لبنانیة وصفة لبنھ بوك 180 جم","en":"Puck Labneh 180g-Lebanese recipe","weightValue":180,"weightUnit":"g"}]},{"id":"g6-whipping-cooking-cream-a","titleAr":"والصلصات الطبخ وكریمة الخفق كریمة","titleEn":"whipping, cooking cream and sauces","items":[{"id":"p607050","sku":"607050","ar":"طبخ كریمة بوك 1 لتر","en":"Puck Cooking Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607049","sku":"607049","ar":"طبخ كریمة بوك 200 مل","en":"Puck Cooking Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607048","sku":"607048","ar":"طبخ كریمة بوك 500 مل","en":"Puck Cooking Cream 500ml","weightValue":500,"weightUnit":"ml"},{"id":"p607055","sku":"607055","ar":"لیت طبخ كریمة بوك 500 مل","en":"Puck Cooking Cream 500ml - Light","weightValue":500,"weightUnit":"ml"},{"id":"p607061","sku":"607061","ar":"اجبان اربعھ صلصة بوك","en":"Puck Sauce - 4 Cheese","weightValue":0,"weightUnit":"g"},{"id":"p607059","sku":"607059","ar":"البشامیل صلصة بوك","en":"Puck Sauce - Bechamel","weightValue":0,"weightUnit":"g"},{"id":"p607062","sku":"607062","ar":"المشروم صلصة بوك","en":"Puck Sauce - Mashroom","weightValue":0,"weightUnit":"g"},{"id":"p607058","sku":"607058","ar":"الطماطم صلصة بوك","en":"Puck Sauce - Tomato","weightValue":0,"weightUnit":"g"},{"id":"p601611","sku":"601611","ar":"بخاخ خفق بوك 250 جم","en":"Puck Whipping Spray 250G","weightValue":250,"weightUnit":"g"},{"id":"p607071","sku":"607071","ar":"خفق كریمة بوك 1 لتر","en":"Puck Whipping Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607070","sku":"607070","ar":"خفق كریمة بوك 200 مل","en":"Puck Whipping Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607069","sku":"607069","ar":"خفق كریمة بوك 500 مل","en":"Puck Whipping Cream 500ml","weightValue":500,"weightUnit":"ml"}]},{"id":"g7-puck-slices-and-naturals","titleAr":"شرائح &طبیعیة شرائح","titleEn":"Puck Slices and naturals slices","items":[{"id":"p54443","sku":"54443","ar":"شیدار طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Cheddar","weightValue":150,"weightUnit":"g"},{"id":"p49761","sku":"49761","ar":"ایمتال طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Emmental","weightValue":150,"weightUnit":"g"},{"id":"p49760","sku":"49760","ar":"جودا طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Gouda","weightValue":150,"weightUnit":"g"},{"id":"p49758","sku":"49758","ar":"ھافارتي طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Havarti","weightValue":150,"weightUnit":"g"},{"id":"p590403","sku":"590403","ar":"جیلبینو ھافارتي طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Havati/Jalapeno","weightValue":150,"weightUnit":"g"},{"id":"p49795","sku":"49795","ar":"موزریل طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Mozzarella","weightValue":150,"weightUnit":"g"},{"id":"p602501","sku":"602501","ar":"عادیة شرائح بوك 200 جم","en":"Puck Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p602502","sku":"602502","ar":"شیدار شرائح بوك 200 جم","en":"Puck Sclices 200G - Cheddar","weightValue":200,"weightUnit":"g"},{"id":"p602500","sku":"602500","ar":"الدسم قلیل شرائح بوك 200 جم","en":"Puck Sclices 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p602473","sku":"602473","ar":"عادیة شرائح بوك 400 جم","en":"Puck Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p603473","sku":"603473","ar":"شیدار شرائح بوك 400 جم","en":"Puck Sclices 400G - Cheddar","weightValue":400,"weightUnit":"g"}]},{"id":"g8-puck-mozarellah","titleAr":"موزریل بوك","titleEn":"Puck Mozarellah","items":[{"id":"p607074","sku":"607074","ar":"شیدار موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Chedder","weightValue":180,"weightUnit":"g"},{"id":"p607092","sku":"607092","ar":"قشقوان موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Kashkaval","weightValue":180,"weightUnit":"g"},{"id":"p607091","sku":"607091","ar":"مكس تكس موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Tex Mex","weightValue":180,"weightUnit":"g"},{"id":"p607079","sku":"607079","ar":"موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p594709","sku":"594709","ar":"شیدار موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Chedder","weightValue":400,"weightUnit":"g"},{"id":"p594719","sku":"594719","ar":"قشقوان موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Kashkaval","weightValue":400,"weightUnit":"g"},{"id":"p594713","sku":"594713","ar":"مكس تكس موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Tex Mex","weightValue":400,"weightUnit":"g"},{"id":"p607081","sku":"607081","ar":"موزریل جبن بوك 900 جم","en":"Puck Shredded Cheese 900G","weightValue":900,"weightUnit":"g"},{"id":"p597226","sku":"597226","ar":"موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p608390","sku":"608390","ar":"مكس شیدار موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Chedder mix","weightValue":180,"weightUnit":"g"},{"id":"p608387","sku":"608387","ar":"مكس شیدار موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Chedder mix","weightValue":400,"weightUnit":"g"}]},{"id":"g9-three-cows-feta-cheese-a","titleAr":"فیتا /موزریل بقرات ثلث","titleEn":"Three Cows Feta cheese and Mozzarella","items":[{"id":"p607113","sku":"607113","ar":"بقرات ثلث موزریل 180 جم","en":"TTC Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p607114","sku":"607114","ar":"بقرات ثلث موزریل 400 جم","en":"TTC Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p607115","sku":"607115","ar":"بقرات ثلث موزریل 900 جم","en":"TTC Shredded Cheese 900G","weightValue":900,"weightUnit":"g"}]},{"id":"g10-feta-puck-and-ttc","titleAr":"الثلث والبقرات بوك فیتا","titleEn":"Feta Puck and TTC","items":[{"id":"p598191","sku":"598191","ar":"مكعبات فیتا بوك 410 جم","en":"Puck Feta Cubes 410G","weightValue":410,"weightUnit":"g"},{"id":"p598123","sku":"598123","ar":"واعشاب ثوم مكعبات فیتا بوك 410 جم","en":"Puck Feta Cubes 410G - Gar/Pars","weightValue":410,"weightUnit":"g"},{"id":"p598101","sku":"598101","ar":"وبابریكا حار فلفل مكعبات فیتا بوك 410 جم","en":"Puck Feta Cubes 410G - Pepper/Chilli","weightValue":410,"weightUnit":"g"},{"id":"p796232","sku":"796232","ar":"بقرات ثلث فیتا 200 جم","en":"TTC Feta 200g","weightValue":200,"weightUnit":"g"},{"id":"p796239","sku":"796239","ar":"الدسم قلیل بقرات ثلث فیتا 200 جم","en":"TTC Feta 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p796236","sku":"796236","ar":"بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G","weightValue":500,"weightUnit":"g"},{"id":"p796229","sku":"796229","ar":"الدسم قلیل بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G - LF","weightValue":500,"weightUnit":"g"}]},{"id":"g11-arla-organic-and-milk-po","titleAr":"العضوي الحلیب ارل &مجفف حلیب بوك","titleEn":"Arla Organic and milk powder","items":[{"id":"p63899","sku":"63899","ar":"الدسم كامل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Full Fat","weightValue":1,"weightUnit":"l"},{"id":"p65373","sku":"65373","ar":"الدسم قلیل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Low Fat","weightValue":1,"weightUnit":"l"},{"id":"p65389","sku":"65389","ar":"شوكوتھ عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Choco","weightValue":200,"weightUnit":"ml"},{"id":"p65386","sku":"65386","ar":"الدسم كامل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Full Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65959","sku":"65959","ar":"الدسم قلیل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Low Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65960","sku":"65960","ar":"فراولة عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Strawberry","weightValue":200,"weightUnit":"ml"},{"id":"p588383","sku":"588383","ar":"لكتوز من خالي عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Lactose Free","weightValue":1,"weightUnit":"l"}]},{"id":"g12-st-cream-thick-cream","titleAr":"وقیمر قشطة","titleEn":"St. Cream & Thick Cream","items":[{"id":"p582417","sku":"582417","ar":"قشطة بوك 160 جم","en":"Puck Str. Cream 160G","weightValue":160,"weightUnit":"g"},{"id":"p582428","sku":"582428","ar":"بالعسل قشطة بوك 160 جم","en":"Puck Str. Cream 160G - Honey","weightValue":160,"weightUnit":"g"},{"id":"p582425","sku":"582425","ar":"لیت قشطة بوك 160 جم","en":"Puck Str. Cream 160G - Light","weightValue":160,"weightUnit":"g"},{"id":"p582432","sku":"582432","ar":"بالفراولة قشطة بوك 160 جم","en":"Puck Str. Cream 160G - Strawberry","weightValue":160,"weightUnit":"g"},{"id":"p582421","sku":"582421","ar":"برومو قشطة بوك 160 جم","en":"Puck Str. Cream 160G Promo","weightValue":160,"weightUnit":"g"},{"id":"p591438","sku":"591438","ar":"دي فیتامین قشطة بوك 160 جم","en":"Puck Str. Cream 160G -Vit D","weightValue":160,"weightUnit":"g"},{"id":"p591966","sku":"591966","ar":"دي فیتامین قشطة بوك برومو 160 جم","en":"Puck Str. Cream 160G Promo Vit D","weightValue":160,"weightUnit":"g"},{"id":"p607011","sku":"607011","ar":"قیمر بوك 125 مل","en":"Puck Thick Cream 125ml","weightValue":125,"weightUnit":"ml"},{"id":"p607013","sku":"607013","ar":"(1+3)برومو قیمر بوك 125 مل","en":"Puck Thick Cream 125ml (3+1) Promo","weightValue":125,"weightUnit":"ml"},{"id":"p607012","sku":"607012","ar":"قیمر بوك 250 مل","en":"Puck Thick Cream 250ml","weightValue":250,"weightUnit":"ml"},{"id":"p607008","sku":"607008","ar":"برومو قیمر بوك 250 مل","en":"Puck Thick Cream 250ml - Promo","weightValue":250,"weightUnit":"ml"}]},{"id":"g13-evap-milk","titleAr":"مبخر شاي حلیب","titleEn":"EVAP MILK","items":[{"id":"p597989","sku":"597989","ar":"شاي حلیب بوك 170 جم","en":"Puck Evap Milk 170G","weightValue":170,"weightUnit":"g"}]},{"id":"g14-starbucks","titleAr":"ستاربكس قھوة","titleEn":"Starbucks","items":[{"id":"p607045","sku":"607045","ar":"لیتھ ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caffe Latte","weightValue":220,"weightUnit":"ml"},{"id":"p607047","sku":"607047","ar":"كابتشینو ستاربكس 220 مل","en":"SBUX Classic 220 ml - Cappucino","weightValue":220,"weightUnit":"ml"},{"id":"p607046","sku":"607046","ar":"كارمیل ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caramel Mach","weightValue":220,"weightUnit":"ml"},{"id":"p607044","sku":"607044","ar":"موكا ستاربكس 220 مل","en":"SBUX Classic 220 ml - Mocha","weightValue":220,"weightUnit":"ml"},{"id":"p38881","sku":"38881","ar":"شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p68529","sku":"68529","ar":"سكر بدون شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml - No Added Sugar","weightValue":200,"weightUnit":"ml"},{"id":"p54397","sku":"54397","ar":"كارمیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Caramel","weightValue":250,"weightUnit":"ml"},{"id":"p49820","sku":"49820","ar":"قھوة فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Coffee","weightValue":250,"weightUnit":"ml"},{"id":"p89261","sku":"89261","ar":"كوكیز فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Cookies","weightValue":250,"weightUnit":"ml"},{"id":"p49918","sku":"49918","ar":"موكا فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Mocha","weightValue":250,"weightUnit":"ml"},{"id":"p66899","sku":"66899","ar":"فانیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Vanilla","weightValue":250,"weightUnit":"ml"},{"id":"p595113","sku":"595113","ar":"سكر بدون كارمیل فرابوتشینو س 250 مل","en":"SBUX Frappuccino 250ml - Caramel No sugar","weightValue":250,"weightUnit":"ml"},{"id":"p601814","sku":"601814","ar":"شوت تربل ستاربكس 300 مل","en":"SBUX Triple Shot 300ml","weightValue":300,"weightUnit":"ml"}]},{"id":"g15-lurpak-butter","titleAr":"مملحة غیر زبدة لورباك","titleEn":"Lurpak Butter","items":[{"id":"p584543","sku":"584543","ar":"زبده لورباك غیرمملحة 100 جم","en":"Lurpak Butter 100G - UnSalted","weightValue":100,"weightUnit":"g"},{"id":"p86174","sku":"86174","ar":"زبدة لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted","weightValue":200,"weightUnit":"g"},{"id":"p86474","sku":"86474","ar":"زبدة لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted","weightValue":200,"weightUnit":"g"},{"id":"p86019","sku":"86019","ar":"زبدة لورباك عضویة غیرمملحة 200 جم","en":"Lurpak Butter 200G - UnSalted - Organic","weightValue":200,"weightUnit":"g"},{"id":"p86482","sku":"86482","ar":"زبدة لوربك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted","weightValue":400,"weightUnit":"g"},{"id":"p596278","sku":"596278","ar":"لورباك مملحة غیر 50 جم","en":"Lurpak Butter 50G - UnSalted","weightValue":50,"weightUnit":"g"},{"id":"p80661","sku":"80661","ar":"لورباك مملحة غیر 10 جم","en":"Lurpak Butter 10G - UnSalted","weightValue":10,"weightUnit":"g"},{"id":"p89111","sku":"89111","ar":"بخاخ رذاذ لورباك 200 مل","en":"Lurpak Cooking Mist 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p88790","sku":"88790","ar":"سوفت لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88789","sku":"88789","ar":"سوفت لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88786","sku":"88786","ar":"سوفت لورباك مملحة 400 جم","en":"Lurpak Butter 400G - Salted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p88785","sku":"88785","ar":"سوفت لورباك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p596537","sku":"596537","ar":"لورباك مملحة غير 50 جم","en":"Lurpak Butter 50G -( 5+ 1 ) UnSalted","weightValue":50,"weightUnit":"g"}]},{"id":"g16-danya-juice","titleAr":"دانیا عصیر","titleEn":"Danya Juice","items":[{"id":"p593530","sku":"593530","ar":"احمر عنب عصیر دانیة 1 لتر","en":"Danya Red Grape 1L","weightValue":1,"weightUnit":"l"},{"id":"p593550","sku":"593550","ar":"ابیض عنب عصیر دانیة 1 لتر","en":"Danya White Grape 1L","weightValue":1,"weightUnit":"l"}]},{"id":"g17-galaxy-milk","titleAr":"حليب جالكسي","titleEn":"Galaxy Milk","items":[{"id":"p595889","sku":"595889","ar":"الكرامیل و بالشوكولتة الحلیب سي 220 مل","en":"Galaxy 10X220ML Choc Milk Caramel Flavo","weightValue":220,"weightUnit":"ml"},{"id":"p595886","sku":"595886","ar":"الممیزة بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Signature Chocolate Milk","weightValue":220,"weightUnit":"ml"},{"id":"p595892","sku":"595892","ar":"البندق و بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Choc Milk Hazlnut Flavor","weightValue":220,"weightUnit":"ml"},{"id":"p599495","sku":"599495","ar":"الھند بجوز الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Coconut Flavor LTO","weightValue":220,"weightUnit":"ml"}]},{"id":"g18-arla-protein","titleAr":"بروتین أرل","titleEn":"Arla Protein","items":[{"id":"p598942","sku":"598942","ar":"شوكلتة بودنق بروتین 200 جم","en":"Pudding Choco ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598897","sku":"598897","ar":"كارامیل بودنق بروتین 200 جم","en":"Pudding caramel ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598922","sku":"598922","ar":"بندق بودنق بروتین 200 جم","en":"Pudding hazulnut ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p604815","sku":"604815","ar":"ازرق توت زبادي بروتین آرل 150 جم","en":"Arla Protein bluebery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604813","sku":"604813","ar":"فروت باشن زبادي بروتین آرل 150 جم","en":"Arla Protein peach passion yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604814","sku":"604814","ar":"فراولة زبادي بروتین آرل 150 جم","en":"Arla Protein strewbery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p338037","sku":"338037","ar":"شوكلتة بروتین حلیب 250 مل","en":"Arla Protine Shake chocolate 250Ml","weightValue":250,"weightUnit":"ml"},{"id":"p604487","sku":"604487","ar":"بروتين حليب فراولة 225 مل","en":"Arla Protine Shake Strawberry 225Ml","weightValue":225,"weightUnit":"ml"}]},{"id":"g19-puck-square-promo","titleAr":"بوك مربعات - عرض ترويجي","titleEn":"Puck Square Promo","items":[{"id":"p607096","sku":"607096","ar":"مربع بوك 108 جم","en":"Puck square 3×108g","weightValue":108,"weightUnit":"g"},{"id":"p607123","sku":"607123","ar":"مربع بوك برومو 216 جم","en":"Puck square Promo KSA 8X3X216G","weightValue":216,"weightUnit":"g"},{"id":"p338619","sku":"338619","ar":"بودنج بروتين آرل كريم بروليه 200 جم","en":"Arla protein Pudding Creame brulee 20g 6x200g","weightValue":20,"weightUnit":"g"}]}];
 const FONT_OPTIONS = [
   {value:"'Tajawal', sans-serif", label:"تجول (Tajawal)"},
   {value:"'Cairo', sans-serif", label:"القاهرة (Cairo)"},
@@ -681,9 +798,13 @@ let state = {
   subscribers: [],
   monthlyProducts: [],
   monthlyMeta: {},
+  monthlyEntries: {},
+  monthlyDuplicates: [],
+  monthlyOverrides: {},
   messages: [],
   planogramItems: [],
   planogramSeen: {},
+  documentation: [],
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
@@ -691,6 +812,7 @@ let session = { user: null, viewOnly: false };
 let managerUI = { tab: "accounts" };
 function canEdit(){ return !!(session.user && !session.viewOnly); }
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null };
+let pendingDocPhotos = [];
 
 /* =========================================================
    LANGUAGE / I18N
@@ -925,6 +1047,7 @@ const I18N = {
     no_messages_yet: "لا توجد رسائل بعد",
     close_word: "إغلاق",
     planogram_word: "بلانوجرام",
+    planogram_doc_section_label: "بلانوجرام - التوثيق",
     new_update_label: "يوجد تحديث جديد",
     edit_planogram_title: "تعديل البلانوجرام",
     planogram_notes_label: "ملاحظات",
@@ -942,6 +1065,47 @@ const I18N = {
     employee_number_placeholder: "رقم الموظف (اختياري)",
     sku_label: "SKU",
     sku_placeholder: "رقم المنتج SKU",
+    monthly_col_expiry: "تاريخ الانتهاء",
+    unit_ml: "مل",
+    unit_l: "لتر",
+    monthly_catalog_hint: "اضغط على أي مجموعة لعرضها، ثم اختر الكمية وتاريخ الانتهاء من القوائم — بدون كتابة يدوية.",
+    monthly_qty_field: "الكمية",
+    carton_unit_word: "كرتون",
+    monthly_expiry_field: "تاريخ الانتهاء",
+    monthly_no_selection: "—",
+    monthly_group_progress: "منتج مُدخل",
+    monthly_other_group_title: "منتجات أخرى",
+    monthly_other_group_title_en: "Other Products",
+    sku_word: "SKU",
+    weight_word: "الوزن",
+    field_notes: "ملاحظات",
+    field_reason: "السبب",
+    duplicate_word: "تكرار المنتج",
+    remove_duplicate_word: "حذف التكرار",
+    branch_name_manual_label: "اسم الفرع (تسجيل يدوي)",
+    employee_label: "الموظف المسؤول",
+    hijri_label: "التاريخ الهجري",
+    gregorian_label: "التاريخ الميلادي",
+    monthly_col_shelf: "الرف",
+    monthly_col_back: "المستودع",
+    documentation_word: "التوثيق اليومي",
+    take_photo_btn: "التقط صورة",
+    take_another_photo_btn: "التقط صورة أخرى",
+    documentation_note_label: "ملاحظة (اسم الفرع الذي تزوره)",
+    documentation_note_placeholder: "مثال: فرع العثيم - النسيم",
+    display_duration_label: "مدة عرض الصورة",
+    hours_word: "ساعة",
+    save_documentation_btn: "حفظ التوثيق",
+    my_documentation_title: "توثيقاتي",
+    no_documentation_yet: "لا يوجد توثيق بعد",
+    toast_documentation_saved: "تم حفظ التوثيق",
+    toast_photo_required: "التقط صورة واحدة على الأقل",
+    documentation_viewer_title: "مشاهد التوثيق",
+    no_documentation_employees: "لا يوجد أي توثيق حتى الآن",
+    send_alert_word: "إرسال تنبيه",
+    photos_word: "صور",
+    documentation_expires_in: "يظهر لمدة",
+    documentation_alert_prefill: "بخصوص التوثيق اليومي",
   },
   en: {
     control_panel: "Control Panel",
@@ -1168,6 +1332,7 @@ const I18N = {
     no_messages_yet: "No messages yet",
     close_word: "Close",
     planogram_word: "Planogram",
+    planogram_doc_section_label: "Planogram - Documentation",
     new_update_label: "New update available",
     edit_planogram_title: "Edit Planogram",
     planogram_notes_label: "Notes",
@@ -1185,6 +1350,47 @@ const I18N = {
     employee_number_placeholder: "Employee number (optional)",
     sku_label: "SKU",
     sku_placeholder: "Product SKU",
+    monthly_col_expiry: "Expiry Date",
+    unit_ml: "ml",
+    unit_l: "L",
+    monthly_catalog_hint: "Tap any group to open it, then pick the quantity and expiry date from the lists — no manual typing.",
+    monthly_qty_field: "Quantity",
+    carton_unit_word: "carton",
+    monthly_expiry_field: "Expiry Date",
+    monthly_no_selection: "—",
+    monthly_group_progress: "entered",
+    monthly_other_group_title: "Other Products",
+    monthly_other_group_title_en: "Other Products",
+    sku_word: "SKU",
+    weight_word: "Weight",
+    field_notes: "Notes",
+    field_reason: "Reason",
+    duplicate_word: "Duplicate product",
+    remove_duplicate_word: "Remove duplicate",
+    branch_name_manual_label: "Branch Name (manual entry)",
+    employee_label: "Responsible Employee",
+    hijri_label: "Hijri Date",
+    gregorian_label: "Gregorian Date",
+    monthly_col_shelf: "Shelf",
+    monthly_col_back: "Warehouse",
+    documentation_word: "Daily Documentation",
+    take_photo_btn: "Take Photo",
+    take_another_photo_btn: "Take Another Photo",
+    documentation_note_label: "Note (branch you are visiting)",
+    documentation_note_placeholder: "e.g. Othaim Branch - Al Naseem",
+    display_duration_label: "Photo display duration",
+    hours_word: "hours",
+    save_documentation_btn: "Save Documentation",
+    my_documentation_title: "My Documentation",
+    no_documentation_yet: "No documentation yet",
+    toast_documentation_saved: "Documentation saved",
+    toast_photo_required: "Take at least one photo",
+    documentation_viewer_title: "Documentation Viewer",
+    no_documentation_employees: "No documentation yet",
+    send_alert_word: "Send Alert",
+    photos_word: "photos",
+    documentation_expires_in: "Visible for",
+    documentation_alert_prefill: "Regarding daily documentation",
   }
 };
 
@@ -1194,8 +1400,10 @@ function t(key){
 }
 
 function unitLabel(u){
-  if(u === "كغ") return t("unit_kg");
-  return t("unit_g");
+  if(u === "كغ" || u === "kg") return "KG";
+  if(u === "مل" || u === "ml") return "ML";
+  if(u === "لتر" || u === "l") return "L";
+  return "G";
 }
 
 function dayWord(n){
@@ -1225,6 +1433,31 @@ function defaultBranches(){
 function branchColumns(b){ return (b && (b.columns===1 || b.columns===2)) ? b.columns : 2; }
 function branchNotices(b){ return (b && Array.isArray(b.notices)) ? b.notices : []; }
 function branchIcon(b){ return (b && b.icon && b.icon.type) ? b.icon : { type:"daisy", value:"" }; }
+
+/* ---------------- DAILY INVENTORY: seed catalog products per branch ---------------- */
+function ensureCatalogSeededForBranch(branchId){
+  const existingSkus = new Set(state.products.filter(p=>p.branchId===branchId).map(p=>p.sku).filter(Boolean));
+  let added = false;
+  PRODUCT_CATALOG.forEach(g=>{
+    g.items.forEach(it=>{
+      if(existingSkus.has(it.sku)) return;
+      state.products.push({
+        id: uid(), branchId, sku: it.sku, name: it.ar, nameEn: it.en,
+        image: "", weightValue: it.weightValue||0, weightUnit: it.weightUnit||"g",
+        startDay: 1, startMonth: 1, endDay: 31, endMonth: 12, alertDays: 14, hidden: false
+      });
+      existingSkus.add(it.sku);
+      added = true;
+    });
+  });
+  return added;
+}
+async function ensureCatalogSeededAllBranches(){
+  let anyAdded = false;
+  state.branches.forEach(b=>{ if(ensureCatalogSeededForBranch(b.id)) anyAdded = true; });
+  if(anyAdded) await storageSet("puck:products", state.products);
+}
+
 function defaultProducts(){
   return [
     { id: uid(), branchId: "panda", sku: "CRM-500", name: "جبنة كريمة", image: SEED_IMG.cream500, weightValue: 500, weightUnit: "غ", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
@@ -1318,6 +1551,8 @@ async function loadAll(){
   state.products = await storageGet("puck:products", null);
   if(state.products === null){ state.products = defaultProducts(); await storageSet("puck:products", state.products); }
 
+  await ensureCatalogSeededAllBranches();
+
   state.users = await storageGet("puck:users", null);
   if(state.users === null){ state.users = defaultUsers(); await storageSet("puck:users", state.users); }
 
@@ -1333,6 +1568,15 @@ async function loadAll(){
   state.monthlyMeta = await storageGet("puck:monthlyMeta", null);
   if(state.monthlyMeta === null){ state.monthlyMeta = {}; await storageSet("puck:monthlyMeta", state.monthlyMeta); }
 
+  state.monthlyEntries = await storageGet("puck:monthlyEntries", null);
+  if(state.monthlyEntries === null){ state.monthlyEntries = {}; await storageSet("puck:monthlyEntries", state.monthlyEntries); }
+
+  state.monthlyDuplicates = await storageGet("puck:monthlyDuplicates", null);
+  if(state.monthlyDuplicates === null){ state.monthlyDuplicates = []; await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates); }
+
+  state.monthlyOverrides = await storageGet("puck:monthlyOverrides", null);
+  if(state.monthlyOverrides === null){ state.monthlyOverrides = {}; await storageSet("puck:monthlyOverrides", state.monthlyOverrides); }
+
   state.messages = await storageGet("puck:messages", null);
   if(state.messages === null){ state.messages = []; await storageSet("puck:messages", state.messages); }
 
@@ -1341,6 +1585,15 @@ async function loadAll(){
 
   state.planogramSeen = await storageGet("puck:planogramSeen", null);
   if(state.planogramSeen === null){ state.planogramSeen = {}; await storageSet("puck:planogramSeen", state.planogramSeen); }
+
+  state.documentation = await storageGet("puck:documentation", null);
+  if(state.documentation === null){ state.documentation = []; await storageSet("puck:documentation", state.documentation); }
+  {
+    const sevenDaysAgo = Date.now() - (7*24*3600*1000);
+    const before = state.documentation.length;
+    state.documentation = state.documentation.filter(e=> e.createdAt > sevenDaysAgo);
+    if(state.documentation.length !== before) await storageSet("puck:documentation", state.documentation);
+  }
 
   applySettings();
   (state.settings.customFonts || []).forEach(f => registerFont(f.name, f.dataUrl));
@@ -1364,6 +1617,52 @@ function expiryStatus(p){
   if(days < 0) return { status:"expired", days };
   if(days <= threshold) return { status:"near", days };
   return { status:"ok", days };
+}
+function dailyProductGroupOf(p){
+  if(!p.sku) return null;
+  for(const g of PRODUCT_CATALOG){
+    if(g.items.some(it=>it.sku===p.sku)) return g;
+  }
+  return null;
+}
+function dailyProductCardHtml(p){
+  const info = expiryStatus(p);
+  let cardClass = "product-card";
+  let banner = "";
+  if(p.hidden){
+    cardClass += " product-hidden";
+    banner = `<div class="alert-banner hidden-banner">${ICON.warn} ${t('hidden_product_label')}</div>`;
+  }else if(info.status === "expired"){
+    cardClass += " alert-expired";
+    banner = `<div class="alert-banner expired">${ICON.warn} ${t('promo_ended')}</div>`;
+  }else if(info.status === "near"){
+    cardClass += " alert-near";
+    banner = `<div class="alert-banner">${ICON.warn} ${t('ends_in')} ${info.days} ${dayWord(info.days)}</div>`;
+  }
+  return `
+    <div class="${cardClass}">
+      ${banner}
+      <div class="product-media">
+        <img src="${p.image || ''}" alt="${escapeHtml(p.name)}">
+        <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>${p.sku ? `<div class="sku-badge">SKU ${escapeHtml(p.sku)}</div>` : ''}
+        ${canEdit() ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+      </div>
+      <div class="product-body">
+        <div class="product-name">${escapeHtml(p.name)}</div>
+        ${p.nameEn ? `<div class="product-name-en">${escapeHtml(p.nameEn)}</div>` : ''}
+        <div class="date-row">
+          <div class="date-box">
+            <div class="lbl">${ICON.calendar} ${t('date_start')}</div>
+            <div class="val">${String(p.startDay).padStart(2,'0')} ${curMonths()[p.startMonth-1]} ${YEAR}</div>
+          </div>
+          <div class="date-box">
+            <div class="lbl">${ICON.calendar} ${t('date_end')}</div>
+            <div class="val">${String(p.endDay).padStart(2,'0')} ${curMonths()[p.endMonth-1]} ${YEAR}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
 }
 function buildWaMessage(p, branchName, info){
   if(info.status === "expired"){
@@ -1421,6 +1720,7 @@ const ICON = {
   edit: `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9" stroke-linecap="round"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   download: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v12M6 10l6 6 6-6M4 20h16" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   bell: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  chevron: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 };
 
 function renderBgDaisies(){
@@ -1494,6 +1794,9 @@ function render(){
   else if(view.screen === "monthly") app.innerHTML = renderMonthlyScreen();
   else if(view.screen === "monthlyBranch") app.innerHTML = renderMonthlyBranchScreen(view.branchId);
   else if(view.screen === "planogram") app.innerHTML = renderPlanogramScreen();
+  else if(view.screen === "documentation") app.innerHTML = renderDocumentationScreen();
+  else if(view.screen === "managerDocumentation") app.innerHTML = renderManagerDocumentationScreen();
+  else if(view.screen === "managerEmployeeDocs") app.innerHTML = renderManagerEmployeeDocsScreen(view.branchId);
   else if(view.screen === "managerEmployees") app.innerHTML = renderManagerEmployeesScreen();
   else if(view.screen === "managerNotifications") app.innerHTML = renderManagerNotificationsScreen();
   attachHomeEvents();
@@ -1514,6 +1817,7 @@ function goPlanogram(){
   navigate({ screen:"planogram", branchId:null });
 }
 function goBranchExpired(id){ navigate({ screen:"branchExpired", branchId:id }); }
+function goDocumentation(){ navigate({ screen:"documentation", branchId:null }); }
 function goLanding(){ navigate({ screen:"landing", branchId:null }); }
 function goHome(){ navigate({ screen:"home", branchId:null }); }
 function goBranch(id){ navigate({ screen:"branch", branchId:id }); }
@@ -1554,12 +1858,16 @@ function renderLandingScreen(){
         <div class="lbl">${t('monthly_word')}</div>
       </div>
     </div>
-    <div class="section-label"><span class="line"></span> ${t('planogram_word')} <span class="line"></span></div>
-    <div class="inventory-choice-row" style="max-width:280px;">
+    <div class="section-label"><span class="line"></span> ${t('planogram_doc_section_label')} <span class="line"></span></div>
+    <div class="inventory-choice-row">
       <div class="inventory-opt" data-goto="planogram">
         <div class="ico" style="font-size:34px;">🗺️</div>
         <div class="lbl">${t('planogram_word')}</div>
         ${hasNewPlanogram ? `<div class="new-update-tag"><span class="dot"></span>${t('new_update_label')}</div>` : ''}
+      </div>
+      <div class="inventory-opt" data-goto="documentation">
+        <div class="ico" style="font-size:34px;">📸</div>
+        <div class="lbl">${t('documentation_word')}</div>
       </div>
     </div>
   `;
@@ -1597,44 +1905,43 @@ function renderBranchScreen(branchId){
   const cols = branchColumns(branch);
   const expiredCount = state.products.filter(p=>p.branchId===branchId && !p.hidden && expiryStatus(p).status==="expired").length;
 
-  const cardsHtml = products.length ? products.map(p => {
-    const info = expiryStatus(p);
-    let cardClass = "product-card";
-    let banner = "";
-    if(p.hidden){
-      cardClass += " product-hidden";
-      banner = `<div class="alert-banner hidden-banner">${ICON.warn} ${t('hidden_product_label')}</div>`;
-    }else if(info.status === "expired"){
-      cardClass += " alert-expired";
-      banner = `<div class="alert-banner expired">${ICON.warn} ${t('promo_ended')}</div>`;
-    }else if(info.status === "near"){
-      cardClass += " alert-near";
-      banner = `<div class="alert-banner">${ICON.warn} ${t('ends_in')} ${info.days} ${dayWord(info.days)}</div>`;
-    }
+  const groupsMap = new Map();
+  const otherItems = [];
+  products.forEach(p=>{
+    const g = dailyProductGroupOf(p);
+    if(g){
+      if(!groupsMap.has(g.id)) groupsMap.set(g.id, []);
+      groupsMap.get(g.id).push(p);
+    } else otherItems.push(p);
+  });
+
+  function groupBlockHtml(titleAr, titleEn, items){
+    const expiredInGroup = items.filter(p=>!p.hidden && expiryStatus(p).status==="expired").length;
+    const cards = items.map(dailyProductCardHtml).join("");
     return `
-    <div class="${cardClass}">
-      ${banner}
-      <div class="product-media">
-        <img src="${p.image || ''}" alt="${escapeHtml(p.name)}">
-        <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>${p.sku ? `<div class="sku-badge">SKU ${escapeHtml(p.sku)}</div>` : ''}
-        ${canEdit() ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
-      </div>
-      <div class="product-body">
-        <div class="product-name">${escapeHtml(p.name)}</div>
-        <div class="date-row">
-          <div class="date-box">
-            <div class="lbl">${ICON.calendar} ${t('date_start')}</div>
-            <div class="val">${String(p.startDay).padStart(2,'0')} ${curMonths()[p.startMonth-1]} ${YEAR}</div>
+      <details class="product-group" ${expiredInGroup>0 ? 'open' : ''}>
+        <summary>
+          <div class="mg-title">
+            <div class="ar">${escapeHtml(titleAr)}</div>
+            <div class="en">${escapeHtml(titleEn)}</div>
           </div>
-          <div class="date-box">
-            <div class="lbl">${ICON.calendar} ${t('date_end')}</div>
-            <div class="val">${String(p.endDay).padStart(2,'0')} ${curMonths()[p.endMonth-1]} ${YEAR}</div>
+          <div class="mg-meta">
+            <span class="mg-count ${expiredInGroup>0?'has-filled':''}">${items.length} ${t('product_word')}</span>
+            <span class="mg-chevron">${ICON.chevron}</span>
           </div>
-        </div>
-      </div>
-    </div>
-  `;
-  }).join("") : `<div class="branch-empty">${t('no_products_branch')}</div>`;
+        </summary>
+        <div class="mg-body"><div class="product-grid cols-${cols}">${cards}</div></div>
+      </details>
+    `;
+  }
+
+  let groupsHtml = "";
+  PRODUCT_CATALOG.forEach(g=>{
+    const items = groupsMap.get(g.id);
+    if(items && items.length) groupsHtml += groupBlockHtml(g.titleAr, g.titleEn, items);
+  });
+  if(otherItems.length) groupsHtml += groupBlockHtml(t('monthly_other_group_title'), t('monthly_other_group_title_en'), otherItems);
+  if(!groupsHtml) groupsHtml = `<div class="branch-empty">${t('no_products_branch')}</div>`;
 
   return `
     <div class="topbar">
@@ -1663,7 +1970,7 @@ function renderBranchScreen(branchId){
         </div>
       </div>
       ${expiredCount>0 ? `<div class="expired-alert-bar" data-goto-expired="${branchId}">${ICON.warn} ${t('expired_products_label')} (${expiredCount})</div>` : ''}
-      <div class="product-grid cols-${cols}">${cardsHtml}</div>
+      <div class="product-groups">${groupsHtml}</div>
       ${(canEdit() && branch) ? `<div style="max-width:900px; margin:18px auto 0; padding:0 20px;"><button class="add-product-tile" data-quick-add-product="${branch.id}">${ICON.plus} ${t('add_new_product')}</button></div>` : ''}
     </div>
   `;
@@ -1687,6 +1994,7 @@ function renderBranchExpiredScreen(branchId){
       </div>
       <div class="product-body">
         <div class="product-name">${escapeHtml(p.name)}</div>
+        ${p.nameEn ? `<div class="product-name-en">${escapeHtml(p.nameEn)}</div>` : ''}
         <div class="date-row">
           <div class="date-box">
             <div class="lbl">${ICON.calendar} ${t('date_start')}</div>
@@ -1723,7 +2031,7 @@ function renderBranchExpiredScreen(branchId){
 /* ---------------- MONTHLY INVENTORY: branch picker ---------------- */
 function renderMonthlyScreen(){
   const branchesHtml = state.branches.length ? state.branches.map(b => {
-    const count = state.monthlyProducts.filter(p=>p.branchId===b.id).length;
+    const count = branchCatalogFilledCount(b.id) + branchCustomFilledCount(b.id);
     return `<div class="branch-card" data-monthly-branch="${b.id}">
       ${renderBranchIconHtml(b)}
       <div class="name">${escapeHtml(b.name)}</div>
@@ -1749,24 +2057,154 @@ function renderMonthlyScreen(){
 }
 
 /* ---------------- MONTHLY INVENTORY: per-branch list ---------------- */
-function renderMonthlyBranchScreen(branchId){
-  const branch = state.branches.find(b=>b.id===branchId);
-  const products = state.monthlyProducts.filter(p=>p.branchId===branchId);
-  const meta = state.monthlyMeta[branchId] || { responsibleName: "" };
-
-  const rowsHtml = products.length ? products.map(p => `
-    <div class="monthly-row">
-      ${canEdit() ? `<button class="m-edit-btn" data-monthly-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+function monthlyProductRowHtml(branchId, opts){
+  const { rowId, seq, ar, en, sku, weightValue, weightUnit, legacyUnit, editable, kind } = opts;
+  const entry = getMonthlyEntry(branchId, rowId);
+  const filled = entryIsFilled(entry);
+  const unitStr = unitBilingual(weightUnit, legacyUnit);
+  const showEnFirst = (lang === "en" && en);
+  const primaryText = showEnFirst ? en : ar;
+  const primaryDir = showEnFirst ? "ltr" : "rtl";
+  const secondaryText = showEnFirst ? ar : en;
+  const secondaryDir = showEnFirst ? "rtl" : "ltr";
+  return `
+    <div class="monthly-row ${filled?'filled':''}">
       <div class="m-info">
-        <div class="m-name">${escapeHtml(p.name)}</div>
-        <div class="m-weight">${p.weightValue||0} ${unitLabel(p.weightUnit)}${p.sku ? ` — SKU ${escapeHtml(p.sku)}` : ''}</div>
+        <div class="m-seq">${seq}</div>
+        <div class="m-info-text">
+          <div class="m-name-ar" dir="${primaryDir}">${escapeHtml(primaryText)}</div>
+          ${secondaryText ? `<div class="m-name-en" dir="${secondaryDir}">${escapeHtml(secondaryText)}</div>` : ''}
+          <div class="m-weight">
+            ${weightValue ? `<span class="tag">${weightValue} ${unitStr}</span>` : ''}
+            ${sku ? `<span class="tag">${t('sku_word')} ${escapeHtml(sku)}</span>` : ''}
+          </div>
+        </div>
+        <div class="m-row-actions">
+          ${editable ? `<button class="m-edit-btn" data-monthly-row-edit="${rowId}" data-row-kind="${kind}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
+          ${editable && (kind==='catalog' || kind==='custom') ? `<button class="m-dup-btn" data-monthly-duplicate="${rowId}" data-row-kind="${kind}" title="${t('duplicate_word')}">${ICON.plus}</button>` : ''}
+          ${editable && (kind==='duplicate') ? `<button class="m-del-btn" data-monthly-remove-dup="${rowId}" title="${t('remove_duplicate_word')}">${ICON.trash}</button>` : ''}
+        </div>
       </div>
-      <div class="m-qty-group">
-        <input type="number" min="0" max="200" value="${p.qty||0}" data-monthly-qty="${p.id}">
-        <span class="carton-lbl">${t('carton_word')}</span>
+      <div class="m-shelf-back-grid">
+        <div class="m-loc-block">
+          <div class="m-loc-title">${t('monthly_col_shelf')} <span class="en-tag">SHELF</span></div>
+          <div class="m-select-row">
+            <select class="qty-select" data-row="${rowId}" data-entry-field="shelfQty" ${editable?'':'disabled'}>${qtyCartonOptionsHtml(entry.shelfQty)}</select>
+            <span class="carton-lbl">${t('carton_unit_word')}</span>
+          </div>
+          <div class="m-select-row">
+            <select data-row="${rowId}" data-entry-field="shelfDay" ${editable?'':'disabled'}>${dayOptionsWithNoneHtml(entry.shelfDay)}</select>
+            <select data-row="${rowId}" data-entry-field="shelfMonth" ${editable?'':'disabled'}>${monthOptionsWithNoneHtml(entry.shelfMonth)}</select>
+            <select data-row="${rowId}" data-entry-field="shelfYear" ${editable?'':'disabled'}>${yearOptionsWithNoneHtml(entry.shelfYear)}</select>
+          </div>
+        </div>
+        <div class="m-loc-block">
+          <div class="m-loc-title">${t('monthly_col_back')} <span class="en-tag">BACK DOOR</span></div>
+          <div class="m-select-row">
+            <select class="qty-select" data-row="${rowId}" data-entry-field="backQty" ${editable?'':'disabled'}>${qtyCartonOptionsHtml(entry.backQty)}</select>
+            <span class="carton-lbl">${t('carton_unit_word')}</span>
+          </div>
+          <div class="m-select-row">
+            <select data-row="${rowId}" data-entry-field="backDay" ${editable?'':'disabled'}>${dayOptionsWithNoneHtml(entry.backDay)}</select>
+            <select data-row="${rowId}" data-entry-field="backMonth" ${editable?'':'disabled'}>${monthOptionsWithNoneHtml(entry.backMonth)}</select>
+            <select data-row="${rowId}" data-entry-field="backYear" ${editable?'':'disabled'}>${yearOptionsWithNoneHtml(entry.backYear)}</select>
+          </div>
+        </div>
+      </div>
+      <div class="m-notes-row">
+        <div class="m-field">
+          <span>${t('field_notes')}</span>
+          <input type="text" data-row="${rowId}" data-entry-text="notes" value="${escapeHtml(entry.notes||'')}" ${editable?'':'disabled'}>
+        </div>
+        <div class="m-field">
+          <span>${t('field_reason')}</span>
+          <input type="text" data-row="${rowId}" data-entry-text="reason" value="${escapeHtml(entry.reason||'')}" ${editable?'':'disabled'}>
+        </div>
       </div>
     </div>
-  `).join("") : `<div class="branch-empty">${t('monthly_empty')}</div>`;
+  `;
+}
+
+function renderMonthlyBranchScreen(branchId){
+  const branch = state.branches.find(b=>b.id===branchId);
+  const meta = state.monthlyMeta[branchId] || { responsibleName: "", branchNameManual: "" };
+  const editable = canEdit();
+  let seq = 0;
+  const nextSeq = ()=> (++seq);
+
+  const groupsHtml = PRODUCT_CATALOG.map(g=>{
+    let filledInGroup = 0, totalInGroup = 0, rows = "";
+    g.items.forEach(it=>{
+      const view = getCatalogItemView(branchId, it);
+      totalInGroup++;
+      if(entryIsFilled(getMonthlyEntry(branchId, it.id))) filledInGroup++;
+      rows += monthlyProductRowHtml(branchId, {
+        rowId: it.id, seq: nextSeq(), ar: view.ar, en: view.en, sku: view.sku,
+        weightValue: view.weightValue, weightUnit: view.weightUnit, editable, kind: "catalog"
+      });
+      state.monthlyDuplicates.filter(d=>d.branchId===branchId && d.sourceKind==="catalog" && d.sourceItemId===it.id).forEach(d=>{
+        totalInGroup++;
+        if(entryIsFilled(getMonthlyEntry(branchId, d.id))) filledInGroup++;
+        rows += monthlyProductRowHtml(branchId, {
+          rowId: d.id, seq: nextSeq(), ar: d.ar, en: d.en, sku: d.sku,
+          weightValue: d.weightValue, weightUnit: d.weightUnit, editable, kind: "duplicate"
+        });
+      });
+    });
+    return `
+      <details class="monthly-group" ${filledInGroup>0 ? 'open':''}>
+        <summary>
+          <div class="mg-title">
+            <div class="ar">${escapeHtml(g.titleAr)}</div>
+            <div class="en">${escapeHtml(g.titleEn)}</div>
+          </div>
+          <div class="mg-meta">
+            <span class="mg-count ${filledInGroup>0?'has-filled':''}">${filledInGroup}/${totalInGroup}</span>
+            <span class="mg-chevron">${ICON.chevron}</span>
+          </div>
+        </summary>
+        <div class="mg-body">${rows}</div>
+      </details>
+    `;
+  }).join("");
+
+  const customProducts = state.monthlyProducts.filter(p=>p.branchId===branchId);
+  let customFilled = 0, customTotal = 0, customRowsHtml = "";
+  customProducts.forEach(p=>{
+    customTotal++;
+    if(entryIsFilled(getMonthlyEntry(branchId, p.id))) customFilled++;
+    customRowsHtml += monthlyProductRowHtml(branchId, {
+      rowId: p.id, seq: nextSeq(), ar: p.name, en: p.nameEn||'', sku: p.sku,
+      weightValue: p.weightValue, weightUnit: p.weightUnit, legacyUnit: true, editable, kind: "custom"
+    });
+    state.monthlyDuplicates.filter(d=>d.branchId===branchId && d.sourceKind==="custom" && d.sourceItemId===p.id).forEach(d=>{
+      customTotal++;
+      if(entryIsFilled(getMonthlyEntry(branchId, d.id))) customFilled++;
+      customRowsHtml += monthlyProductRowHtml(branchId, {
+        rowId: d.id, seq: nextSeq(), ar: d.ar, en: d.en, sku: d.sku,
+        weightValue: d.weightValue, weightUnit: d.weightUnit, editable, kind: "duplicate"
+      });
+    });
+  });
+
+  const otherGroupHtml = `
+    <details class="monthly-group" ${customProducts.length ? 'open':''}>
+      <summary>
+        <div class="mg-title">
+          <div class="ar">${t('monthly_other_group_title')}</div>
+          <div class="en">${t('monthly_other_group_title_en')}</div>
+        </div>
+        <div class="mg-meta">
+          <span class="mg-count ${customFilled>0?'has-filled':''}">${customFilled}/${customTotal}</span>
+          <span class="mg-chevron">${ICON.chevron}</span>
+        </div>
+      </summary>
+      <div class="mg-body">
+        ${customRowsHtml || `<div class="branch-empty">${t('monthly_empty')}</div>`}
+        ${editable ? `<button class="add-product-tile" id="monthlyAddBtn" data-branch="${branchId}" style="margin-top:4px;">${ICON.plus} ${t('add_new_product')}</button>` : ''}
+      </div>
+    </details>
+  `;
 
   return `
     <div class="topbar">
@@ -1781,14 +2219,18 @@ function renderMonthlyBranchScreen(branchId){
       ${branch ? renderBranchNoticesHtml(branch) : ''}
     </div>
     <div class="monthly-wrap">
-      <div class="field" style="margin-bottom:18px;">
+      <div class="field" style="margin-bottom:14px;">
         <label>${t('responsible_name_label')}</label>
         <input type="text" id="responsibleNameInput" placeholder="${t('responsible_name_placeholder')}" value="${escapeHtml(meta.responsibleName||'')}">
       </div>
-      <div class="monthly-list">${rowsHtml}</div>
+      <div class="field" style="margin-bottom:14px;">
+        <label>${t('branch_name_manual_label')}</label>
+        <input type="text" id="branchNameManualInput" placeholder="${escapeHtml(branch ? branch.name : '')}" value="${escapeHtml(meta.branchNameManual || (branch ? branch.name : ''))}">
+      </div>
+      <p class="monthly-catalog-hint">${t('monthly_catalog_hint')}</p>
+      <div class="monthly-groups">${groupsHtml}${otherGroupHtml}</div>
     </div>
     <div class="monthly-actions">
-      ${canEdit() ? `<button class="add-product-tile" id="monthlyAddBtn" data-branch="${branchId}">${ICON.plus} ${t('add_new_product')}</button>` : ''}
       <button class="btn-download" id="monthlyDownloadBtn" data-branch="${branchId}">${ICON.download} ${t('download_word')}</button>
     </div>
   `;
@@ -1832,6 +2274,83 @@ function renderPlanogramScreen(){
   `;
 }
 
+function attachDocThumbRemoveHandlers(){
+  document.querySelectorAll("[data-remove-pending-photo]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const idx = parseInt(btn.getAttribute("data-remove-pending-photo"), 10);
+      pendingDocPhotos.splice(idx, 1);
+      const stripEl = document.getElementById("docThumbStrip");
+      if(stripEl) stripEl.innerHTML = docThumbStripHtml();
+      const takeBtn = document.getElementById("docTakePhotoBtn");
+      if(takeBtn) takeBtn.innerHTML = `📷 ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}`;
+      attachDocThumbRemoveHandlers();
+    };
+  });
+}
+function docThumbStripHtml(){
+  if(!pendingDocPhotos.length) return "";
+  return `<div class="doc-thumb-strip">${pendingDocPhotos.map((photo, idx) => `
+    <div class="doc-thumb-item">
+      <img src="${photo}" alt="">
+      <button class="doc-thumb-remove" data-remove-pending-photo="${idx}" type="button">&times;</button>
+    </div>
+  `).join("")}</div>`;
+}
+function docEntryCardHtml(e, showAlertBtn){
+  return `
+    <div class="doc-entry-card">
+      <div class="doc-entry-meta">
+        <span>${new Date(e.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</span>
+        <span class="doc-entry-hours">${docHoursLeft(e)} ${t('hours_word')} — ${t('documentation_expires_in')}</span>
+      </div>
+      ${e.note ? `<div class="doc-entry-note">${escapeHtml(e.note)}</div>` : ''}
+      <div class="doc-entry-photos">
+        ${e.photos.map(p=>`<img src="${p}" class="doc-entry-photo" alt="">`).join("")}
+      </div>
+      ${showAlertBtn ? `<button class="doc-alert-btn" data-send-doc-alert="${e.id}">${ICON.bell} ${t('send_alert_word')}</button>` : ''}
+    </div>
+  `;
+}
+function docHistoryHtml(){
+  const mine = session.user ? activeDocumentationEntries(session.user.id) : [];
+  if(!mine.length) return `<div class="branch-empty">${t('no_documentation_yet')}</div>`;
+  return mine.map(e=> docEntryCardHtml(e, false)).join("");
+}
+function renderDocumentationScreen(){
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}${bellButtonHtml()}
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row">
+      <h2>${t('documentation_word')}</h2>
+    </div>
+    <div class="monthly-wrap">
+      <div class="doc-capture-card">
+        <input type="file" accept="image/*" capture="environment" id="docCameraInput" style="display:none;">
+        <button class="add-product-tile" id="docTakePhotoBtn" type="button">📷 ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}</button>
+        <div id="docThumbStrip">${docThumbStripHtml()}</div>
+        <div class="field" style="margin-top:14px;">
+          <label>${t('documentation_note_label')}</label>
+          <textarea id="docNoteInput" rows="2" placeholder="${t('documentation_note_placeholder')}" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);"></textarea>
+        </div>
+        <div class="field">
+          <label>${t('display_duration_label')}</label>
+          <select id="docDurationSelect">
+            ${[1,2,4,6,12,24,48,72].map(h=>`<option value="${h}" ${h===24?'selected':''}>${h} ${t('hours_word')}</option>`).join("")}
+          </select>
+        </div>
+        <button class="btn btn-primary" id="docSaveBtn" style="width:100%; margin-top:10px;">${t('save_documentation_btn')}</button>
+      </div>
+      <h4 style="margin:24px 0 10px;">${t('my_documentation_title')}</h4>
+      <div id="docHistoryList">${docHistoryHtml()}</div>
+    </div>
+  `;
+}
+
 function attachHomeEvents(){
   const gearBtn = document.getElementById("gearBtn");
   if(gearBtn) gearBtn.onclick = ()=>{
@@ -1839,7 +2358,7 @@ function attachHomeEvents(){
     const role = userRole(session.user);
     if(role === "bigboss") return openAdminPanel();
     if(role === "manager"){ session.viewOnly = false; return goLanding(); }
-    return openEmployeeAccountModal();
+    return openEmployeeAdminPanel();
   };
   const backBtn = document.getElementById("backBtn");
   if(backBtn) backBtn.onclick = goHome;
@@ -1858,6 +2377,51 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-del-plano]").forEach(btn=>{
     btn.onclick = ()=> deletePlanogramItem(btn.getAttribute("data-del-plano"));
   });
+  const docCameraInput = document.getElementById("docCameraInput");
+  const docTakePhotoBtn = document.getElementById("docTakePhotoBtn");
+  if(docTakePhotoBtn && docCameraInput) docTakePhotoBtn.onclick = ()=> docCameraInput.click();
+  if(docCameraInput) docCameraInput.onchange = (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    compressImageToDataUrl(file, 900).then(dataUrl=>{
+      pendingDocPhotos.push(dataUrl);
+      const stripEl = document.getElementById("docThumbStrip");
+      if(stripEl) stripEl.innerHTML = docThumbStripHtml();
+      if(docTakePhotoBtn) docTakePhotoBtn.innerHTML = `📷 ${t('take_another_photo_btn')}`;
+      attachDocThumbRemoveHandlers();
+      docCameraInput.value = "";
+    });
+  };
+  attachDocThumbRemoveHandlers();
+  const docSaveBtn = document.getElementById("docSaveBtn");
+  if(docSaveBtn) docSaveBtn.onclick = async ()=>{
+    if(!pendingDocPhotos.length){ toast(t('toast_photo_required')); return; }
+    const note = (document.getElementById("docNoteInput")||{}).value || "";
+    const expiryHours = parseInt((document.getElementById("docDurationSelect")||{}).value, 10) || 24;
+    state.documentation.push({
+      id: uid(), userId: session.user.id, username: session.user.username,
+      note: note.trim(), photos: pendingDocPhotos.slice(),
+      createdAt: Date.now(), expiryHours
+    });
+    await storageSet("puck:documentation", state.documentation);
+    pendingDocPhotos = [];
+    toast(t('toast_documentation_saved'));
+    render();
+  };
+  document.querySelectorAll("[data-send-doc-alert]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const entry = state.documentation.find(x=>x.id===btn.getAttribute("data-send-doc-alert"));
+      if(!entry) return;
+      const prefill = `${t('documentation_alert_prefill')}${entry.note ? ' — ' + entry.note : ''}`;
+      openComposeMessageModal([entry.userId], prefill);
+    };
+  });
+  document.querySelectorAll("[data-view-emp-docs]").forEach(row=>{
+    row.onclick = ()=> navigate({ screen:"managerEmployeeDocs", branchId: row.getAttribute("data-view-emp-docs") });
+  });
+  document.querySelectorAll("[data-quick-view-doc]").forEach(el=>{
+    el.onclick = (e)=>{ e.stopPropagation(); openDocQuickViewModal(el.getAttribute("data-quick-view-doc")); };
+  });
   const viewOnlyBackBtn = document.getElementById("viewOnlyBackBtn");
   if(viewOnlyBackBtn) viewOnlyBackBtn.onclick = ()=>{ session.viewOnly = false; goLanding(); };
   const monthlyBackBtn = document.getElementById("monthlyBackBtn");
@@ -1873,6 +2437,7 @@ function attachHomeEvents(){
       if(dest === "home") goHome();
       else if(dest === "monthly") goMonthly();
       else if(dest === "planogram") goPlanogram();
+      else if(dest === "documentation") goDocumentation();
     };
   });
   document.querySelectorAll(".branch-card[data-branch]").forEach(el=>{
@@ -1902,21 +2467,74 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-quick-add-product]").forEach(btn=>{
     btn.onclick = ()=> openQuickAddProductModal(btn.getAttribute("data-quick-add-product"));
   });
-  document.querySelectorAll("[data-monthly-qty]").forEach(inp=>{
-    inp.onchange = async ()=>{
-      const id = inp.getAttribute("data-monthly-qty");
-      const p = state.monthlyProducts.find(x=>x.id===id);
-      if(!p) return;
-      let v = parseInt(inp.value,10);
+  document.querySelectorAll("[data-entry-field]").forEach(sel=>{
+    sel.onchange = async ()=>{
+      const rowId = sel.getAttribute("data-row");
+      const field = sel.getAttribute("data-entry-field");
+      let v = parseInt(sel.value,10);
       if(isNaN(v)) v = 0;
-      v = Math.max(0, Math.min(200, v));
-      inp.value = v;
-      p.qty = v;
-      await storageSet("puck:monthlyProducts", state.monthlyProducts);
+      if(field === "shelfQty" || field === "backQty") v = Math.max(0, Math.min(300, v));
+      const patch = {}; patch[field] = v;
+      await patchMonthlyEntry(view.branchId, rowId, patch);
+      const rowEl = sel.closest(".monthly-row");
+      if(rowEl){
+        const entry = getMonthlyEntry(view.branchId, rowId);
+        rowEl.classList.toggle("filled", entryIsFilled(entry));
+      }
+      updateMonthlyGroupBadge(sel.closest("details.monthly-group"));
     };
   });
-  document.querySelectorAll("[data-monthly-edit]").forEach(btn=>{
-    btn.onclick = ()=> openMonthlyEditProductModal(btn.getAttribute("data-monthly-edit"));
+  document.querySelectorAll("[data-entry-text]").forEach(inp=>{
+    inp.onchange = async ()=>{
+      const rowId = inp.getAttribute("data-row");
+      const field = inp.getAttribute("data-entry-text");
+      const patch = {}; patch[field] = inp.value;
+      await patchMonthlyEntry(view.branchId, rowId, patch);
+    };
+  });
+  document.querySelectorAll("[data-monthly-duplicate]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const rowId = btn.getAttribute("data-monthly-duplicate");
+      const rowKind = btn.getAttribute("data-row-kind");
+      let base = null;
+      if(rowKind === "catalog"){
+        let found = null;
+        PRODUCT_CATALOG.forEach(g=> g.items.forEach(it=>{ if(it.id===rowId) found = it; }));
+        if(found) base = getCatalogItemView(view.branchId, found);
+      } else {
+        base = state.monthlyProducts.find(p=>p.id===rowId);
+      }
+      if(!base) return;
+      state.monthlyDuplicates.push({
+        id: uid(), branchId: view.branchId, sourceKind: rowKind, sourceItemId: rowId,
+        ar: rowKind === "catalog" ? base.ar : base.name,
+        en: rowKind === "catalog" ? base.en : (base.nameEn || ""),
+        sku: base.sku || "", weightValue: base.weightValue || 0, weightUnit: base.weightUnit || "g"
+      });
+      await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates);
+      toast(t('toast_change_saved'));
+      render();
+    };
+  });
+  document.querySelectorAll("[data-monthly-remove-dup]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const rowId = btn.getAttribute("data-monthly-remove-dup");
+      state.monthlyDuplicates = state.monthlyDuplicates.filter(d=>d.id!==rowId);
+      const key = monthlyEntryKey(view.branchId, rowId);
+      delete state.monthlyEntries[key];
+      await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates);
+      await storageSet("puck:monthlyEntries", state.monthlyEntries);
+      toast(t('toast_product_deleted'));
+      render();
+    };
+  });
+  document.querySelectorAll("[data-monthly-row-edit]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const rowId = btn.getAttribute("data-monthly-row-edit");
+      const rowKind = btn.getAttribute("data-row-kind");
+      if(rowKind === "custom") openMonthlyEditProductModal(rowId);
+      else openMonthlyCatalogEditModal(rowId, rowKind);
+    };
   });
   const responsibleNameInput = document.getElementById("responsibleNameInput");
   if(responsibleNameInput) responsibleNameInput.onchange = async ()=>{
@@ -1926,10 +2544,31 @@ function attachHomeEvents(){
     state.monthlyMeta[bId].responsibleName = responsibleNameInput.value.trim();
     await storageSet("puck:monthlyMeta", state.monthlyMeta);
   };
+  const branchNameManualInput = document.getElementById("branchNameManualInput");
+  if(branchNameManualInput) branchNameManualInput.onchange = async ()=>{
+    const bId = view.branchId;
+    if(!bId) return;
+    state.monthlyMeta[bId] = state.monthlyMeta[bId] || {};
+    state.monthlyMeta[bId].branchNameManual = branchNameManualInput.value.trim();
+    await storageSet("puck:monthlyMeta", state.monthlyMeta);
+  };
   const monthlyAddBtn = document.getElementById("monthlyAddBtn");
   if(monthlyAddBtn) monthlyAddBtn.onclick = ()=> openMonthlyAddChoiceModal(monthlyAddBtn.getAttribute("data-branch"));
   const monthlyDownloadBtn = document.getElementById("monthlyDownloadBtn");
   if(monthlyDownloadBtn) monthlyDownloadBtn.onclick = ()=> downloadMonthlyPdf(monthlyDownloadBtn.getAttribute("data-branch"));
+}
+
+function updateMonthlyGroupBadge(detailsEl){
+  if(!detailsEl) return;
+  const rows = detailsEl.querySelectorAll(".monthly-row");
+  const total = rows.length;
+  let filled = 0;
+  rows.forEach(r=>{ if(r.classList.contains("filled")) filled++; });
+  const badge = detailsEl.querySelector(".mg-count");
+  if(badge){
+    badge.textContent = `${filled}/${total}`;
+    badge.classList.toggle("has-filled", filled > 0);
+  }
 }
 
 function escapeHtml(str){
@@ -1941,6 +2580,85 @@ function monthOptionsHtml(selected){
 }
 function dayOptionsHtml(selected){
   return Array.from({length:31},(_,i)=>i+1).map(d=>`<option value="${d}" ${selected===d?'selected':''}>${d}</option>`).join("");
+}
+/* ---------------- MONTHLY INVENTORY: catalog helpers ---------------- */
+function yearOptionsHtml(selected){
+  return [2026,2027].map(y=>`<option value="${y}" ${selected===y?'selected':''}>${y}</option>`).join("");
+}
+function qtyCartonOptionsHtml(selected){
+  const opts = [`<option value="0" ${(!selected)?'selected':''}>${t('monthly_no_selection')}</option>`];
+  for(let i=1;i<=300;i++){ opts.push(`<option value="${i}" ${selected===i?'selected':''}>${i}</option>`); }
+  return opts.join("");
+}
+function dayOptionsWithNoneHtml(selected){
+  const opts = [`<option value="0" ${(!selected)?'selected':''}>${t('monthly_no_selection')}</option>`];
+  opts.push(dayOptionsHtml(selected));
+  return opts.join("");
+}
+function monthOptionsWithNoneHtml(selected){
+  const opts = [`<option value="0" ${(!selected)?'selected':''}>${t('monthly_no_selection')}</option>`];
+  opts.push(monthOptionsHtml(selected));
+  return opts.join("");
+}
+function yearOptionsWithNoneHtml(selected){
+  const opts = [`<option value="0" ${(!selected)?'selected':''}>${t('monthly_no_selection')}</option>`];
+  opts.push(yearOptionsHtml(selected));
+  return opts.join("");
+}
+function catalogUnitLabel(u){
+  if(u === "kg") return "KG";
+  if(u === "ml") return "ML";
+  if(u === "l") return "L";
+  return "G";
+}
+function monthlyEntryKey(branchId, itemId){ return branchId + "::" + itemId; }
+function defaultMonthlyEntry(){
+  return { shelfQty:0, shelfDay:0, shelfMonth:0, shelfYear:0, backQty:0, backDay:0, backMonth:0, backYear:0, notes:"", reason:"" };
+}
+function getMonthlyEntry(branchId, itemId){
+  const key = monthlyEntryKey(branchId, itemId);
+  return Object.assign(defaultMonthlyEntry(), state.monthlyEntries[key] || {});
+}
+async function patchMonthlyEntry(branchId, itemId, patch){
+  const key = monthlyEntryKey(branchId, itemId);
+  const cur = Object.assign(defaultMonthlyEntry(), state.monthlyEntries[key] || {});
+  state.monthlyEntries[key] = Object.assign(cur, patch);
+  await storageSet("puck:monthlyEntries", state.monthlyEntries);
+}
+function entryIsFilled(entry){ return (entry.shelfQty||0) > 0 || (entry.backQty||0) > 0; }
+function unitBilingual(weightUnit, legacy){
+  if(legacy){
+    return (weightUnit === "كغ") ? "KG" : "G";
+  }
+  if(weightUnit === "kg") return "KG";
+  if(weightUnit === "ml") return "ML";
+  if(weightUnit === "l") return "L";
+  return "G";
+}
+function catalogItemDisplayName(item){ return lang === "en" ? item.en : item.ar; }
+function monthlyOverrideKey(branchId, itemId){ return branchId + "::" + itemId; }
+function getCatalogItemView(branchId, item){
+  const ov = state.monthlyOverrides[monthlyOverrideKey(branchId, item.id)];
+  return ov ? Object.assign({}, item, ov) : item;
+}
+async function saveCatalogOverride(branchId, itemId, patch){
+  const key = monthlyOverrideKey(branchId, itemId);
+  const cur = state.monthlyOverrides[key] || {};
+  state.monthlyOverrides[key] = Object.assign({}, cur, patch);
+  await storageSet("puck:monthlyOverrides", state.monthlyOverrides);
+}
+function branchCatalogFilledCount(branchId){
+  let n = 0;
+  PRODUCT_CATALOG.forEach(g=> g.items.forEach(it=>{
+    if(entryIsFilled(getMonthlyEntry(branchId, it.id))) n++;
+  }));
+  state.monthlyDuplicates.filter(d=>d.branchId===branchId).forEach(d=>{
+    if(entryIsFilled(getMonthlyEntry(branchId, d.id))) n++;
+  });
+  return n;
+}
+function branchCustomFilledCount(branchId){
+  return state.monthlyProducts.filter(p=>p.branchId===branchId && entryIsFilled(getMonthlyEntry(branchId, p.id))).length;
 }
 
 /* =========================================================
@@ -2160,6 +2878,10 @@ function renderManagerHomeScreen(){
         <div class="ico" style="font-size:34px;">👥</div>
         <div class="lbl">${t('tab_employees')}</div>
       </div>
+      <div class="inventory-opt" data-mgoto="documentation">
+        <div class="ico" style="font-size:34px;">📸</div>
+        <div class="lbl">${t('documentation_viewer_title')}</div>
+      </div>
       <div class="inventory-opt" data-mgoto="notifications">
         <div class="ico" style="font-size:34px;">🔔</div>
         <div class="lbl">${t('send_notification_btn')}</div>
@@ -2192,6 +2914,79 @@ function renderManagerEmployeesScreen(){
     <div class="branch-title-row"><h2>${t('tab_employees')}</h2></div>
     <div class="monthly-wrap">${rows}</div>
   `;
+}
+
+/* ---------------- MANAGER: documentation viewer ---------------- */
+function renderManagerDocumentationScreen(){
+  const employees = state.users.filter(u=>userRole(u)==="employee");
+  const rows = employees.map(u=>{
+    const entries = activeDocumentationEntries(u.id);
+    if(!entries.length) return "";
+    const thumbs = [];
+    entries.forEach(e=> e.photos.forEach(p=> thumbs.push({ entryId: e.id, photo: p })));
+    const shown = thumbs.slice(0, 6);
+    const extra = thumbs.length - shown.length;
+    return `
+      <div class="notice-row doc-emp-row" style="align-items:center; cursor:pointer;" data-view-emp-docs="${u.id}">
+        <span class="txt" style="font-weight:800;">${escapeHtml(employeeLabel(u))}</span>
+        <div class="doc-thumb-row">
+          ${shown.map(x=>`<img src="${x.photo}" class="doc-mini-thumb" data-quick-view-doc="${x.entryId}" alt="">`).join("")}
+          ${extra>0 ? `<span class="doc-thumb-more">+${extra}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }).join("");
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row"><h2>${t('documentation_viewer_title')}</h2></div>
+    <div class="monthly-wrap">${rows || `<p class="hint">${t('no_documentation_employees')}</p>`}</div>
+  `;
+}
+
+function renderManagerEmployeeDocsScreen(employeeId){
+  const emp = state.users.find(u=>u.id===employeeId);
+  const entries = activeDocumentationEntries(employeeId);
+  const rows = entries.length ? entries.map(e=> docEntryCardHtml(e, true)).join("") : `<div class="branch-empty">${t('no_documentation_yet')}</div>`;
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row"><h2>${escapeHtml(emp ? employeeLabel(emp) : "")}</h2></div>
+    <div class="monthly-wrap">${rows}</div>
+  `;
+}
+
+function openDocQuickViewModal(entryId){
+  const entry = state.documentation.find(e=>e.id===entryId);
+  if(!entry) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal wide">
+      <button class="close-x" id="closeDocQuick">&times;</button>
+      <h3>${ICON.gallery || "📸"} ${escapeHtml(entry.username)}</h3>
+      <p class="hint">${new Date(entry.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</p>
+      ${entry.note ? `<div class="doc-entry-note">${escapeHtml(entry.note)}</div>` : ''}
+      <div class="doc-entry-photos">
+        ${entry.photos.map(p=>`<img src="${p}" class="doc-entry-photo" alt="">`).join("")}
+      </div>
+      <button class="btn btn-ghost" id="closeDocQuickBtn" style="width:100%; margin-top:10px;">${t('close_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeDocQuick").onclick = ()=> wrap.remove();
+  document.getElementById("closeDocQuickBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
 }
 
 /* ---------------- MANAGER: notifications screen (compose + history) ---------------- */
@@ -2232,6 +3027,7 @@ function renderManagerNotificationsScreen(){
 
 function goManagerEmployees(){ navigate({ screen:"managerEmployees", branchId:null }); }
 function goManagerNotifications(){ navigate({ screen:"managerNotifications", branchId:null }); }
+function goManagerDocumentation(){ navigate({ screen:"managerDocumentation", branchId:null }); }
 
 function attachManagerScreenEvents(){
   document.querySelectorAll("[data-mgoto]").forEach(el=>{
@@ -2239,6 +3035,7 @@ function attachManagerScreenEvents(){
       const dest = el.getAttribute("data-mgoto");
       if(dest === "planogram") goPlanogram();
       else if(dest === "employees") goManagerEmployees();
+      else if(dest === "documentation") goManagerDocumentation();
       else if(dest === "notifications") goManagerNotifications();
     };
   });
@@ -2266,7 +3063,7 @@ function attachManagerScreenEvents(){
   });
 }
 
-function openComposeMessageModal(presetIds){
+function openComposeMessageModal(presetIds, presetText){
   const employees = state.users.filter(u=>userRole(u)==="employee");
   let mode = "specific";
   const picked = new Set(presetIds || []);
@@ -2291,7 +3088,7 @@ function openComposeMessageModal(presetIds){
         </div>
         ${mode==='specific' ? `<div style="max-height:150px; overflow-y:auto; margin-bottom:14px;">${listHtml}</div>` : ''}
         <div id="composeError"></div>
-        <div class="field"><label>${t('message_ar_label')}</label><textarea id="msgAr" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="rtl"></textarea></div>
+        <div class="field"><label>${t('message_ar_label')}</label><textarea id="msgAr" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="rtl">${escapeHtml(presetText||"")}</textarea></div>
         <div class="field"><label>${t('message_en_label')}</label><textarea id="msgEn" rows="3" style="width:100%; padding:9px 11px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body);" dir="ltr"></textarea></div>
         <button class="btn btn-primary" id="sendMsgBtn" style="width:100%;">${ICON.plus} ${t('send_message_btn')}</button>
       </div>
@@ -2375,6 +3172,23 @@ function visiblePlanogramItems(){
   const role = userRole(session.user);
   if(role !== "employee") return items;
   return items.filter(it => !it.targetIds || !it.targetIds.length || it.targetIds.includes(session.user.id));
+}
+
+/* ---------------- DAILY DOCUMENTATION ---------------- */
+function isDocEntryExpired(e){
+  const hours = e.expiryHours || 24;
+  return (Date.now() - e.createdAt) > hours * 3600 * 1000;
+}
+function activeDocumentationEntries(userId){
+  return state.documentation
+    .filter(e => (!userId || e.userId === userId) && !isDocEntryExpired(e))
+    .sort((a,b)=> b.createdAt - a.createdAt);
+}
+function docHoursLeft(e){
+  const hours = e.expiryHours || 24;
+  const elapsedMs = Date.now() - e.createdAt;
+  const leftMs = (hours * 3600 * 1000) - elapsedMs;
+  return Math.max(0, Math.ceil(leftMs / 3600000));
 }
 
 function downloadDataUrl(dataUrl, filename){
@@ -2489,6 +3303,11 @@ function openAdminPanel(){
   adminUI.selectedBranchForProducts = state.branches[0] ? state.branches[0].id : null;
   renderAdminOverlay();
 }
+function openEmployeeAdminPanel(){
+  adminUI.tab = "products";
+  adminUI.selectedBranchForProducts = state.branches[0] ? state.branches[0].id : null;
+  renderAdminOverlay();
+}
 
 function closeAdminPanel(){
   const el = document.getElementById("adminOverlay");
@@ -2504,12 +3323,16 @@ function renderAdminOverlay(){
     el.id = "adminOverlay";
     document.body.appendChild(el);
   }
-  const tabs = [
+  const role = userRole(session.user);
+  const isEmployeeRole = (role === "employee");
+  const allTabs = [
     {id:"branches", label:t('tab_branches')},
     {id:"products", label:t('tab_products')},
     {id:"users", label:t('tab_users')},
     {id:"appearance", label:t('tab_appearance')},
   ];
+  const tabs = isEmployeeRole ? allTabs.filter(tb=> tb.id==="branches" || tb.id==="products") : allTabs;
+  if(isEmployeeRole && !tabs.some(tb=>tb.id===adminUI.tab)) adminUI.tab = "products";
   el.innerHTML = `
     <div class="admin-shell">
       <div class="admin-top">
@@ -2577,8 +3400,10 @@ function attachBranchesTabEvents(){
     const nameInput = document.getElementById("newBranchName");
     const name = nameInput.value.trim();
     if(!name){ toast(t('toast_enter_branch_name')); return; }
-    state.branches.push({ id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" } });
+    const newBranch = { id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" } };
+    state.branches.push(newBranch);
     await storageSet("puck:branches", state.branches);
+    if(ensureCatalogSeededForBranch(newBranch.id)) await storageSet("puck:products", state.products);
     toast(t('toast_branch_added'));
     renderAdminOverlay();
   };
@@ -2787,6 +3612,7 @@ function renderProductsTab(){
       <div class="row-fields">
         <div class="line1">
           <input type="text" value="${escapeHtml(p.name)}" data-field="name" data-id="${p.id}" placeholder="${t('product_name_placeholder')}">
+          <input type="text" value="${escapeHtml(p.nameEn||'')}" data-field="nameEn" data-id="${p.id}" placeholder="English Name" style="direction:ltr;">
           <input type="text" value="${escapeHtml(p.sku||'')}" data-field="sku" data-id="${p.id}" placeholder="${t('sku_placeholder')}" style="max-width:120px;">
           <div class="weight-inputs">
             <input type="number" min="0" value="${p.weightValue}" data-field="weightValue" data-id="${p.id}">
@@ -3392,6 +4218,7 @@ function openQuickEditProductModal(productId){
       <button class="close-x" id="closeQuickEdit">&times;</button>
       <h3>${ICON.edit} ${t('quick_edit_title')}</h3>
       <div class="field"><label>${t('product_name_placeholder')}</label><input id="qeName" type="text" value="${escapeHtml(p.name)}"></div>
+      <div class="field"><label>English Name</label><input id="qeNameEn" type="text" value="${escapeHtml(p.nameEn||'')}" style="direction:ltr;" placeholder="English Name"></div>
       <div class="field"><label>${t('sku_label')}</label><input id="qeSku" type="text" value="${escapeHtml(p.sku||'')}" placeholder="${t('sku_placeholder')}"></div>
       <div class="field">
         <label>${t('image_word')}</label>
@@ -3464,6 +4291,7 @@ function openQuickEditProductModal(productId){
 
   document.getElementById("qeSaveBtn").onclick = async ()=>{
     p.name = document.getElementById("qeName").value.trim() || p.name;
+    p.nameEn = document.getElementById("qeNameEn").value.trim();
     p.sku = document.getElementById("qeSku").value.trim();
     if(pendingImage) p.image = pendingImage;
     p.weightValue = parseInt(document.getElementById("qeWeightValue").value,10) || 0;
@@ -3490,6 +4318,7 @@ function openQuickAddProductModal(branchId){
       <button class="close-x" id="closeQuickAdd">&times;</button>
       <h3>${ICON.plus} ${t('add_new_product')}</h3>
       <div class="field"><label>${t('product_name_placeholder')}</label><input id="qaName" type="text" placeholder="${t('product_name_placeholder')}"></div>
+      <div class="field"><label>English Name</label><input id="qaNameEn" type="text" placeholder="English Name" style="direction:ltr;"></div>
       <div class="field"><label>${t('sku_label')}</label><input id="qaSku" type="text" placeholder="${t('sku_placeholder')}"></div>
       <div class="field">
         <label>${t('image_word')}</label>
@@ -3548,7 +4377,8 @@ function openQuickAddProductModal(branchId){
     const name = document.getElementById("qaName").value.trim() || t('default_new_product_name');
     const newProduct = {
       id: uid(), branchId,
-      name, sku: document.getElementById("qaSku").value.trim(), image: pendingImage,
+      name, nameEn: document.getElementById("qaNameEn").value.trim(),
+      sku: document.getElementById("qaSku").value.trim(), image: pendingImage,
       weightValue: parseInt(document.getElementById("qaWeightValue").value,10) || 0,
       weightUnit: document.getElementById("qaWeightUnit").value,
       startDay: parseInt(document.getElementById("qaStartDay").value,10),
@@ -3614,6 +4444,7 @@ function openMonthlyNewProductModal(branchId){
       <button class="close-x" id="closeMNew">&times;</button>
       <h3>${ICON.plus} ${t('add_new_product')}</h3>
       <div class="field"><label>${t('product_name_placeholder')}</label><input id="mnName" type="text" placeholder="${t('product_name_placeholder')}"></div>
+      <div class="field"><label>English Name</label><input id="mnNameEn" type="text" placeholder="English Name (optional)" style="direction:ltr;"></div>
       <div class="field"><label>${t('sku_label')}</label><input id="mnSku" type="text" placeholder="${t('sku_placeholder')}"></div>
       <div class="field">
         <label>${t('weight_label')}</label>
@@ -3637,10 +4468,10 @@ function openMonthlyNewProductModal(branchId){
     const name = document.getElementById("mnName").value.trim();
     if(!name){ toast(t('toast_enter_product_name')); return; }
     state.monthlyProducts.push({
-      id: uid(), branchId, name, sku: document.getElementById("mnSku").value.trim(),
+      id: uid(), branchId, name, nameEn: document.getElementById("mnNameEn").value.trim(),
+      sku: document.getElementById("mnSku").value.trim(),
       weightValue: parseInt(document.getElementById("mnWeightValue").value,10) || 0,
-      weightUnit: document.getElementById("mnWeightUnit").value,
-      qty: 0
+      weightUnit: document.getElementById("mnWeightUnit").value
     });
     await storageSet("puck:monthlyProducts", state.monthlyProducts);
     wrap.remove();
@@ -3702,9 +4533,8 @@ function openMonthlyPreviousProductsModal(branchId){
       const src = all.find(p=>p.id===id);
       if(!src) return;
       state.monthlyProducts.push({
-        id: uid(), branchId, name: src.name, sku: src.sku||"",
-        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"غ",
-        qty: 0
+        id: uid(), branchId, name: src.name, nameEn: src.nameEn||"", sku: src.sku||"",
+        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"غ"
       });
     });
     await storageSet("puck:monthlyProducts", state.monthlyProducts);
@@ -3724,6 +4554,7 @@ function openMonthlyEditProductModal(id){
       <button class="close-x" id="closeMEdit">&times;</button>
       <h3>${ICON.edit} ${t('quick_edit_title')}</h3>
       <div class="field"><label>${t('product_name_placeholder')}</label><input id="meName" type="text" value="${escapeHtml(p.name)}"></div>
+      <div class="field"><label>English Name</label><input id="meNameEn" type="text" value="${escapeHtml(p.nameEn||'')}" style="direction:ltr;"></div>
       <div class="field"><label>${t('sku_label')}</label><input id="meSku" type="text" value="${escapeHtml(p.sku||'')}" placeholder="${t('sku_placeholder')}"></div>
       <div class="field">
         <label>${t('weight_label')}</label>
@@ -3749,17 +4580,95 @@ function openMonthlyEditProductModal(id){
   document.getElementById("meDeleteBtn").onclick = async ()=>{
     if(!confirm(t('confirm_delete_product'))) return;
     state.monthlyProducts = state.monthlyProducts.filter(x=>x.id!==id);
+    delete state.monthlyEntries[monthlyEntryKey(p.branchId, id)];
+    state.monthlyDuplicates = state.monthlyDuplicates.filter(d=>d.sourceItemId!==id);
     await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    await storageSet("puck:monthlyEntries", state.monthlyEntries);
+    await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates);
     wrap.remove();
     toast(t('toast_product_deleted'));
     render();
   };
   document.getElementById("meSaveBtn").onclick = async ()=>{
     p.name = document.getElementById("meName").value.trim() || p.name;
+    p.nameEn = document.getElementById("meNameEn").value.trim();
     p.sku = document.getElementById("meSku").value.trim();
     p.weightValue = parseInt(document.getElementById("meWeightValue").value,10) || 0;
     p.weightUnit = document.getElementById("meWeightUnit").value;
     await storageSet("puck:monthlyProducts", state.monthlyProducts);
+    wrap.remove();
+    toast(t('toast_change_saved'));
+    render();
+  };
+}
+
+function openMonthlyCatalogEditModal(rowId, rowKind){
+  const branchId = view.branchId;
+  let base = null;
+  if(rowKind === "catalog"){
+    let found = null;
+    PRODUCT_CATALOG.forEach(g=> g.items.forEach(it=>{ if(it.id===rowId) found = it; }));
+    if(!found) return;
+    base = getCatalogItemView(branchId, found);
+  } else if(rowKind === "duplicate"){
+    base = state.monthlyDuplicates.find(d=>d.id===rowId);
+    if(!base) return;
+  } else return;
+
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMCatEdit">&times;</button>
+      <h3>${ICON.edit} ${t('quick_edit_title')}</h3>
+      <div class="field"><label>${t('product_name_placeholder')} (AR)</label><input id="mceAr" type="text" value="${escapeHtml(base.ar)}"></div>
+      <div class="field"><label>${t('product_name_placeholder')} (EN)</label><input id="mceEn" type="text" value="${escapeHtml(base.en||'')}" style="direction:ltr;"></div>
+      <div class="field"><label>${t('sku_label')}</label><input id="mceSku" type="text" value="${escapeHtml(base.sku||'')}"></div>
+      <div class="field">
+        <label>${t('weight_label')}</label>
+        <div class="weight-inputs">
+          <input type="number" min="0" id="mceWeightValue" value="${base.weightValue||0}">
+          <select id="mceWeightUnit">
+            <option value="g" ${base.weightUnit==='g'?'selected':''}>G</option>
+            <option value="kg" ${base.weightUnit==='kg'?'selected':''}>KG</option>
+            <option value="ml" ${base.weightUnit==='ml'?'selected':''}>ML</option>
+            <option value="l" ${base.weightUnit==='l'?'selected':''}>L</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="mceSaveBtn">${t('save_word')}</button>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button class="btn btn-ghost" id="mceCancelBtn" style="flex:1;">${t('cancel_word')}</button>
+        ${rowKind==='catalog' ? `<button class="btn btn-ghost" id="mceResetBtn" style="flex:1;">↺</button>` : ''}
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMCatEdit").onclick = ()=> wrap.remove();
+  document.getElementById("mceCancelBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  const resetBtn = document.getElementById("mceResetBtn");
+  if(resetBtn) resetBtn.onclick = async ()=>{
+    delete state.monthlyOverrides[monthlyOverrideKey(branchId, rowId)];
+    await storageSet("puck:monthlyOverrides", state.monthlyOverrides);
+    wrap.remove();
+    toast(t('toast_change_saved'));
+    render();
+  };
+  document.getElementById("mceSaveBtn").onclick = async ()=>{
+    const patch = {
+      ar: document.getElementById("mceAr").value.trim() || base.ar,
+      en: document.getElementById("mceEn").value.trim(),
+      sku: document.getElementById("mceSku").value.trim(),
+      weightValue: parseInt(document.getElementById("mceWeightValue").value,10) || 0,
+      weightUnit: document.getElementById("mceWeightUnit").value
+    };
+    if(rowKind === "catalog"){
+      await saveCatalogOverride(branchId, rowId, patch);
+    } else {
+      Object.assign(base, patch);
+      await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates);
+    }
     wrap.remove();
     toast(t('toast_change_saved'));
     render();
@@ -3776,23 +4685,91 @@ function downloadMonthlyPdf(branchId){
   }
   const branch = state.branches.find(b=>b.id===branchId);
   const meta = state.monthlyMeta[branchId] || {};
-  const todayStr = new Date().toLocaleDateString(lang === "en" ? "en-US" : "ar-SA");
-  const productsForBranch = state.monthlyProducts.filter(p=>p.branchId===branchId);
-  const rows = productsForBranch.map(p=>`
-    <tr>
-      <td>${escapeHtml(p.sku||'')}</td>
-      <td>${escapeHtml(p.name)}</td>
-      <td>${p.weightValue||0} ${unitLabel(p.weightUnit)}</td>
-      <td>${p.qty||0}</td>
-    </tr>
-  `).join("");
+  const now = new Date();
+  const gregorianStr = now.toLocaleDateString("en-GB");
+  let hijriStr = "";
+  try{ hijriStr = now.toLocaleDateString("ar-SA-u-ca-islamic", { day:"numeric", month:"numeric", year:"numeric" }); }catch(e){ hijriStr = ""; }
+  const branchNameFinal = (meta.branchNameManual && meta.branchNameManual.trim()) || (branch ? branch.name : "");
+  const employeeName = session.user ? employeeLabel(session.user) : (meta.responsibleName || "");
+
+  function fmtExpiry(day, month, year){
+    if(!day || !month || !year) return '';
+    return `${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/${year}`;
+  }
+  function bilingualName(ar, en){
+    if(en && en.trim()) return `${ar} / ${en}`;
+    return ar;
+  }
+
+  let seq = 0;
+  let rows = "";
+  function rowHtml(ar, en, sku, weightValue, weightUnit, legacy, entry){
+    seq++;
+    return `
+      <tr>
+        <td>${seq}</td>
+        <td>${escapeHtml(sku||'')}</td>
+        <td style="text-align:${lang==='ar'?'right':'left'};">${escapeHtml(bilingualName(ar, en))}</td>
+        <td>${weightValue||0} ${unitBilingual(weightUnit, legacy)}</td>
+        <td>${entry.shelfQty||0}</td>
+        <td>${fmtExpiry(entry.shelfDay, entry.shelfMonth, entry.shelfYear)}</td>
+        <td>${entry.backQty||0}</td>
+        <td>${fmtExpiry(entry.backDay, entry.backMonth, entry.backYear)}</td>
+        <td>${escapeHtml(entry.notes||'')}</td>
+        <td>${escapeHtml(entry.reason||'')}</td>
+      </tr>
+    `;
+  }
+
+  PRODUCT_CATALOG.forEach(g=>{
+    const groupRows = [];
+    g.items.forEach(it=>{
+      const entry = getMonthlyEntry(branchId, it.id);
+      if(entryIsFilled(entry)){
+        const view = getCatalogItemView(branchId, it);
+        groupRows.push(rowHtml(view.ar, view.en, view.sku, view.weightValue, view.weightUnit, false, entry));
+      }
+      state.monthlyDuplicates.filter(d=>d.branchId===branchId && d.sourceKind==="catalog" && d.sourceItemId===it.id).forEach(d=>{
+        const dEntry = getMonthlyEntry(branchId, d.id);
+        if(entryIsFilled(dEntry)) groupRows.push(rowHtml(d.ar, d.en, d.sku, d.weightValue, d.weightUnit, false, dEntry));
+      });
+    });
+    if(groupRows.length){
+      rows += `<tr class="p-group-row"><td colspan="10">${escapeHtml(lang==='en' ? g.titleEn : g.titleAr)}</td></tr>`;
+      rows += groupRows.join("");
+    }
+  });
+
+  const customProducts = state.monthlyProducts.filter(p=>p.branchId===branchId);
+  const customRows = [];
+  customProducts.forEach(p=>{
+    const entry = getMonthlyEntry(branchId, p.id);
+    if(entryIsFilled(entry)) customRows.push(rowHtml(p.name, p.nameEn, p.sku, p.weightValue, p.weightUnit, true, entry));
+    state.monthlyDuplicates.filter(d=>d.branchId===branchId && d.sourceKind==="custom" && d.sourceItemId===p.id).forEach(d=>{
+      const dEntry = getMonthlyEntry(branchId, d.id);
+      if(entryIsFilled(dEntry)) customRows.push(rowHtml(d.ar, d.en, d.sku, d.weightValue, d.weightUnit, false, dEntry));
+    });
+  });
+  if(customRows.length){
+    rows += `<tr class="p-group-row"><td colspan="10">${escapeHtml(t('monthly_other_group_title'))}</td></tr>`;
+    rows += customRows.join("");
+  }
+
+  if(!rows){ rows = `<tr><td colspan="10">${t('monthly_empty')}</td></tr>`; }
+
   printArea.innerHTML = `
     <h2>${t('monthly_print_title')}</h2>
-    <div class="p-date">${t('branch_label')}: ${escapeHtml(branch ? branch.name : "")}</div>
+    <div class="p-date">${t('branch_label')}: ${escapeHtml(branchNameFinal)}</div>
+    <div class="p-date">${t('employee_label')}: ${escapeHtml(employeeName)}</div>
     <div class="p-date">${t('responsible_name_label')}: ${escapeHtml(meta.responsibleName || "")}</div>
-    <div class="p-date">${t('monthly_print_date')}: ${todayStr}</div>
+    <div class="p-date">${t('gregorian_label')}: ${gregorianStr}${hijriStr ? `  |  ${t('hijri_label')}: ${hijriStr}` : ''}</div>
     <table>
-      <thead><tr><th>${t('sku_label')}</th><th>${t('monthly_col_product')}</th><th>${t('monthly_col_weight')}</th><th>${t('monthly_col_qty')}</th></tr></thead>
+      <thead><tr>
+        <th>#</th><th>${t('sku_label')}</th><th>${t('monthly_col_product')}</th><th>${t('monthly_col_weight')}</th>
+        <th>${t('monthly_col_shelf')} (${t('carton_unit_word')})</th><th>${t('monthly_col_shelf')} ${t('monthly_col_expiry')}</th>
+        <th>${t('monthly_col_back')} (${t('carton_unit_word')})</th><th>${t('monthly_col_back')} ${t('monthly_col_expiry')}</th>
+        <th>${t('field_notes')}</th><th>${t('field_reason')}</th>
+      </tr></thead>
       <tbody>${rows}</tbody>
     </table>
   `;
@@ -3811,6 +4788,22 @@ function attachAdminTabEvents(tab){
 /* =========================================================
    INIT
 ========================================================= */
+/* ---------------- MODAL SCROLL LOCK ----------------
+   Prevents the background page from scrolling while any .overlay modal
+   is open, and ensures the modal itself becomes the scroll container so
+   its close button is always reachable even on small screens. */
+(function(){
+  const lockBody = ()=>{
+    const hasOverlay = !!document.querySelector('.overlay');
+    document.body.style.overflow = hasOverlay ? 'hidden' : '';
+  };
+  const observer = new MutationObserver(lockBody);
+  document.addEventListener('DOMContentLoaded', ()=>{
+    observer.observe(document.body, { childList: true });
+    lockBody();
+  });
+})();
+
 loadAll();
 </script>
 </body>
