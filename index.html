@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Puck Merchandiser</title>
-<meta name="apple-mobile-web-app-title" content="Puck Merchandiser">
-<meta name="application-name" content="Puck Merchandiser">
+<title>Arla Merchandiser</title>
+<meta name="apple-mobile-web-app-title" content="Arla Merchandiser">
+<meta name="application-name" content="Arla Merchandiser">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -250,6 +250,47 @@
     background:var(--white); border:1px solid var(--line); border-radius:16px;
     box-shadow:var(--shadow-card); padding:18px 16px; max-width:640px; margin:0 auto 20px;
   }
+  .doc-countdown{ font-size:12px; font-weight:700; color:#c0392b; margin-top:8px; min-height:16px; }
+  .employee-card{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    background:var(--white); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow-card); padding:12px 14px; margin-bottom:10px; max-width:640px; margin-left:auto; margin-right:auto;
+  }
+  .employee-card-main{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .employee-avatar{
+    width:40px; height:40px; border-radius:50%; background:var(--sky-light); color:var(--navy);
+    font-family:var(--font-display); font-weight:800; font-size:16px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .employee-name{ font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--navy-deep); }
+  .employee-phone{ font-size:11.5px; color:#7C93B8; margin-top:2px; }
+  .employee-actions{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .emp-action-btn{
+    width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    border:1.5px solid var(--line); background:var(--white); color:var(--navy); cursor:pointer; text-decoration:none; font-size:15px;
+  }
+  .emp-action-btn.wa{ border-color:#25D366; color:#25D366; }
+  .emp-action-btn.call{ border-color:var(--sky); color:var(--sky); }
+  .emp-action-btn.view{ border-color:var(--line); }
+  .emp-action-btn.msg{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .alert-branch-list{ display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; }
+  .alert-branch-check{ display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--navy-deep); }
+  .lightbox-overlay{
+    background:rgba(0,0,0,0.9); align-items:center; justify-content:center; padding:20px;
+  }
+  .lightbox-img{ max-width:100%; max-height:90vh; object-fit:contain; border-radius:8px; }
+  .lightbox-close{
+    position:fixed; top:16px; right:16px; z-index:110;
+    width:40px; height:40px; border-radius:50%; border:none;
+    background:rgba(255,255,255,0.92); color:#111; font-size:22px; line-height:1;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .camera-modal{ max-width:420px; }
+  .camera-preview-wrap{
+    width:100%; aspect-ratio:3/4; background:#000; border-radius:14px; overflow:hidden; margin:10px 0;
+  }
+  .camera-preview-wrap video{ width:100%; height:100%; object-fit:cover; display:block; }
+  #cameraShutterBtn.flash{ filter:brightness(1.4); }
   .doc-thumb-strip{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
   .doc-thumb-item{ position:relative; width:74px; height:74px; border-radius:10px; overflow:hidden; border:1.5px solid var(--line); }
   .doc-thumb-item img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -276,6 +317,17 @@
   .doc-thumb-row{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
   .doc-mini-thumb{ width:38px; height:38px; object-fit:cover; border-radius:8px; border:1px solid var(--line); cursor:pointer; }
   .doc-thumb-more{ font-size:11.5px; font-weight:800; color:var(--navy); background:var(--sky-light); border-radius:8px; padding:3px 7px; }
+
+  /* ---------- move product / manage categories ---------- */
+  .move-group-list{ display:flex; flex-direction:column; gap:8px; max-height:340px; overflow-y:auto; margin-top:10px; }
+  .move-group-opt{
+    display:flex; flex-direction:column; align-items:flex-start; text-align:start;
+    background:var(--paper); border:1.5px solid var(--line); border-radius:12px; padding:10px 14px;
+    cursor:pointer; font-family:inherit; width:100%;
+  }
+  .move-group-opt .ar{ font-family:var(--font-display); font-weight:800; font-size:13.5px; color:var(--navy-deep); }
+  .move-group-opt .en{ font-size:11px; color:#7C93B8; margin-top:1px; direction:ltr; }
+  .move-group-opt.active{ border-color:var(--leaf); background:rgba(111,190,68,0.12); }
 
   /* ---------- monthly inventory ---------- */
   .monthly-wrap{ max-width:640px; margin:0 auto; padding:0 20px 50px; }
@@ -414,34 +466,32 @@
   .product-grid{ display:grid; gap:18px; }
   .product-grid.cols-1{ grid-template-columns:1fr; max-width:420px; margin:0 auto; }
   .product-grid.cols-2{ grid-template-columns:repeat(2,1fr); }
-  @media (max-width:520px){ .product-grid{ gap:10px; } .product-media{ padding:10px 10px 0; } .product-body{ padding:10px 10px 14px; } .weight-badge{ font-size:11px; padding:5px 8px; } .product-name{ font-size:13px; margin-bottom:8px; } .date-box{ padding:6px 4px; } .date-box .val{ font-size:11px; } .date-box .lbl{ font-size:10px; } }
+  @media (max-width:520px){ .product-grid{ gap:10px; } .product-media{ padding:12px 10px 0; } .product-body{ padding:10px 10px 14px; } .weight-badge, .sku-badge{ font-size:9.5px; padding:3px 7px; } .product-name{ font-size:13px; margin-bottom:8px; } .date-box{ padding:6px 4px; } .date-box .val{ font-size:11px; } .date-box .lbl{ font-size:10px; } }
 
   .product-card{
     background:var(--white); border-radius:var(--radius-lg);
     box-shadow:var(--shadow-soft); overflow:hidden; position:relative;
     border:1px solid var(--line);
   }
-  .product-media{ position:relative; padding:18px 18px 0; }
+  .product-media{ position:relative; padding:16px 14px 0; }
   .product-media img{
     width:100%; aspect-ratio:1/1; object-fit:contain; display:block;
     filter:drop-shadow(0 8px 14px rgba(27,107,61,0.12));
   }
-  .weight-badge{
-    position:absolute; top:14px; left:14px;
-    background:var(--paper); border:1px solid var(--line);
-    color:var(--navy-deep); font-family:var(--font-display); font-weight:800;
-    font-size:13px; padding:7px 12px; border-radius:10px;
+  .card-badges-row{
+    position:absolute; top:10px; left:10px;
+    display:flex; gap:5px; align-items:center; flex-wrap:wrap; max-width:calc(100% - 20px); z-index:2;
   }
-  .sku-badge{
-    position:absolute; top:50px; left:14px;
-    background:rgba(255,255,255,0.9); border:1px solid var(--line);
-    color:#7C9A8B; font-family:var(--font-display); font-weight:700;
-    font-size:10.5px; padding:3px 9px; border-radius:8px;
+  .weight-badge, .sku-badge{
+    background:rgba(255,255,255,0.92); border:1px solid var(--line);
+    color:#5D77A0; font-family:var(--font-display); font-weight:700;
+    font-size:10.5px; padding:4px 8px; border-radius:8px; white-space:nowrap; line-height:1.3;
   }
   .product-body{ padding:14px 18px 20px; }
   .product-name{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--navy-deep); text-align:center; margin-bottom:4px; }
   .product-name-en{ font-family:var(--font-body); font-weight:500; font-size:12px; color:#7C93B8; text-align:center; margin-bottom:14px; direction:ltr; }
   .date-row{ display:flex; gap:10px; }
+  .date-row.single-date .date-box{ max-width:200px; margin:0 auto; }
   .date-box{
     flex:1; background:var(--paper); border:1px solid var(--line);
     border-radius:10px; padding:8px 10px; text-align:center;
@@ -763,14 +813,21 @@ const SEED_IMG = {
 const YEAR = 2026;
 const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
 const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const MONTHS_AR_ABBR3 = ["ينا","فبر","مار","أبر","ماي","يون","يول","أغس","سبت","أكت","نوف","ديس"];
+const MONTHS_EN_ABBR3 = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 function curMonths(){ return lang === "en" ? MONTHS_EN : MONTHS_AR; }
+function curMonthsAbbr3(){ return lang === "en" ? MONTHS_EN_ABBR3 : MONTHS_AR_ABBR3; }
+function monthNumAbbr(monthIndex1based){
+  const idx = Math.max(1, Math.min(12, monthIndex1based||1)) - 1;
+  return `${String(monthIndex1based).padStart(2,'0')} ${curMonthsAbbr3()[idx]}`;
+}
 
 /* =========================================================
    MONTHLY INVENTORY — PRODUCT CATALOG (from source sheet)
    Each group mirrors a category from the uploaded market list.
    Items keep their original SKU and Arabic/English naming.
 ========================================================= */
-const PRODUCT_CATALOG = [{"id":"g1-puck-cheese-cream","titleAr":"بوك جبن كريمي","titleEn":"Puck Cheese Cream","items":[{"id":"p602238","sku":"602238","ar":"كاسات بوك 1100 جم","en":"Puck Blue Jar 1100G","weightValue":1100,"weightUnit":"g"},{"id":"p592474","sku":"592474","ar":"كاسات بوك 130 جم","en":"Puck Blue Jar 130G","weightValue":130,"weightUnit":"g"},{"id":"p592479","sku":"592479","ar":"كاسات بوك 230 جم","en":"Puck Blue Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p798952","sku":"798952","ar":"الدسم قلیل كاسات بوك 240 جم","en":"Puck Blue Jar 240G - LF","weightValue":240,"weightUnit":"g"},{"id":"p798955","sku":"798955","ar":"الدسم قلیل كاسات بوك 500 جم","en":"Puck Blue Jar 500G - LF","weightValue":500,"weightUnit":"g"},{"id":"p602061","sku":"602061","ar":"برومو كاسات بوك 500 جم","en":"Puck Blue Jar 500G - Promo","weightValue":500,"weightUnit":"g"},{"id":"p602059","sku":"602059","ar":"كاسات بوك 500 جم","en":"Puck Blue Jar 500G - Single","weightValue":500,"weightUnit":"g"},{"id":"p588330","sku":"588330","ar":"دي فایتمین كاسات بوك 500 جم","en":"Puck Blue Jar 500G - Vit D","weightValue":500,"weightUnit":"g"},{"id":"p592349","sku":"592349","ar":"برومو كاسات بوك 900 جم","en":"Puck Blue Jar 900G - Promo","weightValue":900,"weightUnit":"g"},{"id":"p592348","sku":"592348","ar":"كاسات بوك 900 جم","en":"Puck Blue Jar 900G - Single","weightValue":900,"weightUnit":"g"},{"id":"p584323","sku":"584323","ar":"كاسات بوك برومو الدسم قلیل 500 جم","en":"Puck Blue Jar 2*500G - Low Fat Promo","weightValue":500,"weightUnit":"g"},{"id":"p798967","sku":"798967","ar":"شیدار كاسات بوك 500 جم","en":"Puck Gold Jar 500G","weightValue":500,"weightUnit":"g"},{"id":"p584322","sku":"584322","ar":"شیدار كاسات بوك برومو 500 جم","en":"Puck Gold Jar 500G Promo","weightValue":500,"weightUnit":"g"},{"id":"p798922","sku":"798922","ar":"سكویز بوك 400 جم","en":"Puck Squeeze 400G","weightValue":400,"weightUnit":"g"},{"id":"p599593","sku":"599593","ar":"سكویز بوك 750 جم","en":"Puck Squeeze 750G","weightValue":750,"weightUnit":"g"},{"id":"p608399","sku":"608399","ar":"سكویز بوك 200 جم","en":"Puck Squeeze 200G","weightValue":200,"weightUnit":"g"}]},{"id":"g2-kraft-cheese-jars","titleAr":"شیدر جبن كرافت","titleEn":"KRAFT CHEESE JARS","items":[{"id":"p88759","sku":"88759","ar":"كاسات كرفت 140 جم","en":"Kraft Gold Jar 140G","weightValue":140,"weightUnit":"g"},{"id":"p88760","sku":"88760","ar":"كاسات كرفت 230 جم","en":"Kraft Gold Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p586372","sku":"586372","ar":"الدسم قلیل كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Low Fat","weightValue":480,"weightUnit":"g"},{"id":"p88766","sku":"88766","ar":"برومو كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Promo","weightValue":480,"weightUnit":"g"},{"id":"p88761","sku":"88761","ar":"كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Single","weightValue":480,"weightUnit":"g"},{"id":"p88767","sku":"88767","ar":"برومو كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Promo","weightValue":870,"weightUnit":"g"},{"id":"p88762","sku":"88762","ar":"كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Single","weightValue":870,"weightUnit":"g"},{"id":"p88765","sku":"88765","ar":"*3كاسات كرفت برومو 230 جم","en":"Kraft Gold Jar 3*4*230G Promo","weightValue":230,"weightUnit":"g"},{"id":"p88763","sku":"88763","ar":"سكویز كرفت 440 جم","en":"Kraft Gold Squeeze 440G","weightValue":440,"weightUnit":"g"},{"id":"p88764","sku":"88764","ar":"سكویز كرفت 790 جم","en":"Kraft Gold Squeeze 790G","weightValue":790,"weightUnit":"g"}]},{"id":"g3-kraft-slices-cheddar-pac","titleAr":"شرائح جبن كرافت","titleEn":"KRAFT SLICES & cheddar packets","items":[{"id":"p702145","sku":"702145","ar":"شرائح كرفت 200 جم","en":"Kraft Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p702146","sku":"702146","ar":"لیت شرائح كرفت 200 جم","en":"Kraft Sclices 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p701741","sku":"701741","ar":"شرائح كرفت 400 جم","en":"Kraft Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p701742","sku":"701742","ar":"لیت شرائح كرفت 400 جم","en":"Kraft Sclices 400G - Light","weightValue":400,"weightUnit":"g"},{"id":"p81388","sku":"81388","ar":"بلوك جبنھ كرفت 250 جم","en":"Kraft Cheddar Packets 250G","weightValue":250,"weightUnit":"g"},{"id":"p81389","sku":"81389","ar":"بلوك جبنھ كرفت 500 جم","en":"Kraft Cheddar Packets 500G","weightValue":500,"weightUnit":"g"}]},{"id":"g4-kraft-tins","titleAr":"علب كرافت","titleEn":"KRAFT TINS","items":[{"id":"p88770","sku":"88770","ar":"علب كرفت 100 جم","en":"Kraft Can 100G","weightValue":100,"weightUnit":"g"},{"id":"p88773","sku":"88773","ar":"برومو علب كرفت 100 جم","en":"Kraft Can 100G - Promo 6 Pcs","weightValue":100,"weightUnit":"g"},{"id":"p88771","sku":"88771","ar":"علب كرفت 190 جم","en":"Kraft Can 190G","weightValue":190,"weightUnit":"g"},{"id":"p88769","sku":"88769","ar":"علب كرفت 50 جم","en":"Kraft Can 50G","weightValue":50,"weightUnit":"g"},{"id":"p88772","sku":"88772","ar":"برومو علب كرفت 50 جم","en":"Kraft Can 50G - Promo 8 Pcs","weightValue":50,"weightUnit":"g"}]},{"id":"g5-puck-sqare-triangles-tub","titleAr":"لبنھ /حلوم جبن/ مثلث جبن /مربع بن","titleEn":"Puck Sqare/ Triangles/Tubs/Hollomi & Labnehs","items":[{"id":"p601480","sku":"601480","ar":"مربعات بوك 108 جم","en":"Puck Square 108G","weightValue":108,"weightUnit":"g"},{"id":"p601479","sku":"601479","ar":"مربعات بوك 216 جم","en":"Puck Square 216G","weightValue":216,"weightUnit":"g"},{"id":"p601478","sku":"601478","ar":"مربعات بوك 432 جم","en":"Puck Square 432G","weightValue":432,"weightUnit":"g"},{"id":"p601378","sku":"601378","ar":"مثلثات بوك 120 جم","en":"Puck Triangles 120G","weightValue":120,"weightUnit":"g"},{"id":"p601382","sku":"601382","ar":"برومو مثلثات بوك 120 جم","en":"Puck Triangles 120G - Promo","weightValue":120,"weightUnit":"g"},{"id":"p601380","sku":"601380","ar":"مثلثات بوك 240 جم","en":"Puck Triangles 240G","weightValue":240,"weightUnit":"g"},{"id":"p599370","sku":"599370","ar":"مثلثات بوك 360 جم","en":"Puck Triangles 360G","weightValue":360,"weightUnit":"g"},{"id":"p599497","sku":"599497","ar":"مثلثات بوك 480 جم","en":"Puck Triangles 480G","weightValue":480,"weightUnit":"g"},{"id":"p596684","sku":"596684","ar":"عادي طبق جبن بوك 200 جم","en":"Puck CC Tub 200G","weightValue":200,"weightUnit":"g"},{"id":"p596690","sku":"596690","ar":"واعشاب ثوم طبق جبن بوك 200 جم","en":"Puck CC Tub 200G - Garlic & Herbs","weightValue":200,"weightUnit":"g"},{"id":"p596700","sku":"596700","ar":"لیت طبق جبن بوك 200 جم","en":"Puck CC Tub 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p596704","sku":"596704","ar":"بالزیتون طبق جبن بوك 200 جم","en":"Puck CC Tub 200G - Olive","weightValue":200,"weightUnit":"g"},{"id":"p596754","sku":"596754","ar":"عادي طبق جبن بوك 300 جم","en":"Puck CC Tub 300G","weightValue":300,"weightUnit":"g"},{"id":"p596762","sku":"596762","ar":"بالزیتون طبق جبن بوك 300 جم","en":"Puck CC Tub 300G - Olive","weightValue":300,"weightUnit":"g"},{"id":"p598056","sku":"598056","ar":"طبق جبن بوك عضوي 150 جم","en":"Puck CC Tub 150G - Organic","weightValue":150,"weightUnit":"g"},{"id":"p603152","sku":"603152","ar":"حلومي جبن بوك 200 جم","en":"Puck Halloumi 200G","weightValue":200,"weightUnit":"g"},{"id":"p603708","sku":"603708","ar":"حلومي جبن بوك الدسم قلیل 200 جم","en":"Puck Halloumi 200G light","weightValue":200,"weightUnit":"g"},{"id":"p605300","sku":"605300","ar":"حلومي جبن الثلث البقرات 200 جم","en":"TTC Grill Chease 200G","weightValue":200,"weightUnit":"g"},{"id":"p799117","sku":"799117","ar":"لبنھ بوك 180 جم","en":"Puck Labneh 180g","weightValue":180,"weightUnit":"g"},{"id":"p586094","sku":"586094","ar":"زعتر لبنھ بوك 180 جم","en":"Puck Labneh 180g - Zaater","weightValue":180,"weightUnit":"g"},{"id":"p799120","sku":"799120","ar":"لبنھ بوك 400 جم","en":"Puck Labneh 400g","weightValue":400,"weightUnit":"g"},{"id":"p799123","sku":"799123","ar":"لبنھ بوك 650 جم","en":"Puck Labneh 650g","weightValue":650,"weightUnit":"g"},{"id":"p599575","sku":"599575","ar":"لبنانیة وصفة لبنھ بوك 400 جم","en":"Puck Labneh 400g-Lebanese recipe","weightValue":400,"weightUnit":"g"},{"id":"p599585","sku":"599585","ar":"لبنانیة وصفة لبنھ بوك 180 جم","en":"Puck Labneh 180g-Lebanese recipe","weightValue":180,"weightUnit":"g"}]},{"id":"g6-whipping-cooking-cream-a","titleAr":"والصلصات الطبخ وكریمة الخفق كریمة","titleEn":"whipping, cooking cream and sauces","items":[{"id":"p607050","sku":"607050","ar":"طبخ كریمة بوك 1 لتر","en":"Puck Cooking Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607049","sku":"607049","ar":"طبخ كریمة بوك 200 مل","en":"Puck Cooking Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607048","sku":"607048","ar":"طبخ كریمة بوك 500 مل","en":"Puck Cooking Cream 500ml","weightValue":500,"weightUnit":"ml"},{"id":"p607055","sku":"607055","ar":"لیت طبخ كریمة بوك 500 مل","en":"Puck Cooking Cream 500ml - Light","weightValue":500,"weightUnit":"ml"},{"id":"p607061","sku":"607061","ar":"اجبان اربعھ صلصة بوك","en":"Puck Sauce - 4 Cheese","weightValue":0,"weightUnit":"g"},{"id":"p607059","sku":"607059","ar":"البشامیل صلصة بوك","en":"Puck Sauce - Bechamel","weightValue":0,"weightUnit":"g"},{"id":"p607062","sku":"607062","ar":"المشروم صلصة بوك","en":"Puck Sauce - Mashroom","weightValue":0,"weightUnit":"g"},{"id":"p607058","sku":"607058","ar":"الطماطم صلصة بوك","en":"Puck Sauce - Tomato","weightValue":0,"weightUnit":"g"},{"id":"p601611","sku":"601611","ar":"بخاخ خفق بوك 250 جم","en":"Puck Whipping Spray 250G","weightValue":250,"weightUnit":"g"},{"id":"p607071","sku":"607071","ar":"خفق كریمة بوك 1 لتر","en":"Puck Whipping Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607070","sku":"607070","ar":"خفق كریمة بوك 200 مل","en":"Puck Whipping Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607069","sku":"607069","ar":"خفق كریمة بوك 500 مل","en":"Puck Whipping Cream 500ml","weightValue":500,"weightUnit":"ml"}]},{"id":"g7-puck-slices-and-naturals","titleAr":"شرائح &طبیعیة شرائح","titleEn":"Puck Slices and naturals slices","items":[{"id":"p54443","sku":"54443","ar":"شیدار طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Cheddar","weightValue":150,"weightUnit":"g"},{"id":"p49761","sku":"49761","ar":"ایمتال طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Emmental","weightValue":150,"weightUnit":"g"},{"id":"p49760","sku":"49760","ar":"جودا طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Gouda","weightValue":150,"weightUnit":"g"},{"id":"p49758","sku":"49758","ar":"ھافارتي طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Havarti","weightValue":150,"weightUnit":"g"},{"id":"p590403","sku":"590403","ar":"جیلبینو ھافارتي طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Havati/Jalapeno","weightValue":150,"weightUnit":"g"},{"id":"p49795","sku":"49795","ar":"موزریل طبیعیة شرائح بوك 150 جم","en":"Puck NAT. Slices 150G - Mozzarella","weightValue":150,"weightUnit":"g"},{"id":"p602501","sku":"602501","ar":"عادیة شرائح بوك 200 جم","en":"Puck Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p602502","sku":"602502","ar":"شیدار شرائح بوك 200 جم","en":"Puck Sclices 200G - Cheddar","weightValue":200,"weightUnit":"g"},{"id":"p602500","sku":"602500","ar":"الدسم قلیل شرائح بوك 200 جم","en":"Puck Sclices 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p602473","sku":"602473","ar":"عادیة شرائح بوك 400 جم","en":"Puck Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p603473","sku":"603473","ar":"شیدار شرائح بوك 400 جم","en":"Puck Sclices 400G - Cheddar","weightValue":400,"weightUnit":"g"}]},{"id":"g8-puck-mozarellah","titleAr":"موزریل بوك","titleEn":"Puck Mozarellah","items":[{"id":"p607074","sku":"607074","ar":"شیدار موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Chedder","weightValue":180,"weightUnit":"g"},{"id":"p607092","sku":"607092","ar":"قشقوان موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Kashkaval","weightValue":180,"weightUnit":"g"},{"id":"p607091","sku":"607091","ar":"مكس تكس موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Tex Mex","weightValue":180,"weightUnit":"g"},{"id":"p607079","sku":"607079","ar":"موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p594709","sku":"594709","ar":"شیدار موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Chedder","weightValue":400,"weightUnit":"g"},{"id":"p594719","sku":"594719","ar":"قشقوان موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Kashkaval","weightValue":400,"weightUnit":"g"},{"id":"p594713","sku":"594713","ar":"مكس تكس موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Tex Mex","weightValue":400,"weightUnit":"g"},{"id":"p607081","sku":"607081","ar":"موزریل جبن بوك 900 جم","en":"Puck Shredded Cheese 900G","weightValue":900,"weightUnit":"g"},{"id":"p597226","sku":"597226","ar":"موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p608390","sku":"608390","ar":"مكس شیدار موزریل جبن بوك 180 جم","en":"Puck Shredded Cheese 180G - Chedder mix","weightValue":180,"weightUnit":"g"},{"id":"p608387","sku":"608387","ar":"مكس شیدار موزریل جبن بوك 400 جم","en":"Puck Shredded Cheese 400G - Chedder mix","weightValue":400,"weightUnit":"g"}]},{"id":"g9-three-cows-feta-cheese-a","titleAr":"فیتا /موزریل بقرات ثلث","titleEn":"Three Cows Feta cheese and Mozzarella","items":[{"id":"p607113","sku":"607113","ar":"بقرات ثلث موزریل 180 جم","en":"TTC Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p607114","sku":"607114","ar":"بقرات ثلث موزریل 400 جم","en":"TTC Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p607115","sku":"607115","ar":"بقرات ثلث موزریل 900 جم","en":"TTC Shredded Cheese 900G","weightValue":900,"weightUnit":"g"}]},{"id":"g10-feta-puck-and-ttc","titleAr":"الثلث والبقرات بوك فیتا","titleEn":"Feta Puck and TTC","items":[{"id":"p598191","sku":"598191","ar":"مكعبات فیتا بوك 410 جم","en":"Puck Feta Cubes 410G","weightValue":410,"weightUnit":"g"},{"id":"p598123","sku":"598123","ar":"واعشاب ثوم مكعبات فیتا بوك 410 جم","en":"Puck Feta Cubes 410G - Gar/Pars","weightValue":410,"weightUnit":"g"},{"id":"p598101","sku":"598101","ar":"وبابریكا حار فلفل مكعبات فیتا بوك 410 جم","en":"Puck Feta Cubes 410G - Pepper/Chilli","weightValue":410,"weightUnit":"g"},{"id":"p796232","sku":"796232","ar":"بقرات ثلث فیتا 200 جم","en":"TTC Feta 200g","weightValue":200,"weightUnit":"g"},{"id":"p796239","sku":"796239","ar":"الدسم قلیل بقرات ثلث فیتا 200 جم","en":"TTC Feta 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p796236","sku":"796236","ar":"بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G","weightValue":500,"weightUnit":"g"},{"id":"p796229","sku":"796229","ar":"الدسم قلیل بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G - LF","weightValue":500,"weightUnit":"g"}]},{"id":"g11-arla-organic-and-milk-po","titleAr":"العضوي الحلیب ارل &مجفف حلیب بوك","titleEn":"Arla Organic and milk powder","items":[{"id":"p63899","sku":"63899","ar":"الدسم كامل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Full Fat","weightValue":1,"weightUnit":"l"},{"id":"p65373","sku":"65373","ar":"الدسم قلیل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Low Fat","weightValue":1,"weightUnit":"l"},{"id":"p65389","sku":"65389","ar":"شوكوتھ عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Choco","weightValue":200,"weightUnit":"ml"},{"id":"p65386","sku":"65386","ar":"الدسم كامل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Full Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65959","sku":"65959","ar":"الدسم قلیل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Low Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65960","sku":"65960","ar":"فراولة عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Strawberry","weightValue":200,"weightUnit":"ml"},{"id":"p588383","sku":"588383","ar":"لكتوز من خالي عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Lactose Free","weightValue":1,"weightUnit":"l"}]},{"id":"g12-st-cream-thick-cream","titleAr":"وقیمر قشطة","titleEn":"St. Cream & Thick Cream","items":[{"id":"p582417","sku":"582417","ar":"قشطة بوك 160 جم","en":"Puck Str. Cream 160G","weightValue":160,"weightUnit":"g"},{"id":"p582428","sku":"582428","ar":"بالعسل قشطة بوك 160 جم","en":"Puck Str. Cream 160G - Honey","weightValue":160,"weightUnit":"g"},{"id":"p582425","sku":"582425","ar":"لیت قشطة بوك 160 جم","en":"Puck Str. Cream 160G - Light","weightValue":160,"weightUnit":"g"},{"id":"p582432","sku":"582432","ar":"بالفراولة قشطة بوك 160 جم","en":"Puck Str. Cream 160G - Strawberry","weightValue":160,"weightUnit":"g"},{"id":"p582421","sku":"582421","ar":"برومو قشطة بوك 160 جم","en":"Puck Str. Cream 160G Promo","weightValue":160,"weightUnit":"g"},{"id":"p591438","sku":"591438","ar":"دي فیتامین قشطة بوك 160 جم","en":"Puck Str. Cream 160G -Vit D","weightValue":160,"weightUnit":"g"},{"id":"p591966","sku":"591966","ar":"دي فیتامین قشطة بوك برومو 160 جم","en":"Puck Str. Cream 160G Promo Vit D","weightValue":160,"weightUnit":"g"},{"id":"p607011","sku":"607011","ar":"قیمر بوك 125 مل","en":"Puck Thick Cream 125ml","weightValue":125,"weightUnit":"ml"},{"id":"p607013","sku":"607013","ar":"(1+3)برومو قیمر بوك 125 مل","en":"Puck Thick Cream 125ml (3+1) Promo","weightValue":125,"weightUnit":"ml"},{"id":"p607012","sku":"607012","ar":"قیمر بوك 250 مل","en":"Puck Thick Cream 250ml","weightValue":250,"weightUnit":"ml"},{"id":"p607008","sku":"607008","ar":"برومو قیمر بوك 250 مل","en":"Puck Thick Cream 250ml - Promo","weightValue":250,"weightUnit":"ml"}]},{"id":"g13-evap-milk","titleAr":"مبخر شاي حلیب","titleEn":"EVAP MILK","items":[{"id":"p597989","sku":"597989","ar":"شاي حلیب بوك 170 جم","en":"Puck Evap Milk 170G","weightValue":170,"weightUnit":"g"}]},{"id":"g14-starbucks","titleAr":"ستاربكس قھوة","titleEn":"Starbucks","items":[{"id":"p607045","sku":"607045","ar":"لیتھ ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caffe Latte","weightValue":220,"weightUnit":"ml"},{"id":"p607047","sku":"607047","ar":"كابتشینو ستاربكس 220 مل","en":"SBUX Classic 220 ml - Cappucino","weightValue":220,"weightUnit":"ml"},{"id":"p607046","sku":"607046","ar":"كارمیل ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caramel Mach","weightValue":220,"weightUnit":"ml"},{"id":"p607044","sku":"607044","ar":"موكا ستاربكس 220 مل","en":"SBUX Classic 220 ml - Mocha","weightValue":220,"weightUnit":"ml"},{"id":"p38881","sku":"38881","ar":"شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p68529","sku":"68529","ar":"سكر بدون شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml - No Added Sugar","weightValue":200,"weightUnit":"ml"},{"id":"p54397","sku":"54397","ar":"كارمیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Caramel","weightValue":250,"weightUnit":"ml"},{"id":"p49820","sku":"49820","ar":"قھوة فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Coffee","weightValue":250,"weightUnit":"ml"},{"id":"p89261","sku":"89261","ar":"كوكیز فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Cookies","weightValue":250,"weightUnit":"ml"},{"id":"p49918","sku":"49918","ar":"موكا فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Mocha","weightValue":250,"weightUnit":"ml"},{"id":"p66899","sku":"66899","ar":"فانیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Vanilla","weightValue":250,"weightUnit":"ml"},{"id":"p595113","sku":"595113","ar":"سكر بدون كارمیل فرابوتشینو س 250 مل","en":"SBUX Frappuccino 250ml - Caramel No sugar","weightValue":250,"weightUnit":"ml"},{"id":"p601814","sku":"601814","ar":"شوت تربل ستاربكس 300 مل","en":"SBUX Triple Shot 300ml","weightValue":300,"weightUnit":"ml"}]},{"id":"g15-lurpak-butter","titleAr":"مملحة غیر زبدة لورباك","titleEn":"Lurpak Butter","items":[{"id":"p584543","sku":"584543","ar":"زبده لورباك غیرمملحة 100 جم","en":"Lurpak Butter 100G - UnSalted","weightValue":100,"weightUnit":"g"},{"id":"p86174","sku":"86174","ar":"زبدة لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted","weightValue":200,"weightUnit":"g"},{"id":"p86474","sku":"86474","ar":"زبدة لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted","weightValue":200,"weightUnit":"g"},{"id":"p86019","sku":"86019","ar":"زبدة لورباك عضویة غیرمملحة 200 جم","en":"Lurpak Butter 200G - UnSalted - Organic","weightValue":200,"weightUnit":"g"},{"id":"p86482","sku":"86482","ar":"زبدة لوربك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted","weightValue":400,"weightUnit":"g"},{"id":"p596278","sku":"596278","ar":"لورباك مملحة غیر 50 جم","en":"Lurpak Butter 50G - UnSalted","weightValue":50,"weightUnit":"g"},{"id":"p80661","sku":"80661","ar":"لورباك مملحة غیر 10 جم","en":"Lurpak Butter 10G - UnSalted","weightValue":10,"weightUnit":"g"},{"id":"p89111","sku":"89111","ar":"بخاخ رذاذ لورباك 200 مل","en":"Lurpak Cooking Mist 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p88790","sku":"88790","ar":"سوفت لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88789","sku":"88789","ar":"سوفت لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88786","sku":"88786","ar":"سوفت لورباك مملحة 400 جم","en":"Lurpak Butter 400G - Salted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p88785","sku":"88785","ar":"سوفت لورباك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p596537","sku":"596537","ar":"لورباك مملحة غير 50 جم","en":"Lurpak Butter 50G -( 5+ 1 ) UnSalted","weightValue":50,"weightUnit":"g"}]},{"id":"g16-danya-juice","titleAr":"دانیا عصیر","titleEn":"Danya Juice","items":[{"id":"p593530","sku":"593530","ar":"احمر عنب عصیر دانیة 1 لتر","en":"Danya Red Grape 1L","weightValue":1,"weightUnit":"l"},{"id":"p593550","sku":"593550","ar":"ابیض عنب عصیر دانیة 1 لتر","en":"Danya White Grape 1L","weightValue":1,"weightUnit":"l"}]},{"id":"g17-galaxy-milk","titleAr":"حليب جالكسي","titleEn":"Galaxy Milk","items":[{"id":"p595889","sku":"595889","ar":"الكرامیل و بالشوكولتة الحلیب سي 220 مل","en":"Galaxy 10X220ML Choc Milk Caramel Flavo","weightValue":220,"weightUnit":"ml"},{"id":"p595886","sku":"595886","ar":"الممیزة بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Signature Chocolate Milk","weightValue":220,"weightUnit":"ml"},{"id":"p595892","sku":"595892","ar":"البندق و بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Choc Milk Hazlnut Flavor","weightValue":220,"weightUnit":"ml"},{"id":"p599495","sku":"599495","ar":"الھند بجوز الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Coconut Flavor LTO","weightValue":220,"weightUnit":"ml"}]},{"id":"g18-arla-protein","titleAr":"بروتین أرل","titleEn":"Arla Protein","items":[{"id":"p598942","sku":"598942","ar":"شوكلتة بودنق بروتین 200 جم","en":"Pudding Choco ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598897","sku":"598897","ar":"كارامیل بودنق بروتین 200 جم","en":"Pudding caramel ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598922","sku":"598922","ar":"بندق بودنق بروتین 200 جم","en":"Pudding hazulnut ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p604815","sku":"604815","ar":"ازرق توت زبادي بروتین آرل 150 جم","en":"Arla Protein bluebery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604813","sku":"604813","ar":"فروت باشن زبادي بروتین آرل 150 جم","en":"Arla Protein peach passion yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604814","sku":"604814","ar":"فراولة زبادي بروتین آرل 150 جم","en":"Arla Protein strewbery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p338037","sku":"338037","ar":"شوكلتة بروتین حلیب 250 مل","en":"Arla Protine Shake chocolate 250Ml","weightValue":250,"weightUnit":"ml"},{"id":"p604487","sku":"604487","ar":"بروتين حليب فراولة 225 مل","en":"Arla Protine Shake Strawberry 225Ml","weightValue":225,"weightUnit":"ml"}]},{"id":"g19-puck-square-promo","titleAr":"بوك مربعات - عرض ترويجي","titleEn":"Puck Square Promo","items":[{"id":"p607096","sku":"607096","ar":"مربع بوك 108 جم","en":"Puck square 3×108g","weightValue":108,"weightUnit":"g"},{"id":"p607123","sku":"607123","ar":"مربع بوك برومو 216 جم","en":"Puck square Promo KSA 8X3X216G","weightValue":216,"weightUnit":"g"},{"id":"p338619","sku":"338619","ar":"بودنج بروتين آرل كريم بروليه 200 جم","en":"Arla protein Pudding Creame brulee 20g 6x200g","weightValue":20,"weightUnit":"g"}]}];
+const PRODUCT_CATALOG = [{"id":"g1-puck-cheese-cream","titleAr":"أرلا جبن كريمي","titleEn":"Arla Cheese Cream","items":[{"id":"p602238","sku":"602238","ar":"كاسات أرلا 1100 جم","en":"Arla Blue Jar 1100G","weightValue":1100,"weightUnit":"g"},{"id":"p592474","sku":"592474","ar":"كاسات أرلا 130 جم","en":"Arla Blue Jar 130G","weightValue":130,"weightUnit":"g"},{"id":"p592479","sku":"592479","ar":"كاسات أرلا 230 جم","en":"Arla Blue Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p798952","sku":"798952","ar":"الدسم قلیل كاسات أرلا 240 جم","en":"Arla Blue Jar 240G - LF","weightValue":240,"weightUnit":"g"},{"id":"p798955","sku":"798955","ar":"الدسم قلیل كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - LF","weightValue":500,"weightUnit":"g"},{"id":"p602061","sku":"602061","ar":"برومو كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - Promo","weightValue":500,"weightUnit":"g"},{"id":"p602059","sku":"602059","ar":"كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - Single","weightValue":500,"weightUnit":"g"},{"id":"p588330","sku":"588330","ar":"دي فایتمین كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - Vit D","weightValue":500,"weightUnit":"g"},{"id":"p592349","sku":"592349","ar":"برومو كاسات أرلا 900 جم","en":"Arla Blue Jar 900G - Promo","weightValue":900,"weightUnit":"g"},{"id":"p592348","sku":"592348","ar":"كاسات أرلا 900 جم","en":"Arla Blue Jar 900G - Single","weightValue":900,"weightUnit":"g"},{"id":"p584323","sku":"584323","ar":"كاسات أرلا برومو الدسم قلیل 500 جم","en":"Arla Blue Jar 2*500G - Low Fat Promo","weightValue":500,"weightUnit":"g"},{"id":"p798967","sku":"798967","ar":"شیدار كاسات أرلا 500 جم","en":"Arla Gold Jar 500G","weightValue":500,"weightUnit":"g"},{"id":"p584322","sku":"584322","ar":"شیدار كاسات أرلا برومو 500 جم","en":"Arla Gold Jar 500G Promo","weightValue":500,"weightUnit":"g"},{"id":"p798922","sku":"798922","ar":"سكویز أرلا 400 جم","en":"Arla Squeeze 400G","weightValue":400,"weightUnit":"g"},{"id":"p599593","sku":"599593","ar":"سكویز أرلا 750 جم","en":"Arla Squeeze 750G","weightValue":750,"weightUnit":"g"},{"id":"p608399","sku":"608399","ar":"سكویز أرلا 200 جم","en":"Arla Squeeze 200G","weightValue":200,"weightUnit":"g"}]},{"id":"g2-kraft-cheese-jars","titleAr":"شیدر جبن كرافت","titleEn":"KRAFT CHEESE JARS","items":[{"id":"p88759","sku":"88759","ar":"كاسات كرفت 140 جم","en":"Kraft Gold Jar 140G","weightValue":140,"weightUnit":"g"},{"id":"p88760","sku":"88760","ar":"كاسات كرفت 230 جم","en":"Kraft Gold Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p586372","sku":"586372","ar":"الدسم قلیل كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Low Fat","weightValue":480,"weightUnit":"g"},{"id":"p88766","sku":"88766","ar":"برومو كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Promo","weightValue":480,"weightUnit":"g"},{"id":"p88761","sku":"88761","ar":"كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Single","weightValue":480,"weightUnit":"g"},{"id":"p88767","sku":"88767","ar":"برومو كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Promo","weightValue":870,"weightUnit":"g"},{"id":"p88762","sku":"88762","ar":"كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Single","weightValue":870,"weightUnit":"g"},{"id":"p88765","sku":"88765","ar":"*3كاسات كرفت برومو 230 جم","en":"Kraft Gold Jar 3*4*230G Promo","weightValue":230,"weightUnit":"g"},{"id":"p88763","sku":"88763","ar":"سكویز كرفت 440 جم","en":"Kraft Gold Squeeze 440G","weightValue":440,"weightUnit":"g"},{"id":"p88764","sku":"88764","ar":"سكویز كرفت 790 جم","en":"Kraft Gold Squeeze 790G","weightValue":790,"weightUnit":"g"}]},{"id":"g3-kraft-slices-cheddar-pac","titleAr":"شرائح جبن كرافت","titleEn":"KRAFT SLICES & cheddar packets","items":[{"id":"p702145","sku":"702145","ar":"شرائح كرفت 200 جم","en":"Kraft Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p702146","sku":"702146","ar":"لیت شرائح كرفت 200 جم","en":"Kraft Sclices 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p701741","sku":"701741","ar":"شرائح كرفت 400 جم","en":"Kraft Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p701742","sku":"701742","ar":"لیت شرائح كرفت 400 جم","en":"Kraft Sclices 400G - Light","weightValue":400,"weightUnit":"g"},{"id":"p81388","sku":"81388","ar":"بلوك جبنھ كرفت 250 جم","en":"Kraft Cheddar Packets 250G","weightValue":250,"weightUnit":"g"},{"id":"p81389","sku":"81389","ar":"بلوك جبنھ كرفت 500 جم","en":"Kraft Cheddar Packets 500G","weightValue":500,"weightUnit":"g"}]},{"id":"g4-kraft-tins","titleAr":"علب كرافت","titleEn":"KRAFT TINS","items":[{"id":"p88770","sku":"88770","ar":"علب كرفت 100 جم","en":"Kraft Can 100G","weightValue":100,"weightUnit":"g"},{"id":"p88773","sku":"88773","ar":"برومو علب كرفت 100 جم","en":"Kraft Can 100G - Promo 6 Pcs","weightValue":100,"weightUnit":"g"},{"id":"p88771","sku":"88771","ar":"علب كرفت 190 جم","en":"Kraft Can 190G","weightValue":190,"weightUnit":"g"},{"id":"p88769","sku":"88769","ar":"علب كرفت 50 جم","en":"Kraft Can 50G","weightValue":50,"weightUnit":"g"},{"id":"p88772","sku":"88772","ar":"برومو علب كرفت 50 جم","en":"Kraft Can 50G - Promo 8 Pcs","weightValue":50,"weightUnit":"g"}]},{"id":"g5-puck-sqare-triangles-tub","titleAr":"لبنھ /حلوم جبن/ مثلث جبن /مربع بن","titleEn":"Arla Sqare/ Triangles/Tubs/Hollomi & Labnehs","items":[{"id":"p601480","sku":"601480","ar":"مربعات أرلا 108 جم","en":"Arla Square 108G","weightValue":108,"weightUnit":"g"},{"id":"p601479","sku":"601479","ar":"مربعات أرلا 216 جم","en":"Arla Square 216G","weightValue":216,"weightUnit":"g"},{"id":"p601478","sku":"601478","ar":"مربعات أرلا 432 جم","en":"Arla Square 432G","weightValue":432,"weightUnit":"g"},{"id":"p601378","sku":"601378","ar":"مثلثات أرلا 120 جم","en":"Arla Triangles 120G","weightValue":120,"weightUnit":"g"},{"id":"p601382","sku":"601382","ar":"برومو مثلثات أرلا 120 جم","en":"Arla Triangles 120G - Promo","weightValue":120,"weightUnit":"g"},{"id":"p601380","sku":"601380","ar":"مثلثات أرلا 240 جم","en":"Arla Triangles 240G","weightValue":240,"weightUnit":"g"},{"id":"p599370","sku":"599370","ar":"مثلثات أرلا 360 جم","en":"Arla Triangles 360G","weightValue":360,"weightUnit":"g"},{"id":"p599497","sku":"599497","ar":"مثلثات أرلا 480 جم","en":"Arla Triangles 480G","weightValue":480,"weightUnit":"g"},{"id":"p596684","sku":"596684","ar":"عادي طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G","weightValue":200,"weightUnit":"g"},{"id":"p596690","sku":"596690","ar":"واعشاب ثوم طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G - Garlic & Herbs","weightValue":200,"weightUnit":"g"},{"id":"p596700","sku":"596700","ar":"لیت طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p596704","sku":"596704","ar":"بالزیتون طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G - Olive","weightValue":200,"weightUnit":"g"},{"id":"p596754","sku":"596754","ar":"عادي طبق جبن أرلا 300 جم","en":"Arla CC Tub 300G","weightValue":300,"weightUnit":"g"},{"id":"p596762","sku":"596762","ar":"بالزیتون طبق جبن أرلا 300 جم","en":"Arla CC Tub 300G - Olive","weightValue":300,"weightUnit":"g"},{"id":"p598056","sku":"598056","ar":"طبق جبن أرلا عضوي 150 جم","en":"Arla CC Tub 150G - Organic","weightValue":150,"weightUnit":"g"},{"id":"p603152","sku":"603152","ar":"حلومي جبن أرلا 200 جم","en":"Arla Halloumi 200G","weightValue":200,"weightUnit":"g"},{"id":"p603708","sku":"603708","ar":"حلومي جبن أرلا الدسم قلیل 200 جم","en":"Arla Halloumi 200G light","weightValue":200,"weightUnit":"g"},{"id":"p605300","sku":"605300","ar":"حلومي جبن الثلث البقرات 200 جم","en":"TTC Grill Chease 200G","weightValue":200,"weightUnit":"g"},{"id":"p799117","sku":"799117","ar":"لبنھ أرلا 180 جم","en":"Arla Labneh 180g","weightValue":180,"weightUnit":"g"},{"id":"p586094","sku":"586094","ar":"زعتر لبنھ أرلا 180 جم","en":"Arla Labneh 180g - Zaater","weightValue":180,"weightUnit":"g"},{"id":"p799120","sku":"799120","ar":"لبنھ أرلا 400 جم","en":"Arla Labneh 400g","weightValue":400,"weightUnit":"g"},{"id":"p799123","sku":"799123","ar":"لبنھ أرلا 650 جم","en":"Arla Labneh 650g","weightValue":650,"weightUnit":"g"},{"id":"p599575","sku":"599575","ar":"لبنانیة وصفة لبنھ أرلا 400 جم","en":"Arla Labneh 400g-Lebanese recipe","weightValue":400,"weightUnit":"g"},{"id":"p599585","sku":"599585","ar":"لبنانیة وصفة لبنھ أرلا 180 جم","en":"Arla Labneh 180g-Lebanese recipe","weightValue":180,"weightUnit":"g"}]},{"id":"g6-whipping-cooking-cream-a","titleAr":"والصلصات الطبخ وكریمة الخفق كریمة","titleEn":"whipping, cooking cream and sauces","items":[{"id":"p607050","sku":"607050","ar":"طبخ كریمة أرلا 1 لتر","en":"Arla Cooking Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607049","sku":"607049","ar":"طبخ كریمة أرلا 200 مل","en":"Arla Cooking Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607048","sku":"607048","ar":"طبخ كریمة أرلا 500 مل","en":"Arla Cooking Cream 500ml","weightValue":500,"weightUnit":"ml"},{"id":"p607055","sku":"607055","ar":"لیت طبخ كریمة أرلا 500 مل","en":"Arla Cooking Cream 500ml - Light","weightValue":500,"weightUnit":"ml"},{"id":"p607061","sku":"607061","ar":"اجبان اربعھ صلصة أرلا","en":"Arla Sauce - 4 Cheese","weightValue":0,"weightUnit":"g"},{"id":"p607059","sku":"607059","ar":"البشامیل صلصة أرلا","en":"Arla Sauce - Bechamel","weightValue":0,"weightUnit":"g"},{"id":"p607062","sku":"607062","ar":"المشروم صلصة أرلا","en":"Arla Sauce - Mashroom","weightValue":0,"weightUnit":"g"},{"id":"p607058","sku":"607058","ar":"الطماطم صلصة أرلا","en":"Arla Sauce - Tomato","weightValue":0,"weightUnit":"g"},{"id":"p601611","sku":"601611","ar":"بخاخ خفق أرلا 250 جم","en":"Arla Whipping Spray 250G","weightValue":250,"weightUnit":"g"},{"id":"p607071","sku":"607071","ar":"خفق كریمة أرلا 1 لتر","en":"Arla Whipping Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607070","sku":"607070","ar":"خفق كریمة أرلا 200 مل","en":"Arla Whipping Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607069","sku":"607069","ar":"خفق كریمة أرلا 500 مل","en":"Arla Whipping Cream 500ml","weightValue":500,"weightUnit":"ml"}]},{"id":"g7-puck-slices-and-naturals","titleAr":"شرائح &طبیعیة شرائح","titleEn":"Arla Slices and naturals slices","items":[{"id":"p54443","sku":"54443","ar":"شیدار طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Cheddar","weightValue":150,"weightUnit":"g"},{"id":"p49761","sku":"49761","ar":"ایمتال طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Emmental","weightValue":150,"weightUnit":"g"},{"id":"p49760","sku":"49760","ar":"جودا طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Gouda","weightValue":150,"weightUnit":"g"},{"id":"p49758","sku":"49758","ar":"ھافارتي طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Havarti","weightValue":150,"weightUnit":"g"},{"id":"p590403","sku":"590403","ar":"جیلبینو ھافارتي طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Havati/Jalapeno","weightValue":150,"weightUnit":"g"},{"id":"p49795","sku":"49795","ar":"موزریل طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Mozzarella","weightValue":150,"weightUnit":"g"},{"id":"p602501","sku":"602501","ar":"عادیة شرائح أرلا 200 جم","en":"Arla Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p602502","sku":"602502","ar":"شیدار شرائح أرلا 200 جم","en":"Arla Sclices 200G - Cheddar","weightValue":200,"weightUnit":"g"},{"id":"p602500","sku":"602500","ar":"الدسم قلیل شرائح أرلا 200 جم","en":"Arla Sclices 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p602473","sku":"602473","ar":"عادیة شرائح أرلا 400 جم","en":"Arla Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p603473","sku":"603473","ar":"شیدار شرائح أرلا 400 جم","en":"Arla Sclices 400G - Cheddar","weightValue":400,"weightUnit":"g"}]},{"id":"g8-puck-mozarellah","titleAr":"موزریل أرلا","titleEn":"Arla Mozarellah","items":[{"id":"p607074","sku":"607074","ar":"شیدار موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Chedder","weightValue":180,"weightUnit":"g"},{"id":"p607092","sku":"607092","ar":"قشقوان موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Kashkaval","weightValue":180,"weightUnit":"g"},{"id":"p607091","sku":"607091","ar":"مكس تكس موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Tex Mex","weightValue":180,"weightUnit":"g"},{"id":"p607079","sku":"607079","ar":"موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p594709","sku":"594709","ar":"شیدار موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Chedder","weightValue":400,"weightUnit":"g"},{"id":"p594719","sku":"594719","ar":"قشقوان موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Kashkaval","weightValue":400,"weightUnit":"g"},{"id":"p594713","sku":"594713","ar":"مكس تكس موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Tex Mex","weightValue":400,"weightUnit":"g"},{"id":"p607081","sku":"607081","ar":"موزریل جبن أرلا 900 جم","en":"Arla Shredded Cheese 900G","weightValue":900,"weightUnit":"g"},{"id":"p597226","sku":"597226","ar":"موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p608390","sku":"608390","ar":"مكس شیدار موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Chedder mix","weightValue":180,"weightUnit":"g"},{"id":"p608387","sku":"608387","ar":"مكس شیدار موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Chedder mix","weightValue":400,"weightUnit":"g"}]},{"id":"g9-three-cows-feta-cheese-a","titleAr":"فیتا /موزریل بقرات ثلث","titleEn":"Three Cows Feta cheese and Mozzarella","items":[{"id":"p607113","sku":"607113","ar":"بقرات ثلث موزریل 180 جم","en":"TTC Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p607114","sku":"607114","ar":"بقرات ثلث موزریل 400 جم","en":"TTC Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p607115","sku":"607115","ar":"بقرات ثلث موزریل 900 جم","en":"TTC Shredded Cheese 900G","weightValue":900,"weightUnit":"g"}]},{"id":"g10-feta-puck-and-ttc","titleAr":"الثلث والبقرات أرلا فیتا","titleEn":"Feta Arla and TTC","items":[{"id":"p598191","sku":"598191","ar":"مكعبات فیتا أرلا 410 جم","en":"Arla Feta Cubes 410G","weightValue":410,"weightUnit":"g"},{"id":"p598123","sku":"598123","ar":"واعشاب ثوم مكعبات فیتا أرلا 410 جم","en":"Arla Feta Cubes 410G - Gar/Pars","weightValue":410,"weightUnit":"g"},{"id":"p598101","sku":"598101","ar":"وبابریكا حار فلفل مكعبات فیتا أرلا 410 جم","en":"Arla Feta Cubes 410G - Pepper/Chilli","weightValue":410,"weightUnit":"g"},{"id":"p796232","sku":"796232","ar":"بقرات ثلث فیتا 200 جم","en":"TTC Feta 200g","weightValue":200,"weightUnit":"g"},{"id":"p796239","sku":"796239","ar":"الدسم قلیل بقرات ثلث فیتا 200 جم","en":"TTC Feta 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p796236","sku":"796236","ar":"بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G","weightValue":500,"weightUnit":"g"},{"id":"p796229","sku":"796229","ar":"الدسم قلیل بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G - LF","weightValue":500,"weightUnit":"g"}]},{"id":"g11-arla-organic-and-milk-po","titleAr":"العضوي الحلیب ارل &مجفف حلیب أرلا","titleEn":"Arla Organic and milk powder","items":[{"id":"p63899","sku":"63899","ar":"الدسم كامل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Full Fat","weightValue":1,"weightUnit":"l"},{"id":"p65373","sku":"65373","ar":"الدسم قلیل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Low Fat","weightValue":1,"weightUnit":"l"},{"id":"p65389","sku":"65389","ar":"شوكوتھ عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Choco","weightValue":200,"weightUnit":"ml"},{"id":"p65386","sku":"65386","ar":"الدسم كامل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Full Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65959","sku":"65959","ar":"الدسم قلیل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Low Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65960","sku":"65960","ar":"فراولة عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Strawberry","weightValue":200,"weightUnit":"ml"},{"id":"p588383","sku":"588383","ar":"لكتوز من خالي عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Lactose Free","weightValue":1,"weightUnit":"l"}]},{"id":"g12-st-cream-thick-cream","titleAr":"وقیمر قشطة","titleEn":"St. Cream & Thick Cream","items":[{"id":"p582417","sku":"582417","ar":"قشطة أرلا 160 جم","en":"Arla Str. Cream 160G","weightValue":160,"weightUnit":"g"},{"id":"p582428","sku":"582428","ar":"بالعسل قشطة أرلا 160 جم","en":"Arla Str. Cream 160G - Honey","weightValue":160,"weightUnit":"g"},{"id":"p582425","sku":"582425","ar":"لیت قشطة أرلا 160 جم","en":"Arla Str. Cream 160G - Light","weightValue":160,"weightUnit":"g"},{"id":"p582432","sku":"582432","ar":"بالفراولة قشطة أرلا 160 جم","en":"Arla Str. Cream 160G - Strawberry","weightValue":160,"weightUnit":"g"},{"id":"p582421","sku":"582421","ar":"برومو قشطة أرلا 160 جم","en":"Arla Str. Cream 160G Promo","weightValue":160,"weightUnit":"g"},{"id":"p591438","sku":"591438","ar":"دي فیتامین قشطة أرلا 160 جم","en":"Arla Str. Cream 160G -Vit D","weightValue":160,"weightUnit":"g"},{"id":"p591966","sku":"591966","ar":"دي فیتامین قشطة أرلا برومو 160 جم","en":"Arla Str. Cream 160G Promo Vit D","weightValue":160,"weightUnit":"g"},{"id":"p607011","sku":"607011","ar":"قیمر أرلا 125 مل","en":"Arla Thick Cream 125ml","weightValue":125,"weightUnit":"ml"},{"id":"p607013","sku":"607013","ar":"(1+3)برومو قیمر أرلا 125 مل","en":"Arla Thick Cream 125ml (3+1) Promo","weightValue":125,"weightUnit":"ml"},{"id":"p607012","sku":"607012","ar":"قیمر أرلا 250 مل","en":"Arla Thick Cream 250ml","weightValue":250,"weightUnit":"ml"},{"id":"p607008","sku":"607008","ar":"برومو قیمر أرلا 250 مل","en":"Arla Thick Cream 250ml - Promo","weightValue":250,"weightUnit":"ml"}]},{"id":"g13-evap-milk","titleAr":"مبخر شاي حلیب","titleEn":"EVAP MILK","items":[{"id":"p597989","sku":"597989","ar":"شاي حلیب أرلا 170 جم","en":"Arla Evap Milk 170G","weightValue":170,"weightUnit":"g"}]},{"id":"g14-starbucks","titleAr":"ستاربكس قھوة","titleEn":"Starbucks","items":[{"id":"p607045","sku":"607045","ar":"لیتھ ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caffe Latte","weightValue":220,"weightUnit":"ml"},{"id":"p607047","sku":"607047","ar":"كابتشینو ستاربكس 220 مل","en":"SBUX Classic 220 ml - Cappucino","weightValue":220,"weightUnit":"ml"},{"id":"p607046","sku":"607046","ar":"كارمیل ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caramel Mach","weightValue":220,"weightUnit":"ml"},{"id":"p607044","sku":"607044","ar":"موكا ستاربكس 220 مل","en":"SBUX Classic 220 ml - Mocha","weightValue":220,"weightUnit":"ml"},{"id":"p38881","sku":"38881","ar":"شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p68529","sku":"68529","ar":"سكر بدون شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml - No Added Sugar","weightValue":200,"weightUnit":"ml"},{"id":"p54397","sku":"54397","ar":"كارمیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Caramel","weightValue":250,"weightUnit":"ml"},{"id":"p49820","sku":"49820","ar":"قھوة فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Coffee","weightValue":250,"weightUnit":"ml"},{"id":"p89261","sku":"89261","ar":"كوكیز فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Cookies","weightValue":250,"weightUnit":"ml"},{"id":"p49918","sku":"49918","ar":"موكا فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Mocha","weightValue":250,"weightUnit":"ml"},{"id":"p66899","sku":"66899","ar":"فانیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Vanilla","weightValue":250,"weightUnit":"ml"},{"id":"p595113","sku":"595113","ar":"سكر بدون كارمیل فرابوتشینو س 250 مل","en":"SBUX Frappuccino 250ml - Caramel No sugar","weightValue":250,"weightUnit":"ml"},{"id":"p601814","sku":"601814","ar":"شوت تربل ستاربكس 300 مل","en":"SBUX Triple Shot 300ml","weightValue":300,"weightUnit":"ml"}]},{"id":"g15-lurpak-butter","titleAr":"مملحة غیر زبدة لورباك","titleEn":"Lurpak Butter","items":[{"id":"p584543","sku":"584543","ar":"زبده لورباك غیرمملحة 100 جم","en":"Lurpak Butter 100G - UnSalted","weightValue":100,"weightUnit":"g"},{"id":"p86174","sku":"86174","ar":"زبدة لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted","weightValue":200,"weightUnit":"g"},{"id":"p86474","sku":"86474","ar":"زبدة لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted","weightValue":200,"weightUnit":"g"},{"id":"p86019","sku":"86019","ar":"زبدة لورباك عضویة غیرمملحة 200 جم","en":"Lurpak Butter 200G - UnSalted - Organic","weightValue":200,"weightUnit":"g"},{"id":"p86482","sku":"86482","ar":"زبدة لوربك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted","weightValue":400,"weightUnit":"g"},{"id":"p596278","sku":"596278","ar":"لورباك مملحة غیر 50 جم","en":"Lurpak Butter 50G - UnSalted","weightValue":50,"weightUnit":"g"},{"id":"p80661","sku":"80661","ar":"لورباك مملحة غیر 10 جم","en":"Lurpak Butter 10G - UnSalted","weightValue":10,"weightUnit":"g"},{"id":"p89111","sku":"89111","ar":"بخاخ رذاذ لورباك 200 مل","en":"Lurpak Cooking Mist 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p88790","sku":"88790","ar":"سوفت لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88789","sku":"88789","ar":"سوفت لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88786","sku":"88786","ar":"سوفت لورباك مملحة 400 جم","en":"Lurpak Butter 400G - Salted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p88785","sku":"88785","ar":"سوفت لورباك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p596537","sku":"596537","ar":"لورباك مملحة غير 50 جم","en":"Lurpak Butter 50G -( 5+ 1 ) UnSalted","weightValue":50,"weightUnit":"g"}]},{"id":"g16-danya-juice","titleAr":"دانیا عصیر","titleEn":"Danya Juice","items":[{"id":"p593530","sku":"593530","ar":"احمر عنب عصیر دانیة 1 لتر","en":"Danya Red Grape 1L","weightValue":1,"weightUnit":"l"},{"id":"p593550","sku":"593550","ar":"ابیض عنب عصیر دانیة 1 لتر","en":"Danya White Grape 1L","weightValue":1,"weightUnit":"l"}]},{"id":"g17-galaxy-milk","titleAr":"حليب جالكسي","titleEn":"Galaxy Milk","items":[{"id":"p595889","sku":"595889","ar":"الكرامیل و بالشوكولتة الحلیب سي 220 مل","en":"Galaxy 10X220ML Choc Milk Caramel Flavo","weightValue":220,"weightUnit":"ml"},{"id":"p595886","sku":"595886","ar":"الممیزة بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Signature Chocolate Milk","weightValue":220,"weightUnit":"ml"},{"id":"p595892","sku":"595892","ar":"البندق و بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Choc Milk Hazlnut Flavor","weightValue":220,"weightUnit":"ml"},{"id":"p599495","sku":"599495","ar":"الھند بجوز الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Coconut Flavor LTO","weightValue":220,"weightUnit":"ml"}]},{"id":"g18-arla-protein","titleAr":"بروتین أرل","titleEn":"Arla Protein","items":[{"id":"p598942","sku":"598942","ar":"شوكلتة بودنق بروتین 200 جم","en":"Pudding Choco ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598897","sku":"598897","ar":"كارامیل بودنق بروتین 200 جم","en":"Pudding caramel ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598922","sku":"598922","ar":"بندق بودنق بروتین 200 جم","en":"Pudding hazulnut ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p604815","sku":"604815","ar":"ازرق توت زبادي بروتین آرل 150 جم","en":"Arla Protein bluebery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604813","sku":"604813","ar":"فروت باشن زبادي بروتین آرل 150 جم","en":"Arla Protein peach passion yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604814","sku":"604814","ar":"فراولة زبادي بروتین آرل 150 جم","en":"Arla Protein strewbery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p338037","sku":"338037","ar":"شوكلتة بروتین حلیب 250 مل","en":"Arla Protine Shake chocolate 250Ml","weightValue":250,"weightUnit":"ml"},{"id":"p604487","sku":"604487","ar":"بروتين حليب فراولة 225 مل","en":"Arla Protine Shake Strawberry 225Ml","weightValue":225,"weightUnit":"ml"}]},{"id":"g19-puck-square-promo","titleAr":"أرلا مربعات - عرض ترويجي","titleEn":"Arla Square Promo","items":[{"id":"p607096","sku":"607096","ar":"مربع أرلا 108 جم","en":"Arla square 3×108g","weightValue":108,"weightUnit":"g"},{"id":"p607123","sku":"607123","ar":"مربع أرلا برومو 216 جم","en":"Arla square Promo KSA 8X3X216G","weightValue":216,"weightUnit":"g"},{"id":"p338619","sku":"338619","ar":"بودنج بروتين آرل كريم بروليه 200 جم","en":"Arla protein Pudding Creame brulee 20g 6x200g","weightValue":20,"weightUnit":"g"}]}];
 const FONT_OPTIONS = [
   {value:"'Tajawal', sans-serif", label:"تجول (Tajawal)"},
   {value:"'Cairo', sans-serif", label:"القاهرة (Cairo)"},
@@ -801,6 +858,10 @@ let state = {
   monthlyEntries: {},
   monthlyDuplicates: [],
   monthlyOverrides: {},
+  catalogOverrides: {},
+  catalogGroupOverrides: {},
+  customCatalogGroups: [],
+  managerAlertSettings: {},
   messages: [],
   planogramItems: [],
   planogramSeen: {},
@@ -813,6 +874,9 @@ let managerUI = { tab: "accounts" };
 function canEdit(){ return !!(session.user && !session.viewOnly); }
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null };
 let pendingDocPhotos = [];
+let pendingDocDeadline = null;
+let pendingDocCountdownInterval = null;
+let activeCameraStream = null;
 
 /* =========================================================
    LANGUAGE / I18N
@@ -1106,6 +1170,33 @@ const I18N = {
     photos_word: "صور",
     documentation_expires_in: "يظهر لمدة",
     documentation_alert_prefill: "بخصوص التوثيق اليومي",
+    global_edit_hint: "أي تعديل هنا ينطبق على هذا المنتج في كل مكان بالتطبيق (الفروع والجرد الشهري).",
+    move_product_btn: "نقل المنتج",
+    move_product_hint: "اختر القسم الذي تريد نقل المنتج إليه:",
+    add_category_btn: "إضافة قسم جديد",
+    category_name_ar_label: "اسم القسم (عربي)",
+    category_name_en_label: "اسم القسم (إنجليزي)",
+    toast_enter_category_name: "الرجاء إدخال اسم القسم",
+    manager_expiry_alerts_title: "تنبيهات انتهاء الصلاحية",
+    manager_alerts_branches_label: "الفروع التابعة لك",
+    manager_alerts_days_label: "تنبيه قبل الانتهاء بعدد أيام",
+    manager_alerts_save_btn: "حفظ وعرض النتائج",
+    manager_alerts_no_results: "لا توجد منتجات قريبة من الانتهاء ضمن الفروع المحددة",
+    manager_alerts_no_branches: "اختر فرعًا واحدًا على الأقل",
+    col_product: "المنتج",
+    col_sku: "الكود",
+    col_weight: "الوزن",
+    col_days_left: "الأيام المتبقية",
+    col_branch: "الفرع",
+    days_overdue_word: "متأخر",
+    call_word: "اتصال",
+    whatsapp_word: "واتساب",
+    toast_photos_expired: "انتهت مهلة الـ5 دقائق، تم حذف الصور الملتقطة",
+    doc_countdown_label: "الحذف التلقائي خلال",
+    capture_shutter_btn: "التقط",
+    doc_camera_done_btn: "تم",
+    camera_unsupported_error: "المتصفح لا يدعم الوصول للكاميرا",
+    camera_permission_error: "تعذر الوصول إلى الكاميرا، يرجى منح الإذن اللازم",
   },
   en: {
     control_panel: "Control Panel",
@@ -1391,6 +1482,33 @@ const I18N = {
     photos_word: "photos",
     documentation_expires_in: "Visible for",
     documentation_alert_prefill: "Regarding daily documentation",
+    global_edit_hint: "Any change here applies to this product everywhere in the app (branches and monthly inventory).",
+    move_product_btn: "Move Product",
+    move_product_hint: "Choose the category to move this product to:",
+    add_category_btn: "Add New Category",
+    category_name_ar_label: "Category Name (Arabic)",
+    category_name_en_label: "Category Name (English)",
+    toast_enter_category_name: "Please enter a category name",
+    manager_expiry_alerts_title: "Expiry Alerts",
+    manager_alerts_branches_label: "Your Branches",
+    manager_alerts_days_label: "Alert days before expiry",
+    manager_alerts_save_btn: "Save & Show Results",
+    manager_alerts_no_results: "No near-expiry products in the selected branches",
+    manager_alerts_no_branches: "Choose at least one branch",
+    col_product: "Product",
+    col_sku: "Code",
+    col_weight: "Weight",
+    col_days_left: "Days Left",
+    col_branch: "Branch",
+    days_overdue_word: "overdue",
+    call_word: "Call",
+    whatsapp_word: "WhatsApp",
+    toast_photos_expired: "5-minute limit expired — captured photos were deleted",
+    doc_countdown_label: "Auto-delete in",
+    capture_shutter_btn: "Capture",
+    doc_camera_done_btn: "Done",
+    camera_unsupported_error: "This browser does not support camera access",
+    camera_permission_error: "Could not access the camera. Please grant permission.",
   }
 };
 
@@ -1441,16 +1559,25 @@ function ensureCatalogSeededForBranch(branchId){
   PRODUCT_CATALOG.forEach(g=>{
     g.items.forEach(it=>{
       if(existingSkus.has(it.sku)) return;
+      const view = getCatalogItemView(it);
       state.products.push({
-        id: uid(), branchId, sku: it.sku, name: it.ar, nameEn: it.en,
-        image: "", weightValue: it.weightValue||0, weightUnit: it.weightUnit||"g",
+        id: uid(), branchId, sku: view.sku, nameEn: view.en, name: view.ar, catalogItemId: it.id,
+        image: "", weightValue: view.weightValue||0, weightUnit: view.weightUnit||"g",
         startDay: 1, startMonth: 1, endDay: 31, endMonth: 12, alertDays: 14, hidden: false
       });
       existingSkus.add(it.sku);
       added = true;
     });
   });
-  return added;
+  // backfill catalogItemId on products seeded before this field existed
+  let backfilled = false;
+  state.products.forEach(p=>{
+    if(p.branchId===branchId && !p.catalogItemId && p.sku){
+      const cid = catalogItemIdBySku(p.sku);
+      if(cid){ p.catalogItemId = cid; backfilled = true; }
+    }
+  });
+  return added || backfilled;
 }
 async function ensureCatalogSeededAllBranches(){
   let anyAdded = false;
@@ -1486,7 +1613,7 @@ function employeeLabel(u){
 
 /* =========================================================
    PWA / "Add to Home Screen" icon setup
-   Uses the site logo as the app icon, with "Puck Merchandiser"
+   Uses the site logo as the app icon, with "Arla Merchandiser"
    as the English app name (shown when added as a web app).
 ========================================================= */
 function setupAppIcon(){
@@ -1502,8 +1629,8 @@ function setupAppIcon(){
   head.appendChild(appleIconLink);
 
   const manifest = {
-    name: "Puck Merchandiser",
-    short_name: "Puck Merchandiser",
+    name: "Arla Merchandiser",
+    short_name: "Arla Merchandiser",
     start_url: ".",
     display: "standalone",
     background_color: "#F1F8F4",
@@ -1577,6 +1704,18 @@ async function loadAll(){
   state.monthlyOverrides = await storageGet("puck:monthlyOverrides", null);
   if(state.monthlyOverrides === null){ state.monthlyOverrides = {}; await storageSet("puck:monthlyOverrides", state.monthlyOverrides); }
 
+  state.catalogOverrides = await storageGet("puck:catalogOverrides", null);
+  if(state.catalogOverrides === null){ state.catalogOverrides = {}; await storageSet("puck:catalogOverrides", state.catalogOverrides); }
+
+  state.catalogGroupOverrides = await storageGet("puck:catalogGroupOverrides", null);
+  if(state.catalogGroupOverrides === null){ state.catalogGroupOverrides = {}; await storageSet("puck:catalogGroupOverrides", state.catalogGroupOverrides); }
+
+  state.customCatalogGroups = await storageGet("puck:customCatalogGroups", null);
+  if(state.customCatalogGroups === null){ state.customCatalogGroups = []; await storageSet("puck:customCatalogGroups", state.customCatalogGroups); }
+
+  state.managerAlertSettings = await storageGet("puck:managerAlertSettings", null);
+  if(state.managerAlertSettings === null){ state.managerAlertSettings = {}; await storageSet("puck:managerAlertSettings", state.managerAlertSettings); }
+
   state.messages = await storageGet("puck:messages", null);
   if(state.messages === null){ state.messages = []; await storageSet("puck:messages", state.messages); }
 
@@ -1619,11 +1758,11 @@ function expiryStatus(p){
   return { status:"ok", days };
 }
 function dailyProductGroupOf(p){
-  if(!p.sku) return null;
-  for(const g of PRODUCT_CATALOG){
-    if(g.items.some(it=>it.sku===p.sku)) return g;
-  }
-  return null;
+  const itemId = p.catalogItemId || catalogItemIdBySku(p.sku);
+  if(!itemId) return null;
+  const groupId = catalogItemGroupId(itemId);
+  if(!groupId) return null;
+  return allCatalogGroupsList().find(g=>g.id===groupId) || null;
 }
 function dailyProductCardHtml(p){
   const info = expiryStatus(p);
@@ -1644,20 +1783,19 @@ function dailyProductCardHtml(p){
       ${banner}
       <div class="product-media">
         <img src="${p.image || ''}" alt="${escapeHtml(p.name)}">
-        <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>${p.sku ? `<div class="sku-badge">SKU ${escapeHtml(p.sku)}</div>` : ''}
+        <div class="card-badges-row">
+          <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>
+          ${p.sku ? `<div class="sku-badge">SKU ${escapeHtml(p.sku)}</div>` : ''}
+        </div>
         ${canEdit() ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
       </div>
       <div class="product-body">
         <div class="product-name">${escapeHtml(p.name)}</div>
         ${p.nameEn ? `<div class="product-name-en">${escapeHtml(p.nameEn)}</div>` : ''}
-        <div class="date-row">
-          <div class="date-box">
-            <div class="lbl">${ICON.calendar} ${t('date_start')}</div>
-            <div class="val">${String(p.startDay).padStart(2,'0')} ${curMonths()[p.startMonth-1]} ${YEAR}</div>
-          </div>
+        <div class="date-row single-date">
           <div class="date-box">
             <div class="lbl">${ICON.calendar} ${t('date_end')}</div>
-            <div class="val">${String(p.endDay).padStart(2,'0')} ${curMonths()[p.endMonth-1]} ${YEAR}</div>
+            <div class="val">${String(p.endDay).padStart(2,'0')}/${monthNumAbbr(p.endMonth)} ${YEAR}</div>
           </div>
         </div>
       </div>
@@ -1666,10 +1804,10 @@ function dailyProductCardHtml(p){
 }
 function buildWaMessage(p, branchName, info){
   if(info.status === "expired"){
-    return `تنبيه بوك: انتهت مدة عرض "${p.name}" في فرع ${branchName}. الرجاء المتابعة والإزالة إذا لزم الأمر.`;
+    return `تنبيه أرلا: انتهت مدة عرض "${p.name}" في فرع ${branchName}. الرجاء المتابعة والإزالة إذا لزم الأمر.`;
   }
   const dateStr = `${String(p.endDay).padStart(2,'0')} ${curMonths()[p.endMonth-1]} ${YEAR}`;
-  return `تنبيه بوك: منتج "${p.name}" في فرع ${branchName} على وشك الانتهاء خلال ${info.days} ${info.days===1?'يوم':'أيام'} (بتاريخ ${dateStr}). الرجاء المتابعة.`;
+  return `تنبيه أرلا: منتج "${p.name}" في فرع ${branchName} على وشك الانتهاء خلال ${info.days} ${info.days===1?'يوم':'أيام'} (بتاريخ ${dateStr}). الرجاء المتابعة.`;
 }
 function waLink(phone, text){
   const digits = String(phone).replace(/[^0-9]/g,"");
@@ -1796,6 +1934,7 @@ function render(){
   else if(view.screen === "planogram") app.innerHTML = renderPlanogramScreen();
   else if(view.screen === "documentation") app.innerHTML = renderDocumentationScreen();
   else if(view.screen === "managerDocumentation") app.innerHTML = renderManagerDocumentationScreen();
+  else if(view.screen === "managerExpiryAlerts") app.innerHTML = renderManagerExpiryAlertsScreen();
   else if(view.screen === "managerEmployeeDocs") app.innerHTML = renderManagerEmployeeDocsScreen(view.branchId);
   else if(view.screen === "managerEmployees") app.innerHTML = renderManagerEmployeesScreen();
   else if(view.screen === "managerNotifications") app.innerHTML = renderManagerNotificationsScreen();
@@ -1858,7 +1997,7 @@ function renderLandingScreen(){
         <div class="lbl">${t('monthly_word')}</div>
       </div>
     </div>
-    <div class="section-label"><span class="line"></span> ${t('planogram_doc_section_label')} <span class="line"></span></div>
+    <div class="section-label"><span class="line"></span> ${t('planogram_word')} - ${t('documentation_word')} <span class="line"></span></div>
     <div class="inventory-choice-row">
       <div class="inventory-opt" data-goto="planogram">
         <div class="ico" style="font-size:34px;">🗺️</div>
@@ -1936,7 +2075,7 @@ function renderBranchScreen(branchId){
   }
 
   let groupsHtml = "";
-  PRODUCT_CATALOG.forEach(g=>{
+  allCatalogGroupsList().forEach(g=>{
     const items = groupsMap.get(g.id);
     if(items && items.length) groupsHtml += groupBlockHtml(g.titleAr, g.titleEn, items);
   });
@@ -1970,6 +2109,7 @@ function renderBranchScreen(branchId){
         </div>
       </div>
       ${expiredCount>0 ? `<div class="expired-alert-bar" data-goto-expired="${branchId}">${ICON.warn} ${t('expired_products_label')} (${expiredCount})</div>` : ''}
+      ${canEdit() ? `<button class="btn btn-ghost" id="addCatalogCategoryBtn" style="max-width:900px; width:calc(100% - 40px); margin:0 auto 14px; display:block;">${ICON.plus} ${t('add_category_btn')}</button>` : ''}
       <div class="product-groups">${groupsHtml}</div>
       ${(canEdit() && branch) ? `<div style="max-width:900px; margin:18px auto 0; padding:0 20px;"><button class="add-product-tile" data-quick-add-product="${branch.id}">${ICON.plus} ${t('add_new_product')}</button></div>` : ''}
     </div>
@@ -1982,33 +2122,7 @@ function renderBranchExpiredScreen(branchId){
   const products = state.products.filter(p=>p.branchId===branchId && !p.hidden && expiryStatus(p).status==="expired");
   const cols = branchColumns(branch);
 
-  const cardsHtml = products.length ? products.map(p => {
-    const info = expiryStatus(p);
-    return `
-    <div class="product-card alert-expired">
-      <div class="alert-banner expired">${ICON.warn} ${t('promo_ended')}</div>
-      <div class="product-media">
-        <img src="${p.image || ''}" alt="${escapeHtml(p.name)}">
-        <div class="weight-badge">${p.weightValue} ${unitLabel(p.weightUnit)}</div>${p.sku ? `<div class="sku-badge">SKU ${escapeHtml(p.sku)}</div>` : ''}
-        ${canEdit() ? `<button class="edit-badge-btn" data-quick-edit="${p.id}" title="${t('quick_edit_title')}">${ICON.edit}</button>` : ''}
-      </div>
-      <div class="product-body">
-        <div class="product-name">${escapeHtml(p.name)}</div>
-        ${p.nameEn ? `<div class="product-name-en">${escapeHtml(p.nameEn)}</div>` : ''}
-        <div class="date-row">
-          <div class="date-box">
-            <div class="lbl">${ICON.calendar} ${t('date_start')}</div>
-            <div class="val">${String(p.startDay).padStart(2,'0')} ${curMonths()[p.startMonth-1]} ${YEAR}</div>
-          </div>
-          <div class="date-box">
-            <div class="lbl">${ICON.calendar} ${t('date_end')}</div>
-            <div class="val">${String(p.endDay).padStart(2,'0')} ${curMonths()[p.endMonth-1]} ${YEAR}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  }).join("") : `<div class="branch-empty">${t('no_expired_products')}</div>`;
+  const cardsHtml = products.length ? products.map(dailyProductCardHtml).join("") : `<div class="branch-empty">${t('no_expired_products')}</div>`;
 
   return `
     <div class="topbar">
@@ -2132,15 +2246,16 @@ function renderMonthlyBranchScreen(branchId){
   let seq = 0;
   const nextSeq = ()=> (++seq);
 
-  const groupsHtml = PRODUCT_CATALOG.map(g=>{
+  const groupsHtml = allCatalogGroupsList().map(g=>{
+    const items = itemsForGroupId(g.id);
+    if(!items.length) return "";
     let filledInGroup = 0, totalInGroup = 0, rows = "";
-    g.items.forEach(it=>{
-      const view = getCatalogItemView(branchId, it);
+    items.forEach(it=>{
       totalInGroup++;
       if(entryIsFilled(getMonthlyEntry(branchId, it.id))) filledInGroup++;
       rows += monthlyProductRowHtml(branchId, {
-        rowId: it.id, seq: nextSeq(), ar: view.ar, en: view.en, sku: view.sku,
-        weightValue: view.weightValue, weightUnit: view.weightUnit, editable, kind: "catalog"
+        rowId: it.id, seq: nextSeq(), ar: it.ar, en: it.en, sku: it.sku,
+        weightValue: it.weightValue, weightUnit: it.weightUnit, editable, kind: "catalog"
       });
       state.monthlyDuplicates.filter(d=>d.branchId===branchId && d.sourceKind==="catalog" && d.sourceItemId===it.id).forEach(d=>{
         totalInGroup++;
@@ -2228,6 +2343,7 @@ function renderMonthlyBranchScreen(branchId){
         <input type="text" id="branchNameManualInput" placeholder="${escapeHtml(branch ? branch.name : '')}" value="${escapeHtml(meta.branchNameManual || (branch ? branch.name : ''))}">
       </div>
       <p class="monthly-catalog-hint">${t('monthly_catalog_hint')}</p>
+      ${editable ? `<button class="btn btn-ghost" id="addCatalogCategoryBtn" style="width:100%; margin-bottom:14px;">${ICON.plus} ${t('add_category_btn')}</button>` : ''}
       <div class="monthly-groups">${groupsHtml}${otherGroupHtml}</div>
     </div>
     <div class="monthly-actions">
@@ -2279,13 +2395,116 @@ function attachDocThumbRemoveHandlers(){
     btn.onclick = ()=>{
       const idx = parseInt(btn.getAttribute("data-remove-pending-photo"), 10);
       pendingDocPhotos.splice(idx, 1);
+      if(!pendingDocPhotos.length) clearDocCountdown();
       const stripEl = document.getElementById("docThumbStrip");
       if(stripEl) stripEl.innerHTML = docThumbStripHtml();
       const takeBtn = document.getElementById("docTakePhotoBtn");
       if(takeBtn) takeBtn.innerHTML = `📷 ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}`;
       attachDocThumbRemoveHandlers();
+      tickDocCountdown();
     };
   });
+}
+function startOrKeepDocCountdown(){
+  if(pendingDocDeadline) return;
+  pendingDocDeadline = Date.now() + 5*60*1000;
+  if(pendingDocCountdownInterval) clearInterval(pendingDocCountdownInterval);
+  pendingDocCountdownInterval = setInterval(tickDocCountdown, 1000);
+  tickDocCountdown();
+}
+function clearDocCountdown(){
+  if(pendingDocCountdownInterval){ clearInterval(pendingDocCountdownInterval); pendingDocCountdownInterval = null; }
+  pendingDocDeadline = null;
+  const el = document.getElementById("docCountdown");
+  if(el) el.textContent = "";
+}
+function tickDocCountdown(){
+  const el = document.getElementById("docCountdown");
+  if(!pendingDocDeadline){ if(el) el.textContent = ""; return; }
+  const msLeft = pendingDocDeadline - Date.now();
+  if(msLeft <= 0){
+    pendingDocPhotos = [];
+    clearDocCountdown();
+    toast(t('toast_photos_expired'));
+    if(view.screen === "documentation") render();
+    return;
+  }
+  const totalSec = Math.ceil(msLeft/1000);
+  const mm = Math.floor(totalSec/60);
+  const ss = totalSec % 60;
+  if(el) el.textContent = `⏱ ${t('doc_countdown_label')} ${mm}:${String(ss).padStart(2,'0')}`;
+}
+function addPendingDocPhoto(dataUrl){
+  pendingDocPhotos.push(dataUrl);
+  startOrKeepDocCountdown();
+  const stripEl = document.getElementById("docThumbStrip");
+  if(stripEl) stripEl.innerHTML = docThumbStripHtml();
+  const takeBtn = document.getElementById("docTakePhotoBtn");
+  if(takeBtn) takeBtn.innerHTML = `📷 ${t('take_another_photo_btn')}`;
+  attachDocThumbRemoveHandlers();
+  tickDocCountdown();
+}
+function stopActiveCameraStream(){
+  if(activeCameraStream){ activeCameraStream.getTracks().forEach(tr=>tr.stop()); activeCameraStream = null; }
+}
+async function openCameraCaptureModal(){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal camera-modal">
+      <button class="close-x" id="closeCameraModal">&times;</button>
+      <h3>📷 ${t('take_photo_btn')}</h3>
+      <div class="camera-preview-wrap">
+        <video id="cameraVideo" autoplay playsinline muted></video>
+      </div>
+      <p id="cameraError" class="hint" style="color:#c0392b; display:none;"></p>
+      <button class="btn btn-primary" id="cameraShutterBtn" style="width:100%;">📸 ${t('capture_shutter_btn')}</button>
+      <button class="btn btn-ghost" id="cameraDoneBtn" style="width:100%; margin-top:8px;">${t('doc_camera_done_btn')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  const video = document.getElementById("cameraVideo");
+  const errEl = document.getElementById("cameraError");
+  const shutterBtn = document.getElementById("cameraShutterBtn");
+
+  function closeModal(){
+    stopActiveCameraStream();
+    wrap.remove();
+  }
+  document.getElementById("closeCameraModal").onclick = closeModal;
+  document.getElementById("cameraDoneBtn").onclick = closeModal;
+  wrap.onclick = (e)=>{ if(e.target===wrap) closeModal(); };
+
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    errEl.textContent = t('camera_unsupported_error');
+    errEl.style.display = "block";
+    if(shutterBtn) shutterBtn.disabled = true;
+    return;
+  }
+  try{
+    stopActiveCameraStream();
+    activeCameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+    video.srcObject = activeCameraStream;
+  }catch(err){
+    errEl.textContent = t('camera_permission_error');
+    errEl.style.display = "block";
+    if(shutterBtn) shutterBtn.disabled = true;
+    return;
+  }
+
+  shutterBtn.onclick = ()=>{
+    const w = video.videoWidth || 1200, h = video.videoHeight || 900;
+    const maxDim = 900;
+    const scale = Math.min(1, maxDim / Math.max(w, h));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(w*scale);
+    canvas.height = Math.round(h*scale);
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataUrl = canvas.toDataURL("image/jpeg", 0.82);
+    addPendingDocPhoto(dataUrl);
+    shutterBtn.classList.add("flash");
+    setTimeout(()=> shutterBtn.classList.remove("flash"), 200);
+  };
 }
 function docThumbStripHtml(){
   if(!pendingDocPhotos.length) return "";
@@ -2330,8 +2549,8 @@ function renderDocumentationScreen(){
     </div>
     <div class="monthly-wrap">
       <div class="doc-capture-card">
-        <input type="file" accept="image/*" capture="environment" id="docCameraInput" style="display:none;">
         <button class="add-product-tile" id="docTakePhotoBtn" type="button">📷 ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}</button>
+        <div id="docCountdown" class="doc-countdown"></div>
         <div id="docThumbStrip">${docThumbStripHtml()}</div>
         <div class="field" style="margin-top:14px;">
           <label>${t('documentation_note_label')}</label>
@@ -2377,22 +2596,22 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-del-plano]").forEach(btn=>{
     btn.onclick = ()=> deletePlanogramItem(btn.getAttribute("data-del-plano"));
   });
-  const docCameraInput = document.getElementById("docCameraInput");
   const docTakePhotoBtn = document.getElementById("docTakePhotoBtn");
-  if(docTakePhotoBtn && docCameraInput) docTakePhotoBtn.onclick = ()=> docCameraInput.click();
-  if(docCameraInput) docCameraInput.onchange = (e)=>{
-    const file = e.target.files[0];
-    if(!file) return;
-    compressImageToDataUrl(file, 900).then(dataUrl=>{
-      pendingDocPhotos.push(dataUrl);
-      const stripEl = document.getElementById("docThumbStrip");
-      if(stripEl) stripEl.innerHTML = docThumbStripHtml();
-      if(docTakePhotoBtn) docTakePhotoBtn.innerHTML = `📷 ${t('take_another_photo_btn')}`;
-      attachDocThumbRemoveHandlers();
-      docCameraInput.value = "";
-    });
-  };
+  if(docTakePhotoBtn) docTakePhotoBtn.onclick = ()=> openCameraCaptureModal();
   attachDocThumbRemoveHandlers();
+  tickDocCountdown();
+  const saveManagerAlertsBtn = document.getElementById("saveManagerAlertsBtn");
+  if(saveManagerAlertsBtn) saveManagerAlertsBtn.onclick = async ()=>{
+    const uid_ = session.user ? session.user.id : "_";
+    const branchIds = Array.from(document.querySelectorAll("[data-alert-branch]:checked")).map(el=>el.getAttribute("data-alert-branch"));
+    const alertDays = parseInt((document.getElementById("managerAlertDays")||{}).value, 10) || 15;
+    state.managerAlertSettings[uid_] = { branchIds, alertDays };
+    await storageSet("puck:managerAlertSettings", state.managerAlertSettings);
+    toast(t('toast_change_saved'));
+    render();
+  };
+  const addCatalogCategoryBtn = document.getElementById("addCatalogCategoryBtn");
+  if(addCatalogCategoryBtn) addCatalogCategoryBtn.onclick = ()=> openAddCatalogCategoryModal(null);
   const docSaveBtn = document.getElementById("docSaveBtn");
   if(docSaveBtn) docSaveBtn.onclick = async ()=>{
     if(!pendingDocPhotos.length){ toast(t('toast_photo_required')); return; }
@@ -2405,6 +2624,7 @@ function attachHomeEvents(){
     });
     await storageSet("puck:documentation", state.documentation);
     pendingDocPhotos = [];
+    clearDocCountdown();
     toast(t('toast_documentation_saved'));
     render();
   };
@@ -2422,6 +2642,7 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-quick-view-doc]").forEach(el=>{
     el.onclick = (e)=>{ e.stopPropagation(); openDocQuickViewModal(el.getAttribute("data-quick-view-doc")); };
   });
+  attachDocPhotoLightbox();
   const viewOnlyBackBtn = document.getElementById("viewOnlyBackBtn");
   if(viewOnlyBackBtn) viewOnlyBackBtn.onclick = ()=>{ session.viewOnly = false; goLanding(); };
   const monthlyBackBtn = document.getElementById("monthlyBackBtn");
@@ -2498,9 +2719,8 @@ function attachHomeEvents(){
       const rowKind = btn.getAttribute("data-row-kind");
       let base = null;
       if(rowKind === "catalog"){
-        let found = null;
-        PRODUCT_CATALOG.forEach(g=> g.items.forEach(it=>{ if(it.id===rowId) found = it; }));
-        if(found) base = getCatalogItemView(view.branchId, found);
+        const found = getCatalogItemById(rowId);
+        if(found) base = getCatalogItemView(found);
       } else {
         base = state.monthlyProducts.find(p=>p.id===rowId);
       }
@@ -2576,7 +2796,7 @@ function escapeHtml(str){
 }
 
 function monthOptionsHtml(selected){
-  return curMonths().map((m,i)=>`<option value="${i+1}" ${selected===i+1?'selected':''}>${m}</option>`).join("");
+  return curMonthsAbbr3().map((m,i)=>`<option value="${i+1}" ${selected===i+1?'selected':''}>${String(i+1).padStart(2,'0')} ${m}</option>`).join("");
 }
 function dayOptionsHtml(selected){
   return Array.from({length:31},(_,i)=>i+1).map(d=>`<option value="${d}" ${selected===d?'selected':''}>${d}</option>`).join("");
@@ -2636,16 +2856,71 @@ function unitBilingual(weightUnit, legacy){
   return "G";
 }
 function catalogItemDisplayName(item){ return lang === "en" ? item.en : item.ar; }
-function monthlyOverrideKey(branchId, itemId){ return branchId + "::" + itemId; }
-function getCatalogItemView(branchId, item){
-  const ov = state.monthlyOverrides[monthlyOverrideKey(branchId, item.id)];
+
+/* ---------------- GLOBAL CATALOG: flat lookup, groups, moves, overrides ---------------- */
+let _catalogFlatCache = null;
+function allCatalogItemsFlat(){
+  if(_catalogFlatCache) return _catalogFlatCache;
+  const flat = [];
+  PRODUCT_CATALOG.forEach(g=> g.items.forEach(it=> flat.push(it)));
+  _catalogFlatCache = flat;
+  return flat;
+}
+function getCatalogItemById(itemId){
+  return allCatalogItemsFlat().find(it=>it.id===itemId) || null;
+}
+function defaultGroupIdOfItem(itemId){
+  for(const g of PRODUCT_CATALOG){ if(g.items.some(it=>it.id===itemId)) return g.id; }
+  return null;
+}
+function catalogItemGroupId(itemId){
+  return state.catalogGroupOverrides[itemId] || defaultGroupIdOfItem(itemId);
+}
+function allCatalogGroupsList(){
+  const base = PRODUCT_CATALOG.map(g=>({ id:g.id, titleAr:g.titleAr, titleEn:g.titleEn }));
+  return base.concat(state.customCatalogGroups || []);
+}
+function getCatalogItemView(item){
+  const ov = state.catalogOverrides[item.id];
   return ov ? Object.assign({}, item, ov) : item;
 }
-async function saveCatalogOverride(branchId, itemId, patch){
-  const key = monthlyOverrideKey(branchId, itemId);
-  const cur = state.monthlyOverrides[key] || {};
-  state.monthlyOverrides[key] = Object.assign({}, cur, patch);
-  await storageSet("puck:monthlyOverrides", state.monthlyOverrides);
+function getCatalogItemGlobalView(item){ return getCatalogItemView(item); }
+function itemsForGroupId(groupId){
+  return allCatalogItemsFlat()
+    .filter(it => catalogItemGroupId(it.id) === groupId)
+    .map(getCatalogItemView);
+}
+function catalogItemIdBySku(sku){
+  if(!sku) return null;
+  const it = allCatalogItemsFlat().find(x=>x.sku===sku);
+  return it ? it.id : null;
+}
+async function saveGlobalCatalogOverride(itemId, patch){
+  const cur = state.catalogOverrides[itemId] || {};
+  state.catalogOverrides[itemId] = Object.assign({}, cur, patch);
+  await storageSet("puck:catalogOverrides", state.catalogOverrides);
+  let productsChanged = false;
+  state.products.forEach(p=>{
+    if(p.catalogItemId === itemId){
+      if(patch.ar !== undefined) p.name = patch.ar;
+      if(patch.en !== undefined) p.nameEn = patch.en;
+      if(patch.sku !== undefined) p.sku = patch.sku;
+      if(patch.weightValue !== undefined) p.weightValue = patch.weightValue;
+      if(patch.weightUnit !== undefined) p.weightUnit = patch.weightUnit;
+      productsChanged = true;
+    }
+  });
+  if(productsChanged) await storageSet("puck:products", state.products);
+}
+async function saveGlobalCatalogGroupMove(itemId, newGroupId){
+  state.catalogGroupOverrides[itemId] = newGroupId;
+  await storageSet("puck:catalogGroupOverrides", state.catalogGroupOverrides);
+}
+async function addCustomCatalogGroup(titleAr, titleEn){
+  const g = { id: "custom-" + uid(), titleAr: titleAr, titleEn: titleEn || titleAr };
+  state.customCatalogGroups.push(g);
+  await storageSet("puck:customCatalogGroups", state.customCatalogGroups);
+  return g;
 }
 function branchCatalogFilledCount(branchId){
   let n = 0;
@@ -2882,6 +3157,10 @@ function renderManagerHomeScreen(){
         <div class="ico" style="font-size:34px;">📸</div>
         <div class="lbl">${t('documentation_viewer_title')}</div>
       </div>
+      <div class="inventory-opt" data-mgoto="expiryAlerts">
+        <div class="ico" style="font-size:34px;">⏰</div>
+        <div class="lbl">${t('manager_expiry_alerts_title')}</div>
+      </div>
       <div class="inventory-opt" data-mgoto="notifications">
         <div class="ico" style="font-size:34px;">🔔</div>
         <div class="lbl">${t('send_notification_btn')}</div>
@@ -2897,10 +3176,20 @@ function renderManagerHomeScreen(){
 function renderManagerEmployeesScreen(){
   const employees = state.users.filter(u=>userRole(u)==="employee");
   const rows = employees.length ? employees.map(u=>`
-    <div class="notice-row" style="align-items:center;">
-      <span class="txt" style="font-weight:800;">${escapeHtml(employeeLabel(u))}</span>
-      <button class="btn btn-ghost btn-small" data-view-account="${u.id}">${ICON.search} ${t('view_word')}</button>
-      <button class="btn btn-primary btn-small" data-message-account="${u.id}">${ICON.edit} ${t('message_word')}</button>
+    <div class="employee-card">
+      <div class="employee-card-main">
+        <div class="employee-avatar">${escapeHtml((u.username||'?').charAt(0).toUpperCase())}</div>
+        <div class="employee-info">
+          <div class="employee-name">${escapeHtml(employeeLabel(u))}</div>
+          ${u.phone ? `<div class="employee-phone" dir="ltr">${escapeHtml(u.phone)}</div>` : `<div class="employee-phone hint" style="margin:0;">${t('phone_label')}: —</div>`}
+        </div>
+      </div>
+      <div class="employee-actions">
+        ${u.phone ? `<a class="emp-action-btn wa" href="${waLink(u.phone,'')}" target="_blank" rel="noopener" title="${t('whatsapp_word')}">${ICON.chat}</a>` : ''}
+        ${u.phone ? `<a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}">📞</a>` : ''}
+        <button class="emp-action-btn view" data-view-account="${u.id}" title="${t('view_word')}">${ICON.search}</button>
+        <button class="emp-action-btn msg" data-message-account="${u.id}" title="${t('message_word')}">${ICON.edit}</button>
+      </div>
     </div>
   `).join("") : `<p class="hint">${t('no_employee_accounts')}</p>`;
   return `
@@ -2966,6 +3255,24 @@ function renderManagerEmployeeDocsScreen(employeeId){
   `;
 }
 
+function openImageLightbox(src){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay lightbox-overlay";
+  wrap.innerHTML = `
+    <button class="lightbox-close" id="lightboxCloseBtn" type="button">&times;</button>
+    <img src="${src}" class="lightbox-img" alt="">
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("lightboxCloseBtn").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+}
+function attachDocPhotoLightbox(root){
+  const scope = root || document;
+  scope.querySelectorAll(".doc-entry-photo").forEach(img=>{
+    img.style.cursor = "pointer";
+    img.onclick = (e)=>{ e.stopPropagation(); openImageLightbox(img.src); };
+  });
+}
 function openDocQuickViewModal(entryId){
   const entry = state.documentation.find(e=>e.id===entryId);
   if(!entry) return;
@@ -2987,6 +3294,7 @@ function openDocQuickViewModal(entryId){
   document.getElementById("closeDocQuick").onclick = ()=> wrap.remove();
   document.getElementById("closeDocQuickBtn").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  attachDocPhotoLightbox(wrap);
 }
 
 /* ---------------- MANAGER: notifications screen (compose + history) ---------------- */
@@ -3028,6 +3336,54 @@ function renderManagerNotificationsScreen(){
 function goManagerEmployees(){ navigate({ screen:"managerEmployees", branchId:null }); }
 function goManagerNotifications(){ navigate({ screen:"managerNotifications", branchId:null }); }
 function goManagerDocumentation(){ navigate({ screen:"managerDocumentation", branchId:null }); }
+function goManagerExpiryAlerts(){ navigate({ screen:"managerExpiryAlerts", branchId:null }); }
+function renderManagerExpiryAlertsScreen(){
+  const uid_ = session.user ? session.user.id : "_";
+  const settings = state.managerAlertSettings[uid_] || { branchIds: [], alertDays: 15 };
+  const branchChecks = state.branches.map(b=>`
+    <label class="alert-branch-check">
+      <input type="checkbox" data-alert-branch="${b.id}" ${settings.branchIds.includes(b.id)?'checked':''}>
+      <span>${escapeHtml(b.name)}</span>
+    </label>
+  `).join("");
+  const results = settings.branchIds.length ? computeManagerExpiryAlerts(settings.branchIds, settings.alertDays||15) : [];
+  const rowsHtml = results.length ? results.map(r=>`
+    <div class="doc-entry-card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+      <div>
+        <div style="font-weight:800; font-family:var(--font-display); color:var(--navy-deep);">${escapeHtml(r.name)}</div>
+        <div class="hint" style="margin:2px 0 0;">${t('col_sku')}: ${escapeHtml(r.sku||'—')} · ${t('col_weight')}: ${r.weightValue} ${r.weightUnit} · ${t('col_branch')}: ${escapeHtml(r.branchName)}</div>
+      </div>
+      <div style="font-family:var(--font-display); font-weight:800; font-size:14px; color:${r.days<0?'#c0392b':'var(--sky)'};">
+        ${r.days<0 ? `${Math.abs(r.days)} ${t('days_overdue_word')}` : `${r.days} ${t('day_word')}`}
+      </div>
+    </div>
+  `).join("") : `<div class="branch-empty">${settings.branchIds.length ? t('manager_alerts_no_results') : t('manager_alerts_no_branches')}</div>`;
+
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}
+        <button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row"><h2>${t('manager_expiry_alerts_title')}</h2></div>
+    <div class="monthly-wrap">
+      <div class="doc-capture-card">
+        <div class="field"><label>${t('manager_alerts_branches_label')}</label>
+          <div class="alert-branch-list">${branchChecks}</div>
+        </div>
+        <div class="field"><label>${t('manager_alerts_days_label')}</label>
+          <select id="managerAlertDays">
+            ${[3,5,7,10,15,20,30,45,60].map(d=>`<option value="${d}" ${((settings.alertDays||15)===d)?'selected':''}>${d}</option>`).join("")}
+          </select>
+        </div>
+        <button class="btn btn-primary" id="saveManagerAlertsBtn" style="width:100%; margin-top:8px;">${t('manager_alerts_save_btn')}</button>
+      </div>
+      <div id="managerAlertsResults">${rowsHtml}</div>
+    </div>
+  `;
+}
 
 function attachManagerScreenEvents(){
   document.querySelectorAll("[data-mgoto]").forEach(el=>{
@@ -3036,6 +3392,7 @@ function attachManagerScreenEvents(){
       if(dest === "planogram") goPlanogram();
       else if(dest === "employees") goManagerEmployees();
       else if(dest === "documentation") goManagerDocumentation();
+      else if(dest === "expiryAlerts") goManagerExpiryAlerts();
       else if(dest === "notifications") goManagerNotifications();
     };
   });
@@ -3362,7 +3719,6 @@ function renderAdminTab(tab){
   if(tab==="products") return renderProductsTab();
   if(tab==="users") return renderUsersTab();
   if(tab==="appearance") return renderAppearanceTab();
-  if(tab==="whatsapp") return renderWhatsappTab();
   return "";
 }
 
@@ -3591,18 +3947,10 @@ function openBranchNoticesModal(branchId){
 }
 
 /* ---------- PRODUCTS TAB ---------- */
-function renderProductsTab(){
-  if(!state.branches.length){
-    return `<div class="panel-card"><h4>${t('products_title')}</h4><p class="hint">${t('products_need_branch')}</p></div>`;
-  }
-  if(!adminUI.selectedBranchForProducts) adminUI.selectedBranchForProducts = state.branches[0].id;
-  const selectRow = state.branches.map(b=>`<button class="${adminUI.selectedBranchForProducts===b.id?'active':''}" data-select-branch="${b.id}">${escapeHtml(b.name)}</button>`).join("");
-  const products = state.products.filter(p=>p.branchId===adminUI.selectedBranchForProducts);
-
-  const monthOptions = (selected) => curMonths().map((m,i)=>`<option value="${i+1}" ${selected===i+1?'selected':''}>${m}</option>`).join("");
+function adminProductRowHtml(p){
+  const monthOptions = (selected) => curMonthsAbbr3().map((m,i)=>`<option value="${i+1}" ${selected===i+1?'selected':''}>${String(i+1).padStart(2,'0')} ${m}</option>`).join("");
   const dayOptions = (selected) => Array.from({length:31},(_,i)=>i+1).map(d=>`<option value="${d}" ${selected===d?'selected':''}>${d}</option>`).join("");
-
-  const rowsHtml = products.map(p=>`
+  return `
     <div class="admin-product-row" data-product-id="${p.id}">
       <div class="thumb-upload">
         <img src="${p.image||''}" alt="">
@@ -3623,11 +3971,8 @@ function renderProductsTab(){
           </div>
         </div>
         <div class="date-line">
-          <div class="grp"><span>${t('date_start')}</span>
-            <select data-field="startDay" data-id="${p.id}">${dayOptions(p.startDay)}</select>
-            <select data-field="startMonth" data-id="${p.id}">${monthOptions(p.startMonth)}</select>
-            <span>${YEAR}</span>
-          </div>
+          <input type="hidden" data-field="startDay" data-id="${p.id}" value="1">
+          <input type="hidden" data-field="startMonth" data-id="${p.id}" value="1">
           <div class="grp"><span>${t('date_end')}</span>
             <select data-field="endDay" data-id="${p.id}">${dayOptions(p.endDay)}</select>
             <select data-field="endMonth" data-id="${p.id}">${monthOptions(p.endMonth)}</select>
@@ -3643,11 +3988,57 @@ function renderProductsTab(){
             <input type="checkbox" data-field="hidden" data-id="${p.id}" ${p.hidden ? 'checked' : ''}>
             <span>${t('hide_product_label')}</span>
           </label>
+          ${p.catalogItemId ? `<button class="btn btn-ghost btn-small" data-admin-move-product="${p.catalogItemId}">${ICON.move || '↔️'} ${t('move_product_btn')}</button>` : ''}
           <button class="btn btn-danger btn-small" data-del-product="${p.id}">${ICON.trash} ${t('delete_product')}</button>
         </div>
       </div>
     </div>
-  `).join("");
+  `;
+}
+function renderProductsTab(){
+  if(!state.branches.length){
+    return `<div class="panel-card"><h4>${t('products_title')}</h4><p class="hint">${t('products_need_branch')}</p></div>`;
+  }
+  if(!adminUI.selectedBranchForProducts) adminUI.selectedBranchForProducts = state.branches[0].id;
+  const selectRow = state.branches.map(b=>`<button class="${adminUI.selectedBranchForProducts===b.id?'active':''}" data-select-branch="${b.id}">${escapeHtml(b.name)}</button>`).join("");
+  const products = state.products.filter(p=>p.branchId===adminUI.selectedBranchForProducts);
+
+  const groupsMap = new Map();
+  const otherItems = [];
+  products.forEach(p=>{
+    const g = dailyProductGroupOf(p);
+    if(g){
+      if(!groupsMap.has(g.id)) groupsMap.set(g.id, []);
+      groupsMap.get(g.id).push(p);
+    } else otherItems.push(p);
+  });
+
+  function groupBlockHtml(titleAr, titleEn, items){
+    const rows = items.map(adminProductRowHtml).join("");
+    return `
+      <details class="monthly-group" open>
+        <summary>
+          <div class="mg-title">
+            <div class="ar">${escapeHtml(titleAr)}</div>
+            <div class="en">${escapeHtml(titleEn)}</div>
+          </div>
+          <div class="mg-meta">
+            <span class="mg-count">${items.length}</span>
+            <span class="mg-chevron">${ICON.chevron}</span>
+          </div>
+        </summary>
+        <div class="mg-body">${rows}</div>
+      </details>
+    `;
+  }
+
+  let groupsHtml = "";
+  allCatalogGroupsList().forEach(g=>{
+    const items = groupsMap.get(g.id);
+    if(items && items.length) groupsHtml += groupBlockHtml(g.titleAr, g.titleEn, items);
+  });
+  if(otherItems.length) groupsHtml += groupBlockHtml(t('monthly_other_group_title'), t('monthly_other_group_title_en'), otherItems);
+  if(!groupsHtml) groupsHtml = `<p class="hint">${t('no_products_yet')}</p>`;
 
   return `
     <div class="panel-card">
@@ -3656,7 +4047,7 @@ function renderProductsTab(){
     </div>
     <div class="panel-card">
       <h4>${t('branch_products')}</h4>
-      ${rowsHtml || `<p class="hint">${t('no_products_yet')}</p>`}
+      <div class="monthly-groups" style="margin-top:14px;">${groupsHtml}</div>
       <button class="add-product-tile" id="addProductBtn">${ICON.plus} ${t('add_new_product')}</button>
     </div>
   `;
@@ -3668,6 +4059,9 @@ function attachProductsTabEvents(){
   });
   const addBtn = document.getElementById("addProductBtn");
   if(addBtn) addBtn.onclick = ()=> openAddProductChoiceModal();
+  document.querySelectorAll("[data-admin-move-product]").forEach(btn=>{
+    btn.onclick = ()=> openCatalogMoveModal(btn.getAttribute("data-admin-move-product"));
+  });
   document.querySelectorAll("[data-field]").forEach(inp=>{
     inp.onchange = async ()=>{
       const id = inp.getAttribute("data-id");
@@ -3678,6 +4072,13 @@ function attachProductsTabEvents(){
       if(["weightValue","startDay","startMonth","endDay","endMonth","alertDays"].includes(field)) val = parseInt(val,10)||0;
       p[field] = val;
       await storageSet("puck:products", state.products);
+      if(p.catalogItemId && ["name","nameEn","sku","weightValue","weightUnit"].includes(field)){
+        const unitMap = { "غ":"g", "كغ":"kg" };
+        await saveGlobalCatalogOverride(p.catalogItemId, {
+          ar: p.name, en: p.nameEn, sku: p.sku,
+          weightValue: p.weightValue, weightUnit: unitMap[p.weightUnit] || p.weightUnit
+        });
+      }
       toast(t('toast_change_saved'));
     };
   });
@@ -3880,6 +4281,7 @@ function renderUsersTab(){
       <div class="add-user-form">
         <input id="newUsername" type="text" placeholder="${t('new_username_placeholder')}">
         <input id="newEmployeeNumber" type="text" placeholder="${t('employee_number_placeholder')}">
+        <input id="newUserPhone" type="text" placeholder="${t('phone_placeholder')}" style="direction:ltr;">
         <input id="newUserCode" type="text" placeholder="${t('new_user_code_placeholder')}">
         <select id="newUserRole">
           <option value="employee">${t('role_option_employee')}</option>
@@ -3902,11 +4304,12 @@ function attachUsersTabEvents(){
   if(addBtn) addBtn.onclick = async ()=>{
     const username = document.getElementById("newUsername").value.trim();
     const employeeNumber = document.getElementById("newEmployeeNumber").value.trim();
+    const phone = document.getElementById("newUserPhone").value.trim();
     const code = document.getElementById("newUserCode").value.trim();
     const role = document.getElementById("newUserRole").value;
     if(!username || !code){ toast(t('toast_enter_user_code')); return; }
     if(state.users.some(u=>u.username===username)){ toast(t('toast_user_exists')); return; }
-    state.users.push({ id: uid(), username, employeeNumber, password: code, role, mustChange: true, isAdmin: false, isDefault: false });
+    state.users.push({ id: uid(), username, employeeNumber, phone, password: code, role, mustChange: true, isAdmin: false, isDefault: false });
     await storageSet("puck:users", state.users);
     toast(t('toast_user_added_share') + code);
     renderAdminOverlay();
@@ -3941,6 +4344,7 @@ function openEditUserModal(id){
       <div id="euError"></div>
       <div class="field"><label>${t('username_label')}</label><input id="euUsername" type="text" value="${escapeHtml(user.username)}"></div>
       <div class="field"><label>${t('employee_number_label')}</label><input id="euEmployeeNumber" type="text" value="${escapeHtml(user.employeeNumber||'')}"></div>
+      <div class="field"><label>${t('phone_label')}</label><input id="euPhone" type="text" value="${escapeHtml(user.phone||'')}" placeholder="${t('phone_placeholder')}" style="direction:ltr;"></div>
       <button class="btn btn-primary" id="euSaveBtn">${t('save_word')}</button>
       <button class="btn btn-ghost" id="euCancelBtn" style="width:100%; margin-top:8px;">${t('cancel_word')}</button>
     </div>
@@ -3960,6 +4364,7 @@ function openEditUserModal(id){
 
     user.username = newUsername;
     user.employeeNumber = newEmployeeNumber;
+    user.phone = document.getElementById("euPhone").value.trim();
     await storageSet("puck:users", state.users);
     wrap.remove();
     toast(t('toast_account_updated'));
@@ -4112,99 +4517,6 @@ function attachLayoutTabEvents(){
   });
 }
 
-/* ---------- WHATSAPP TAB ---------- */
-function renderWhatsappTab(){
-  const branchName = (id)=> id==="all" ? "كل الفروع" : (state.branches.find(b=>b.id===id)?.name || "—");
-  const subsRows = state.subscribers.map(s=>`
-    <tr>
-      <td>${escapeHtml(s.phone)}</td>
-      <td>${escapeHtml(branchName(s.branchId))}</td>
-      <td><button class="btn btn-danger btn-small" data-del-sub="${s.id}">${ICON.trash}</button></td>
-    </tr>
-  `).join("");
-
-  const alertItems = [];
-  state.products.forEach(p=>{
-    const info = expiryStatus(p);
-    if(info.status === "ok") return;
-    const branch = state.branches.find(b=>b.id===p.branchId);
-    const bName = branch ? branch.name : "—";
-    const matchingSubs = state.subscribers.filter(s=>s.branchId==="all" || s.branchId===p.branchId);
-    alertItems.push({ p, info, bName, matchingSubs });
-  });
-
-  const alertsHtml = alertItems.length ? alertItems.map(item=>{
-    const pillClass = item.info.status === "expired" ? "expired" : "near";
-    const pillLabel = item.info.status === "expired" ? "منتهي" : `متبقي ${item.info.days} ${item.info.days===1?'يوم':'أيام'}`;
-    const sendButtons = item.matchingSubs.length ? item.matchingSubs.map(s=>`
-      <button class="wa-send-btn" data-send-phone="${escapeHtml(s.phone)}" data-send-product="${item.p.id}">${ICON.chat} إرسال إلى ${escapeHtml(s.phone)}</button>
-    `).join("") : `<span class="hint" style="margin:0;">لا يوجد مشتركون لهذا الفرع بعد</span>`;
-    return `
-      <div class="alert-item">
-        <div class="info"><b>${escapeHtml(item.p.name)}</b> — فرع ${escapeHtml(item.bName)}
-          <span class="days-pill ${pillClass}">${pillLabel}</span>
-        </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">${sendButtons}</div>
-      </div>
-    `;
-  }).join("") : `<p class="hint">لا توجد منتجات ضمن نطاق التنبيه حاليًا.</p>`;
-
-  return `
-    <div class="panel-card">
-      <h4>${ICON.warn} منتجات تحتاج تنبيهًا الآن</h4>
-      ${alertsHtml}
-      <p class="hint" style="margin-top:10px;">الإرسال يتم بضغطة واحدة عبر واتساب ويجب تنفيذه يدويًا من هنا؛ لا يمكن لصفحة الموقع إرسال رسائل تلقائيًا دون فتحها، لأن ذلك يتطلب خادمًا يعمل باستمرار مع اشتراك واتساب بزنس الرسمي.</p>
-    </div>
-    <div class="panel-card">
-      <h4>المشتركون في التنبيهات</h4>
-      <table class="wa-subs-table">
-        <thead><tr><th>رقم الجوال</th><th>الفرع</th><th></th></tr></thead>
-        <tbody>${subsRows || `<tr><td colspan="3" class="hint">لا يوجد مشتركون بعد</td></tr>`}</tbody>
-      </table>
-      <div class="add-user-form">
-        <input id="adminSubPhone" type="text" placeholder="رقم الجوال (مع رمز الدولة)، مثال: 9665xxxxxxxx">
-        <select id="adminSubBranch">
-          <option value="all">كل الفروع</option>
-          ${state.branches.map(b=>`<option value="${b.id}">${escapeHtml(b.name)}</option>`).join("")}
-        </select>
-        <button class="btn btn-primary btn-small" id="adminAddSubBtn">${ICON.plus} إضافة مشترك</button>
-      </div>
-    </div>
-  `;
-}
-function attachWhatsappTabEvents(){
-  document.querySelectorAll("[data-send-phone]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const phone = btn.getAttribute("data-send-phone");
-      const productId = btn.getAttribute("data-send-product");
-      const p = state.products.find(x=>x.id===productId);
-      if(!p) return;
-      const branch = state.branches.find(b=>b.id===p.branchId);
-      const info = expiryStatus(p);
-      const msg = buildWaMessage(p, branch ? branch.name : "—", info);
-      window.open(waLink(phone, msg), "_blank");
-    };
-  });
-  document.querySelectorAll("[data-del-sub]").forEach(btn=>{
-    btn.onclick = async ()=>{
-      const id = btn.getAttribute("data-del-sub");
-      state.subscribers = state.subscribers.filter(s=>s.id!==id);
-      await storageSet("puck:subscribers", state.subscribers);
-      toast("تم حذف المشترك");
-      renderAdminOverlay();
-    };
-  });
-  const addBtn = document.getElementById("adminAddSubBtn");
-  if(addBtn) addBtn.onclick = async ()=>{
-    const phone = document.getElementById("adminSubPhone").value.trim();
-    const branchId = document.getElementById("adminSubBranch").value;
-    if(!phone){ toast("الرجاء إدخال رقم الجوال"); return; }
-    state.subscribers.push({ id: uid(), phone, branchId });
-    await storageSet("puck:subscribers", state.subscribers);
-    toast("تمت إضافة المشترك");
-    renderAdminOverlay();
-  };
-}
 
 /* ---------- PUBLIC SUBSCRIBE MODAL ---------- */
 /* ---------- QUICK EDIT (from public product card, after login) ---------- */
@@ -4239,11 +4551,6 @@ function openQuickEditProductModal(productId){
         </div>
       </div>
       <div class="date-line" style="margin-bottom:14px; flex-wrap:wrap;">
-        <div class="grp"><span>${t('date_start')}</span>
-          <select id="qeStartDay">${dayOptionsHtml(p.startDay)}</select>
-          <select id="qeStartMonth">${monthOptionsHtml(p.startMonth)}</select>
-          <span>${YEAR}</span>
-        </div>
         <div class="grp"><span>${t('date_end')}</span>
           <select id="qeEndDay">${dayOptionsHtml(p.endDay)}</select>
           <select id="qeEndMonth">${monthOptionsHtml(p.endMonth)}</select>
@@ -4258,6 +4565,7 @@ function openQuickEditProductModal(productId){
         <input type="checkbox" id="qeHiddenToggle" ${p.hidden ? 'checked' : ''}>
         <span>${t('hide_product_label')}</span>
       </label>
+      ${p.catalogItemId ? `<button class="btn btn-ghost" id="qeMoveBtn" style="width:100%; margin-bottom:10px;">${ICON.move || '↔️'} ${t('move_product_btn')}</button>` : ''}
       <button class="btn btn-primary" id="qeSaveBtn">${t('save_word')}</button>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button class="btn btn-ghost" id="qeCancelBtn" style="flex:1;">${t('cancel_word')}</button>
@@ -4269,6 +4577,8 @@ function openQuickEditProductModal(productId){
   document.getElementById("closeQuickEdit").onclick = ()=> wrap.remove();
   document.getElementById("qeCancelBtn").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  const qeMoveBtn = document.getElementById("qeMoveBtn");
+  if(qeMoveBtn) qeMoveBtn.onclick = ()=>{ wrap.remove(); openCatalogMoveModal(p.catalogItemId); };
 
   document.getElementById("qeDeleteBtn").onclick = async ()=>{
     if(!confirm(t('confirm_delete_product'))) return;
@@ -4296,13 +4606,20 @@ function openQuickEditProductModal(productId){
     if(pendingImage) p.image = pendingImage;
     p.weightValue = parseInt(document.getElementById("qeWeightValue").value,10) || 0;
     p.weightUnit = document.getElementById("qeWeightUnit").value;
-    p.startDay = parseInt(document.getElementById("qeStartDay").value,10);
-    p.startMonth = parseInt(document.getElementById("qeStartMonth").value,10);
+    p.startDay = 1;
+    p.startMonth = 1;
     p.endDay = parseInt(document.getElementById("qeEndDay").value,10);
     p.endMonth = parseInt(document.getElementById("qeEndMonth").value,10);
     p.alertDays = parseInt(document.getElementById("qeAlertDays").value,10) || 0;
     p.hidden = document.getElementById("qeHiddenToggle").checked;
     await storageSet("puck:products", state.products);
+    if(p.catalogItemId){
+      const unitMap = { "غ":"g", "كغ":"kg" };
+      await saveGlobalCatalogOverride(p.catalogItemId, {
+        ar: p.name, en: p.nameEn, sku: p.sku,
+        weightValue: p.weightValue, weightUnit: unitMap[p.weightUnit] || p.weightUnit
+      });
+    }
     wrap.remove();
     toast(t('toast_change_saved'));
     render();
@@ -4339,11 +4656,6 @@ function openQuickAddProductModal(branchId){
         </div>
       </div>
       <div class="date-line" style="margin-bottom:14px; flex-wrap:wrap;">
-        <div class="grp"><span>${t('date_start')}</span>
-          <select id="qaStartDay">${dayOptionsHtml(1)}</select>
-          <select id="qaStartMonth">${monthOptionsHtml(1)}</select>
-          <span>${YEAR}</span>
-        </div>
         <div class="grp"><span>${t('date_end')}</span>
           <select id="qaEndDay">${dayOptionsHtml(28)}</select>
           <select id="qaEndMonth">${monthOptionsHtml(12)}</select>
@@ -4381,8 +4693,8 @@ function openQuickAddProductModal(branchId){
       sku: document.getElementById("qaSku").value.trim(), image: pendingImage,
       weightValue: parseInt(document.getElementById("qaWeightValue").value,10) || 0,
       weightUnit: document.getElementById("qaWeightUnit").value,
-      startDay: parseInt(document.getElementById("qaStartDay").value,10),
-      startMonth: parseInt(document.getElementById("qaStartMonth").value,10),
+      startDay: 1,
+      startMonth: 1,
       endDay: parseInt(document.getElementById("qaEndDay").value,10),
       endMonth: parseInt(document.getElementById("qaEndMonth").value,10),
       alertDays: parseInt(document.getElementById("qaAlertDays").value,10) || 0,
@@ -4606,10 +4918,9 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
   const branchId = view.branchId;
   let base = null;
   if(rowKind === "catalog"){
-    let found = null;
-    PRODUCT_CATALOG.forEach(g=> g.items.forEach(it=>{ if(it.id===rowId) found = it; }));
+    const found = getCatalogItemById(rowId);
     if(!found) return;
-    base = getCatalogItemView(branchId, found);
+    base = getCatalogItemView(found);
   } else if(rowKind === "duplicate"){
     base = state.monthlyDuplicates.find(d=>d.id===rowId);
     if(!base) return;
@@ -4621,6 +4932,7 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
     <div class="modal">
       <button class="close-x" id="closeMCatEdit">&times;</button>
       <h3>${ICON.edit} ${t('quick_edit_title')}</h3>
+      ${rowKind==='catalog' ? `<p class="hint">${t('global_edit_hint')}</p>` : ''}
       <div class="field"><label>${t('product_name_placeholder')} (AR)</label><input id="mceAr" type="text" value="${escapeHtml(base.ar)}"></div>
       <div class="field"><label>${t('product_name_placeholder')} (EN)</label><input id="mceEn" type="text" value="${escapeHtml(base.en||'')}" style="direction:ltr;"></div>
       <div class="field"><label>${t('sku_label')}</label><input id="mceSku" type="text" value="${escapeHtml(base.sku||'')}"></div>
@@ -4636,6 +4948,7 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
           </select>
         </div>
       </div>
+      ${rowKind==='catalog' ? `<button class="btn btn-ghost" id="mceMoveBtn" style="width:100%; margin-bottom:10px;">${ICON.move || '↔️'} ${t('move_product_btn')}</button>` : ''}
       <button class="btn btn-primary" id="mceSaveBtn">${t('save_word')}</button>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button class="btn btn-ghost" id="mceCancelBtn" style="flex:1;">${t('cancel_word')}</button>
@@ -4647,10 +4960,12 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
   document.getElementById("closeMCatEdit").onclick = ()=> wrap.remove();
   document.getElementById("mceCancelBtn").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  const moveBtn = document.getElementById("mceMoveBtn");
+  if(moveBtn) moveBtn.onclick = ()=>{ wrap.remove(); openCatalogMoveModal(rowId); };
   const resetBtn = document.getElementById("mceResetBtn");
   if(resetBtn) resetBtn.onclick = async ()=>{
-    delete state.monthlyOverrides[monthlyOverrideKey(branchId, rowId)];
-    await storageSet("puck:monthlyOverrides", state.monthlyOverrides);
+    delete state.catalogOverrides[rowId];
+    await storageSet("puck:catalogOverrides", state.catalogOverrides);
     wrap.remove();
     toast(t('toast_change_saved'));
     render();
@@ -4664,7 +4979,7 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
       weightUnit: document.getElementById("mceWeightUnit").value
     };
     if(rowKind === "catalog"){
-      await saveCatalogOverride(branchId, rowId, patch);
+      await saveGlobalCatalogOverride(rowId, patch);
     } else {
       Object.assign(base, patch);
       await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates);
@@ -4672,6 +4987,121 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
     wrap.remove();
     toast(t('toast_change_saved'));
     render();
+  };
+}
+
+/* ---------------- MANAGER: expiry alerts (from monthly inventory data) ---------------- */
+function computeManagerExpiryAlerts(branchIds, alertDaysThreshold){
+  const rows = [];
+  const today = new Date(); today.setHours(0,0,0,0);
+  function daysUntil(day, month, year){
+    if(!day || !month || !year) return null;
+    const d = new Date(year, month-1, day); d.setHours(0,0,0,0);
+    return Math.round((d - today) / 86400000);
+  }
+  function pushIfNeeded(branchId, ar, en, sku, weightValue, weightUnit, legacy, qty, day, month, year, location){
+    if(!qty || qty <= 0) return;
+    const days = daysUntil(day, month, year);
+    if(days === null) return;
+    if(days <= alertDaysThreshold){
+      const branch = state.branches.find(b=>b.id===branchId);
+      rows.push({
+        name: lang==="en" && en ? en : ar, sku: sku||"", weightValue: weightValue||0,
+        weightUnit: unitBilingual(weightUnit, legacy), days, location,
+        branchName: branch ? branch.name : ""
+      });
+    }
+  }
+  branchIds.forEach(branchId=>{
+    allCatalogItemsFlat().forEach(it=>{
+      const view = getCatalogItemView(it);
+      const entry = getMonthlyEntry(branchId, it.id);
+      pushIfNeeded(branchId, view.ar, view.en, view.sku, view.weightValue, view.weightUnit, false, entry.shelfQty, entry.shelfDay, entry.shelfMonth, entry.shelfYear, "shelf");
+      pushIfNeeded(branchId, view.ar, view.en, view.sku, view.weightValue, view.weightUnit, false, entry.backQty, entry.backDay, entry.backMonth, entry.backYear, "back");
+    });
+    state.monthlyDuplicates.filter(d=>d.branchId===branchId).forEach(d=>{
+      const entry = getMonthlyEntry(branchId, d.id);
+      pushIfNeeded(branchId, d.ar, d.en, d.sku, d.weightValue, d.weightUnit, false, entry.shelfQty, entry.shelfDay, entry.shelfMonth, entry.shelfYear, "shelf");
+      pushIfNeeded(branchId, d.ar, d.en, d.sku, d.weightValue, d.weightUnit, false, entry.backQty, entry.backDay, entry.backMonth, entry.backYear, "back");
+    });
+    state.monthlyProducts.filter(p=>p.branchId===branchId).forEach(p=>{
+      const entry = getMonthlyEntry(branchId, p.id);
+      pushIfNeeded(branchId, p.name, p.nameEn, p.sku, p.weightValue, p.weightUnit, true, entry.shelfQty, entry.shelfDay, entry.shelfMonth, entry.shelfYear, "shelf");
+      pushIfNeeded(branchId, p.name, p.nameEn, p.sku, p.weightValue, p.weightUnit, true, entry.backQty, entry.backDay, entry.backMonth, entry.backYear, "back");
+    });
+  });
+  rows.sort((a,b)=> a.days - b.days);
+  return rows;
+}
+function refreshAfterCatalogChange(){
+  render();
+  if(document.getElementById("adminOverlay")) renderAdminOverlay();
+}
+function openCatalogMoveModal(itemId){
+  const currentGroupId = catalogItemGroupId(itemId);
+  const groups = allCatalogGroupsList();
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeMoveModal">&times;</button>
+      <h3>${ICON.move || '↔️'} ${t('move_product_btn')}</h3>
+      <p class="hint">${t('move_product_hint')}</p>
+      <div class="move-group-list">
+        ${groups.map(g=>`
+          <button class="move-group-opt ${g.id===currentGroupId?'active':''}" data-move-to-group="${g.id}">
+            <div class="ar">${escapeHtml(g.titleAr)}</div>
+            <div class="en">${escapeHtml(g.titleEn)}</div>
+          </button>
+        `).join("")}
+      </div>
+      <button class="btn btn-ghost" id="openAddCategoryFromMove" style="width:100%; margin-top:12px;">${ICON.plus} ${t('add_category_btn')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeMoveModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.querySelectorAll("[data-move-to-group]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const groupId = btn.getAttribute("data-move-to-group");
+      await saveGlobalCatalogGroupMove(itemId, groupId);
+      wrap.remove();
+      toast(t('toast_change_saved'));
+      refreshAfterCatalogChange();
+    };
+  });
+  document.getElementById("openAddCategoryFromMove").onclick = ()=>{
+    wrap.remove();
+    openAddCatalogCategoryModal(itemId);
+  };
+}
+
+function openAddCatalogCategoryModal(itemIdToMoveAfter){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeAddCatModal">&times;</button>
+      <h3>${ICON.plus} ${t('add_category_btn')}</h3>
+      <div class="field"><label>${t('category_name_ar_label')}</label><input id="newCatAr" type="text" placeholder="${t('category_name_ar_label')}"></div>
+      <div class="field"><label>${t('category_name_en_label')}</label><input id="newCatEn" type="text" placeholder="${t('category_name_en_label')}" style="direction:ltr;"></div>
+      <button class="btn btn-primary" id="saveNewCatBtn" style="width:100%;">${t('save_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeAddCatModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("saveNewCatBtn").onclick = async ()=>{
+    const ar = document.getElementById("newCatAr").value.trim();
+    const en = document.getElementById("newCatEn").value.trim();
+    if(!ar){ toast(t('toast_enter_category_name')); return; }
+    const g = await addCustomCatalogGroup(ar, en);
+    if(itemIdToMoveAfter){
+      await saveGlobalCatalogGroupMove(itemIdToMoveAfter, g.id);
+    }
+    wrap.remove();
+    toast(t('toast_change_saved'));
+    refreshAfterCatalogChange();
   };
 }
 
@@ -4721,13 +5151,12 @@ function downloadMonthlyPdf(branchId){
     `;
   }
 
-  PRODUCT_CATALOG.forEach(g=>{
+  allCatalogGroupsList().forEach(g=>{
     const groupRows = [];
-    g.items.forEach(it=>{
+    itemsForGroupId(g.id).forEach(it=>{
       const entry = getMonthlyEntry(branchId, it.id);
       if(entryIsFilled(entry)){
-        const view = getCatalogItemView(branchId, it);
-        groupRows.push(rowHtml(view.ar, view.en, view.sku, view.weightValue, view.weightUnit, false, entry));
+        groupRows.push(rowHtml(it.ar, it.en, it.sku, it.weightValue, it.weightUnit, false, entry));
       }
       state.monthlyDuplicates.filter(d=>d.branchId===branchId && d.sourceKind==="catalog" && d.sourceItemId===it.id).forEach(d=>{
         const dEntry = getMonthlyEntry(branchId, d.id);
@@ -4782,7 +5211,6 @@ function attachAdminTabEvents(tab){
   if(tab==="products") attachProductsTabEvents();
   if(tab==="users") attachUsersTabEvents();
   if(tab==="appearance") attachAppearanceTabEvents();
-  if(tab==="whatsapp") attachWhatsappTabEvents();
 }
 
 /* =========================================================
