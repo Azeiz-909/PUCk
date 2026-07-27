@@ -4262,6 +4262,12 @@ function renderUsersTab(){
       <td>${u.isDefault ? 'BIGBOSS' : roleLabel(u)}</td>
       <td><span class="status-pill ${u.mustChange?'pending':'active'}">${u.mustChange?t('status_pending'):t('status_active')}</span></td>
       <td>
+        ${u.phone ? `
+          <a class="emp-action-btn wa" href="${waLink(u.phone,'')}" target="_blank" rel="noopener" title="${t('whatsapp_word')}" style="width:28px; height:28px; display:inline-flex;">${ICON.chat}</a>
+          <a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}" style="width:28px; height:28px; display:inline-flex;">📞</a>
+        ` : '—'}
+      </td>
+      <td>
         ${u.isDefault ? '' : `<button class="btn btn-ghost btn-small" data-edit-user="${u.id}">${ICON.edit} ${t('edit_word')}</button> <button class="btn btn-danger btn-small" data-del-user="${u.id}">${ICON.trash} ${t('delete_word')}</button>`}
       </td>
     </tr>
@@ -4274,10 +4280,12 @@ function renderUsersTab(){
     </div>
     <div class="panel-card">
       <h4>${t('users_tab_title')}</h4>
-      <table class="users-table">
-        <thead><tr><th>${t('col_username')}</th><th>${t('employee_number_label')}</th><th>${t('role_label')}</th><th>${t('col_status')}</th><th></th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <div style="overflow-x:auto;">
+        <table class="users-table">
+          <thead><tr><th>${t('col_username')}</th><th>${t('employee_number_label')}</th><th>${t('role_label')}</th><th>${t('col_status')}</th><th>${t('phone_label')}</th><th></th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
       <div class="add-user-form">
         <input id="newUsername" type="text" placeholder="${t('new_username_placeholder')}">
         <input id="newEmployeeNumber" type="text" placeholder="${t('employee_number_placeholder')}">
