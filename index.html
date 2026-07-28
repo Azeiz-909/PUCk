@@ -935,6 +935,7 @@ const I18N = {
     toast_branch_added: "تمت إضافة الفرع",
     assign_employees_label: "اختيار الموظفين لهذا الفرع",
     no_employees_to_assign: "لا يوجد موظفون لإضافتهم بعد",
+    toast_select_at_least_one_employee: "الرجاء اختيار موظف واحد على الأقل",
     branch_created_by_manager_note: "تم إنشاء هذا الفرع بواسطة المدير",
     view_employee_branches: "فروع الموظف",
     employee_branches_title: "فروع الموظف",
@@ -1251,6 +1252,7 @@ const I18N = {
     branch_delete_hint: "Deleting a branch will also delete all of its products from the site.",
     assign_employees_label: "Select employees for this branch",
     no_employees_to_assign: "No employees to add yet",
+    toast_select_at_least_one_employee: "Please select at least one employee",
     branch_created_by_manager_note: "This branch was created by the manager",
     view_employee_branches: "Employee branches",
     employee_branches_title: "Employee's Branches",
@@ -1597,6 +1599,50 @@ async function ensureCatalogSeededAllBranches(){
   if(anyAdded) await storageSet("puck:products", state.products);
 }
 
+/* =========================================================
+   ترحيل الفروع القديمة المشتركة إلى فروع خاصة بكل موظف
+   -----------------------------------------------------------
+   قديمًا كانت كل الفروع (بما فيها الفروع الافتراضية وأي فرع
+   يضيفه أي موظف) مشتركة بين كل الحسابات بلا استثناء: أي تعديل
+   على صورة/منتج في فرع يظهر فورًا لكل الموظفين لأنهم جميعًا
+   يقرأون نفس السجل بنفس المعرّف. هذه الدالة تُنفَّذ مرة واحدة
+   فقط: لكل فرع لا يملك "ownerId" (فرع قديم مشترك)، تُنشأ نسخة
+   مستقلة كاملة (فرع + منتجاته) لكل موظف حالي، ثم يُحذف الفرع
+   المشترك القديم. من هذه اللحظة فصاعدًا، أي تعديل يقوم به موظف
+   في فرعه الخاص لا يؤثر إطلاقًا على فروع بقية الموظفين.
+========================================================= */
+async function migrateLegacyBranchOwnership(){
+  if(state.settings && state.settings.branchOwnershipMigrated) return;
+  const employees = state.users.filter(u=>userRole(u)==="employee");
+  const legacyBranches = state.branches.filter(b=> !b.ownerId);
+  if(legacyBranches.length && employees.length){
+    const clonedBranches = [];
+    const clonedProducts = [];
+    legacyBranches.forEach(b=>{
+      employees.forEach(emp=>{
+        const newBranchId = uid();
+        clonedBranches.push(Object.assign({}, b, {
+          id: newBranchId,
+          ownerId: emp.id,
+          createdByRole: "employee",
+          createdByName: emp.username,
+          assignedEmployeeIds: [],
+        }));
+        state.products.filter(p=>p.branchId===b.id).forEach(p=>{
+          clonedProducts.push(Object.assign({}, p, { id: uid(), branchId: newBranchId }));
+        });
+      });
+    });
+    const legacyIds = new Set(legacyBranches.map(b=>b.id));
+    state.branches = state.branches.filter(b=> !legacyIds.has(b.id)).concat(clonedBranches);
+    state.products = state.products.filter(p=> !legacyIds.has(p.branchId)).concat(clonedProducts);
+    await storageSet("puck:branches", state.branches);
+    await storageSet("puck:products", state.products);
+  }
+  state.settings.branchOwnershipMigrated = true;
+  await storageSet("puck:settings", state.settings);
+}
+
 function defaultProducts(){
   return [
     { id: uid(), branchId: "panda", sku: "CRM-500", name: "جبنة كريمة", image: SEED_IMG.cream500, weightValue: 500, weightUnit: "غ", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
@@ -1625,14 +1671,29 @@ function employeeLabel(u){
 function isManagerCreatedBranch(b){
   return !!(b && (b.createdByRole === "manager" || b.createdByRole === "bigboss"));
 }
+/* فروع مملوكة فعليًا لهذا الموظف (تظهر في حسابه فقط) */
 function branchesForEmployee(employeeId){
-  const emp = state.users.find(u=>u.id===employeeId);
-  if(!emp) return [];
-  return state.branches.filter(b=>{
-    const assignedToThem = Array.isArray(b.assignedEmployeeIds) && b.assignedEmployeeIds.includes(employeeId);
-    const selfCreated = b.createdByRole === "employee" && b.createdByName === emp.username;
-    return assignedToThem || selfCreated;
-  });
+  return state.branches.filter(b=> b.ownerId === employeeId);
+}
+/* الفروع التي يجب أن يراها المستخدم الحالي في شاشاته (الرئيسية / الجرد الشهري):
+   - الموظف: فروعه الخاصة فقط (التي أنشأها هو أو التي أنشأها له مديره واختاره لها).
+   - المدير/المدير العام: كل الفروع (للإشراف). */
+function visibleBranchesForCurrentUser(){
+  if(!session.user) return [];
+  const role = userRole(session.user);
+  if(role === "employee") return branchesForEmployee(session.user.id);
+  return state.branches;
+}
+/* الفروع التي تظهر لهذا المستخدم داخل تبويب "الفروع" بلوحة التحكم (إضافة/حذف):
+   - الموظف: فروعه الخاصة فقط.
+   - المدير: الفروع التي أنشأها هو بنفسه لموظفيه (وليس فروع موظفين آخرين الخاصة).
+   - المدير العام (bigboss): كل الفروع، للإشراف الكامل. */
+function branchesManageableInBranchesTab(){
+  if(!session.user) return [];
+  const role = userRole(session.user);
+  if(role === "bigboss") return state.branches;
+  if(role === "manager") return state.branches.filter(b=> b.createdByRole==="manager" && b.createdByName === session.user.username);
+  return branchesForEmployee(session.user.id);
 }
 
 /* =========================================================
@@ -1761,6 +1822,7 @@ async function loadAll(){
   });
   if(writesNeeded.length) await Promise.all(writesNeeded);
 
+  await migrateLegacyBranchOwnership();
   await ensureCatalogSeededAllBranches();
 
   {
@@ -1962,6 +2024,14 @@ function render(){
     attachLoginScreenEvents();
     return;
   }
+  /* حماية خصوصية الفروع: موظف لا يمكنه فتح فرع لا يملكه حتى لو
+     حاول الوصول إليه عبر رابط مباشر (# في شريط العنوان). */
+  if(userRole(session.user) === "employee" && (view.screen === "branch" || view.screen === "branchExpired" || view.screen === "monthlyBranch") && view.branchId){
+    const allowedIds = new Set(visibleBranchesForCurrentUser().map(b=>b.id));
+    if(!allowedIds.has(view.branchId)){
+      view = { screen: "home", branchId: null };
+    }
+  }
   if(view.screen === "landing") app.innerHTML = renderLandingScreen();
   else if(view.screen === "home") app.innerHTML = renderHomeScreen();
   else if(view.screen === "branch") app.innerHTML = renderBranchScreen(view.branchId);
@@ -2051,9 +2121,11 @@ function renderLandingScreen(){
 
 /* ---------------- DAILY (branches) ---------------- */
 function renderHomeScreen(){
-  const branchesHtml = state.branches.length ? state.branches.map(b => {
+  const myBranches = visibleBranchesForCurrentUser();
+  const branchesHtml = myBranches.length ? myBranches.map(b => {
     const count = state.products.filter(p=>p.branchId===b.id).length;
     return `<div class="branch-card" data-branch="${b.id}">
+      ${isManagerCreatedBranch(b) ? `<div class="hint" style="margin:0 0 4px; color:var(--sky); font-size:11px;">${t('branch_created_by_manager_note')}</div>` : ''}
       ${renderBranchIconHtml(b)}
       <div class="name">${escapeHtml(b.name)}</div>
       ${renderBranchNoticesHtml(b)}
@@ -2181,7 +2253,8 @@ function renderBranchExpiredScreen(branchId){
 
 /* ---------------- MONTHLY INVENTORY: branch picker ---------------- */
 function renderMonthlyScreen(){
-  const branchesHtml = state.branches.length ? state.branches.map(b => {
+  const myBranches = visibleBranchesForCurrentUser();
+  const branchesHtml = myBranches.length ? myBranches.map(b => {
     const count = branchCatalogFilledCount(b.id) + branchCustomFilledCount(b.id);
     return `<div class="branch-card" data-monthly-branch="${b.id}">
       ${renderBranchIconHtml(b)}
@@ -3182,6 +3255,10 @@ function renderManagerHomeScreen(){
     </div>
     <div class="manager-greeting">${t('welcome_word')}: ${escapeHtml(session.user.username)}</div>
     <div class="manager-boxes-grid">
+      <div class="inventory-opt" data-mgoto="branches">
+        <div class="ico" style="font-size:34px;">🏬</div>
+        <div class="lbl">${t('tab_branches')}</div>
+      </div>
       <div class="inventory-opt" data-mgoto="planogram">
         <div class="ico" style="font-size:34px;">🗺️</div>
         <div class="lbl">${t('planogram_word')}</div>
@@ -3456,7 +3533,8 @@ function attachManagerScreenEvents(){
   document.querySelectorAll("[data-mgoto]").forEach(el=>{
     el.onclick = ()=>{
       const dest = el.getAttribute("data-mgoto");
-      if(dest === "planogram") goPlanogram();
+      if(dest === "branches") openAdminPanel();
+      else if(dest === "planogram") goPlanogram();
       else if(dest === "employees") goManagerEmployees();
       else if(dest === "documentation") goManagerDocumentation();
       else if(dest === "expiryAlerts") goManagerExpiryAlerts();
@@ -3727,12 +3805,14 @@ async function deletePlanogramItem(id){
 ========================================================= */
 function openAdminPanel(){
   adminUI.tab = "branches";
-  adminUI.selectedBranchForProducts = state.branches[0] ? state.branches[0].id : null;
+  const vb = visibleBranchesForCurrentUser();
+  adminUI.selectedBranchForProducts = vb[0] ? vb[0].id : null;
   renderAdminOverlay();
 }
 function openEmployeeAdminPanel(){
   adminUI.tab = "products";
-  adminUI.selectedBranchForProducts = state.branches[0] ? state.branches[0].id : null;
+  const vb = visibleBranchesForCurrentUser();
+  adminUI.selectedBranchForProducts = vb[0] ? vb[0].id : null;
   renderAdminOverlay();
 }
 
@@ -3796,7 +3876,8 @@ function renderAdminTab(tab){
 function renderBranchesTab(){
   const role = userRole(session.user);
   const isManagerRole = (role === "manager" || role === "bigboss");
-  const chips = state.branches.map(b=>`
+  const visibleBranches = branchesManageableInBranchesTab();
+  const chips = visibleBranches.map(b=>`
     <div class="chip">
       <span class="daisy" style="width:14px;height:14px;color:var(--sky)">${renderBranchIconHtmlSmall(b)}</span>
       ${escapeHtml(b.name)}
@@ -3847,18 +3928,39 @@ function attachBranchesTabEvents(){
     if(!name){ toast(t('toast_enter_branch_name')); return; }
     const role = userRole(session.user);
     const isManagerRole = (role === "manager" || role === "bigboss");
-    const assignedEmployeeIds = isManagerRole
-      ? Array.from(document.querySelectorAll(".assign-employee-check:checked")).map(cb=>cb.value)
-      : [];
-    const newBranch = {
-      id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" },
-      createdByRole: role,
-      createdByName: session.user ? session.user.username : "",
-      assignedEmployeeIds,
-    };
-    state.branches.push(newBranch);
+
+    if(isManagerRole){
+      /* كل موظف يتم اختياره يحصل على نسخة مستقلة تمامًا من الفرع
+         (فرع + منتجاته الخاصة) بمعرّف خاص به، بحيث لا يرى هذا الفرع
+         إلا هو، ولا يؤثر أي تعديل يجريه على نسخ بقية الموظفين. */
+      const selectedIds = Array.from(document.querySelectorAll(".assign-employee-check:checked")).map(cb=>cb.value);
+      if(!selectedIds.length){ toast(t('toast_select_at_least_one_employee')); return; }
+      selectedIds.forEach(empId=>{
+        const newBranch = {
+          id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" },
+          ownerId: empId,
+          createdByRole: role,
+          createdByName: session.user ? session.user.username : "",
+          assignedEmployeeIds: [empId],
+        };
+        state.branches.push(newBranch);
+        ensureCatalogSeededForBranch(newBranch.id);
+      });
+    }else{
+      /* فرع الموظف يخصه هو فقط */
+      const newBranch = {
+        id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" },
+        ownerId: session.user ? session.user.id : null,
+        createdByRole: "employee",
+        createdByName: session.user ? session.user.username : "",
+        assignedEmployeeIds: [],
+      };
+      state.branches.push(newBranch);
+      ensureCatalogSeededForBranch(newBranch.id);
+    }
+
     await storageSet("puck:branches", state.branches);
-    if(ensureCatalogSeededForBranch(newBranch.id)) await storageSet("puck:products", state.products);
+    await storageSet("puck:products", state.products);
     toast(t('toast_branch_added'));
     renderAdminOverlay();
   };
@@ -4095,11 +4197,12 @@ function adminProductRowHtml(p){
   `;
 }
 function renderProductsTab(){
-  if(!state.branches.length){
+  const myBranches = visibleBranchesForCurrentUser();
+  if(!myBranches.length){
     return `<div class="panel-card"><h4>${t('products_title')}</h4><p class="hint">${t('products_need_branch')}</p></div>`;
   }
-  if(!adminUI.selectedBranchForProducts) adminUI.selectedBranchForProducts = state.branches[0].id;
-  const selectRow = state.branches.map(b=>`<button class="${adminUI.selectedBranchForProducts===b.id?'active':''}" data-select-branch="${b.id}">${escapeHtml(b.name)}</button>`).join("");
+  if(!adminUI.selectedBranchForProducts || !myBranches.some(b=>b.id===adminUI.selectedBranchForProducts)) adminUI.selectedBranchForProducts = myBranches[0].id;
+  const selectRow = myBranches.map(b=>`<button class="${adminUI.selectedBranchForProducts===b.id?'active':''}" data-select-branch="${b.id}">${escapeHtml(b.name)}</button>`).join("");
   const products = state.products.filter(p=>p.branchId===adminUI.selectedBranchForProducts);
 
   const groupsMap = new Map();
