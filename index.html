@@ -933,6 +933,12 @@ const I18N = {
     branch_delete_hint: "حذف الفرع سيؤدي أيضًا لحذف جميع منتجاته من الموقع.",
     toast_enter_branch_name: "الرجاء إدخال اسم الفرع",
     toast_branch_added: "تمت إضافة الفرع",
+    assign_employees_label: "اختيار الموظفين لهذا الفرع",
+    no_employees_to_assign: "لا يوجد موظفون لإضافتهم بعد",
+    branch_created_by_manager_note: "تم إنشاء هذا الفرع بواسطة المدير",
+    view_employee_branches: "فروع الموظف",
+    employee_branches_title: "فروع الموظف",
+    no_employee_branches: "لا توجد فروع لهذا الموظف بعد",
     confirm_delete_branch: "هل تريد حذف هذا الفرع وجميع منتجاته؟",
     toast_branch_deleted: "تم حذف الفرع",
     products_title: "المنتجات",
@@ -1243,6 +1249,12 @@ const I18N = {
     new_branch_placeholder: "Branch name, e.g. Carrefour",
     add_word: "Add",
     branch_delete_hint: "Deleting a branch will also delete all of its products from the site.",
+    assign_employees_label: "Select employees for this branch",
+    no_employees_to_assign: "No employees to add yet",
+    branch_created_by_manager_note: "This branch was created by the manager",
+    view_employee_branches: "Employee branches",
+    employee_branches_title: "Employee's Branches",
+    no_employee_branches: "No branches for this employee yet",
     toast_enter_branch_name: "Please enter the branch name",
     toast_branch_added: "Branch added",
     confirm_delete_branch: "Delete this branch and all of its products?",
@@ -1610,6 +1622,18 @@ function employeeLabel(u){
   if(!u) return "";
   return u.employeeNumber ? `${u.username} (#${u.employeeNumber})` : u.username;
 }
+function isManagerCreatedBranch(b){
+  return !!(b && (b.createdByRole === "manager" || b.createdByRole === "bigboss"));
+}
+function branchesForEmployee(employeeId){
+  const emp = state.users.find(u=>u.id===employeeId);
+  if(!emp) return [];
+  return state.branches.filter(b=>{
+    const assignedToThem = Array.isArray(b.assignedEmployeeIds) && b.assignedEmployeeIds.includes(employeeId);
+    const selfCreated = b.createdByRole === "employee" && b.createdByName === emp.username;
+    return assignedToThem || selfCreated;
+  });
+}
 
 /* =========================================================
    PWA / "Add to Home Screen" icon setup
@@ -1672,61 +1696,73 @@ async function loadAll(){
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
 
-  state.branches = await storageGet("puck:branches", null);
-  if(state.branches === null){ state.branches = defaultBranches(); await storageSet("puck:branches", state.branches); }
+  /* ---------------------------------------------------------------
+     إصلاح الأداء (سبب تأخر فتح الصفحة ~30 ثانية):
+     كل استدعاء storageGet/storageSet هو طلب شبكة مستقل لِ Supabase.
+     سابقًا كانت 18 عملية قراءة تُنفَّذ الواحدة تلو الأخرى بـ await
+     متسلسل، فيتراكم زمن الشبكة 18 مرة. الحل: تنفيذها كلها دفعة
+     واحدة بالتوازي عبر Promise.all، وكذلك عمليات الكتابة الأولية
+     للقيم الافتراضية الناقصة. هذا يختصر وقت التحميل من نحو 30
+     ثانية إلى زمن أطول طلب واحد تقريبًا.
+  --------------------------------------------------------------- */
+  const KV_KEYS = [
+    "puck:branches", "puck:products", "puck:users", "puck:settings",
+    "puck:subscribers", "puck:monthlyProducts", "puck:monthlyMeta",
+    "puck:monthlyEntries", "puck:monthlyDuplicates", "puck:monthlyOverrides",
+    "puck:catalogOverrides", "puck:catalogGroupOverrides", "puck:customCatalogGroups",
+    "puck:managerAlertSettings", "puck:messages", "puck:planogramItems",
+    "puck:planogramSeen", "puck:documentation",
+  ];
+  const results = await Promise.all(KV_KEYS.map(k => storageGet(k, null)));
+  const kv = {};
+  KV_KEYS.forEach((k, i) => { kv[k] = results[i]; });
 
-  state.products = await storageGet("puck:products", null);
-  if(state.products === null){ state.products = defaultProducts(); await storageSet("puck:products", state.products); }
+  const defaultsByKey = {
+    "puck:branches": defaultBranches,
+    "puck:products": defaultProducts,
+    "puck:users": defaultUsers,
+    "puck:settings": ()=> ({ fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] }),
+    "puck:subscribers": ()=> [],
+    "puck:monthlyProducts": ()=> [],
+    "puck:monthlyMeta": ()=> ({}),
+    "puck:monthlyEntries": ()=> ({}),
+    "puck:monthlyDuplicates": ()=> [],
+    "puck:monthlyOverrides": ()=> ({}),
+    "puck:catalogOverrides": ()=> ({}),
+    "puck:catalogGroupOverrides": ()=> ({}),
+    "puck:customCatalogGroups": ()=> [],
+    "puck:managerAlertSettings": ()=> ({}),
+    "puck:messages": ()=> [],
+    "puck:planogramItems": ()=> [],
+    "puck:planogramSeen": ()=> ({}),
+    "puck:documentation": ()=> [],
+  };
+  const stateKeyByKvKey = {
+    "puck:branches": "branches", "puck:products": "products", "puck:users": "users",
+    "puck:settings": "settings", "puck:subscribers": "subscribers",
+    "puck:monthlyProducts": "monthlyProducts", "puck:monthlyMeta": "monthlyMeta",
+    "puck:monthlyEntries": "monthlyEntries", "puck:monthlyDuplicates": "monthlyDuplicates",
+    "puck:monthlyOverrides": "monthlyOverrides", "puck:catalogOverrides": "catalogOverrides",
+    "puck:catalogGroupOverrides": "catalogGroupOverrides", "puck:customCatalogGroups": "customCatalogGroups",
+    "puck:managerAlertSettings": "managerAlertSettings", "puck:messages": "messages",
+    "puck:planogramItems": "planogramItems", "puck:planogramSeen": "planogramSeen",
+    "puck:documentation": "documentation",
+  };
+
+  const writesNeeded = [];
+  KV_KEYS.forEach(k=>{
+    const stateKey = stateKeyByKvKey[k];
+    if(kv[k] === null){
+      state[stateKey] = defaultsByKey[k]();
+      writesNeeded.push(storageSet(k, state[stateKey]));
+    }else{
+      state[stateKey] = kv[k];
+    }
+  });
+  if(writesNeeded.length) await Promise.all(writesNeeded);
 
   await ensureCatalogSeededAllBranches();
 
-  state.users = await storageGet("puck:users", null);
-  if(state.users === null){ state.users = defaultUsers(); await storageSet("puck:users", state.users); }
-
-  state.settings = await storageGet("puck:settings", null);
-  if(state.settings === null){ state.settings = { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] }; await storageSet("puck:settings", state.settings); }
-
-  state.subscribers = await storageGet("puck:subscribers", null);
-  if(state.subscribers === null){ state.subscribers = []; await storageSet("puck:subscribers", state.subscribers); }
-
-  state.monthlyProducts = await storageGet("puck:monthlyProducts", null);
-  if(state.monthlyProducts === null){ state.monthlyProducts = []; await storageSet("puck:monthlyProducts", state.monthlyProducts); }
-
-  state.monthlyMeta = await storageGet("puck:monthlyMeta", null);
-  if(state.monthlyMeta === null){ state.monthlyMeta = {}; await storageSet("puck:monthlyMeta", state.monthlyMeta); }
-
-  state.monthlyEntries = await storageGet("puck:monthlyEntries", null);
-  if(state.monthlyEntries === null){ state.monthlyEntries = {}; await storageSet("puck:monthlyEntries", state.monthlyEntries); }
-
-  state.monthlyDuplicates = await storageGet("puck:monthlyDuplicates", null);
-  if(state.monthlyDuplicates === null){ state.monthlyDuplicates = []; await storageSet("puck:monthlyDuplicates", state.monthlyDuplicates); }
-
-  state.monthlyOverrides = await storageGet("puck:monthlyOverrides", null);
-  if(state.monthlyOverrides === null){ state.monthlyOverrides = {}; await storageSet("puck:monthlyOverrides", state.monthlyOverrides); }
-
-  state.catalogOverrides = await storageGet("puck:catalogOverrides", null);
-  if(state.catalogOverrides === null){ state.catalogOverrides = {}; await storageSet("puck:catalogOverrides", state.catalogOverrides); }
-
-  state.catalogGroupOverrides = await storageGet("puck:catalogGroupOverrides", null);
-  if(state.catalogGroupOverrides === null){ state.catalogGroupOverrides = {}; await storageSet("puck:catalogGroupOverrides", state.catalogGroupOverrides); }
-
-  state.customCatalogGroups = await storageGet("puck:customCatalogGroups", null);
-  if(state.customCatalogGroups === null){ state.customCatalogGroups = []; await storageSet("puck:customCatalogGroups", state.customCatalogGroups); }
-
-  state.managerAlertSettings = await storageGet("puck:managerAlertSettings", null);
-  if(state.managerAlertSettings === null){ state.managerAlertSettings = {}; await storageSet("puck:managerAlertSettings", state.managerAlertSettings); }
-
-  state.messages = await storageGet("puck:messages", null);
-  if(state.messages === null){ state.messages = []; await storageSet("puck:messages", state.messages); }
-
-  state.planogramItems = await storageGet("puck:planogramItems", null);
-  if(state.planogramItems === null){ state.planogramItems = []; await storageSet("puck:planogramItems", state.planogramItems); }
-
-  state.planogramSeen = await storageGet("puck:planogramSeen", null);
-  if(state.planogramSeen === null){ state.planogramSeen = {}; await storageSet("puck:planogramSeen", state.planogramSeen); }
-
-  state.documentation = await storageGet("puck:documentation", null);
-  if(state.documentation === null){ state.documentation = []; await storageSet("puck:documentation", state.documentation); }
   {
     const sevenDaysAgo = Date.now() - (7*24*3600*1000);
     const before = state.documentation.length;
@@ -3189,6 +3225,7 @@ function renderManagerEmployeesScreen(){
         ${u.phone ? `<a class="emp-action-btn wa" href="${waLink(u.phone,'')}" target="_blank" rel="noopener" title="${t('whatsapp_word')}">${ICON.whatsapp}</a>` : ''}
         ${u.phone ? `<a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}">📞</a>` : ''}
         <button class="emp-action-btn view" data-view-account="${u.id}" title="${t('view_word')}">${ICON.search}</button>
+        <button class="emp-action-btn msg" data-view-employee-branches="${u.id}" title="${t('view_employee_branches')}">🏬</button>
         <button class="emp-action-btn msg" data-message-account="${u.id}" title="${t('message_word')}">${ICON.edit}</button>
       </div>
     </div>
@@ -3254,6 +3291,35 @@ function renderManagerEmployeeDocsScreen(employeeId){
     <div class="branch-title-row"><h2>${escapeHtml(emp ? employeeLabel(emp) : "")}</h2></div>
     <div class="monthly-wrap">${rows}</div>
   `;
+}
+
+function openEmployeeBranchesModal(employeeId){
+  const emp = state.users.find(u=>u.id===employeeId);
+  const branches = branchesForEmployee(employeeId);
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeEmpBranchesModal">&times;</button>
+      <h3>${t('employee_branches_title')}${emp ? ' — ' + escapeHtml(employeeLabel(emp)) : ''}</h3>
+      ${branches.length ? `
+        <div class="chip-grid">
+          ${branches.map(b=>`
+            <div class="chip" style="flex-direction:column; align-items:flex-start; gap:4px;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="daisy" style="width:14px;height:14px;color:var(--sky)">${renderBranchIconHtmlSmall(b)}</span>
+                ${escapeHtml(b.name)}
+              </div>
+              ${isManagerCreatedBranch(b) ? `<div class="hint" style="margin:0; color:var(--sky);">${t('branch_created_by_manager_note')}</div>` : ''}
+            </div>
+          `).join("")}
+        </div>
+      ` : `<p class="hint">${t('no_employee_branches')}</p>`}
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeEmpBranchesModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
 }
 
 function openImageLightbox(src){
@@ -3413,6 +3479,9 @@ function attachManagerScreenEvents(){
       const emp = state.users.find(u=>u.id===btn.getAttribute("data-message-account"));
       if(emp) openComposeMessageModal([emp.id]);
     };
+  });
+  document.querySelectorAll("[data-view-employee-branches]").forEach(btn=>{
+    btn.onclick = ()=> openEmployeeBranchesModal(btn.getAttribute("data-view-employee-branches"));
   });
   const sendAlertBtn = document.getElementById("openSendAlertBtn");
   if(sendAlertBtn) sendAlertBtn.onclick = ()=> openComposeMessageModal([]);
@@ -3725,6 +3794,8 @@ function renderAdminTab(tab){
 
 /* ---------- BRANCHES TAB ---------- */
 function renderBranchesTab(){
+  const role = userRole(session.user);
+  const isManagerRole = (role === "manager" || role === "bigboss");
   const chips = state.branches.map(b=>`
     <div class="chip">
       <span class="daisy" style="width:14px;height:14px;color:var(--sky)">${renderBranchIconHtmlSmall(b)}</span>
@@ -3734,6 +3805,22 @@ function renderBranchesTab(){
       <button data-del-branch="${b.id}" title="${t('delete_branch_title')}">${ICON.trash}</button>
     </div>
   `).join("");
+  const employees = state.users.filter(u=>userRole(u)==="employee");
+  const employeeChecklistHtml = isManagerRole ? `
+    <div class="field" id="assignEmployeesField" style="margin-top:10px;">
+      <label>${t('assign_employees_label')}</label>
+      ${employees.length ? `
+        <div class="chip-grid" id="assignEmployeesList">
+          ${employees.map(u=>`
+            <label class="alert-branch-check">
+              <input type="checkbox" value="${u.id}" class="assign-employee-check">
+              <span>${escapeHtml(employeeLabel(u))}</span>
+            </label>
+          `).join("")}
+        </div>
+      ` : `<p class="hint">${t('no_employees_to_assign')}</p>`}
+    </div>
+  ` : "";
   return `
     <div class="panel-card">
       <h4>${t('current_branches')}</h4>
@@ -3741,8 +3828,9 @@ function renderBranchesTab(){
         ${chips}
         <button class="plus-tile" id="showAddBranch">${ICON.plus} ${t('add_branch')}</button>
       </div>
-      <div class="inline-add-row" id="addBranchRow" style="display:none;">
+      <div class="inline-add-row" id="addBranchRow" style="display:none; flex-direction:column; align-items:stretch; gap:10px;">
         <input id="newBranchName" type="text" placeholder="${t('new_branch_placeholder')}">
+        ${employeeChecklistHtml}
         <button class="btn btn-primary btn-small" id="confirmAddBranch">${t('add_word')}</button>
       </div>
       <p class="hint" style="margin-top:14px;">${t('branch_delete_hint')}</p>
@@ -3757,7 +3845,17 @@ function attachBranchesTabEvents(){
     const nameInput = document.getElementById("newBranchName");
     const name = nameInput.value.trim();
     if(!name){ toast(t('toast_enter_branch_name')); return; }
-    const newBranch = { id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" } };
+    const role = userRole(session.user);
+    const isManagerRole = (role === "manager" || role === "bigboss");
+    const assignedEmployeeIds = isManagerRole
+      ? Array.from(document.querySelectorAll(".assign-employee-check:checked")).map(cb=>cb.value)
+      : [];
+    const newBranch = {
+      id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" },
+      createdByRole: role,
+      createdByName: session.user ? session.user.username : "",
+      assignedEmployeeIds,
+    };
     state.branches.push(newBranch);
     await storageSet("puck:branches", state.branches);
     if(ensureCatalogSeededForBranch(newBranch.id)) await storageSet("puck:products", state.products);
