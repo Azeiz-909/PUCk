@@ -446,11 +446,18 @@
     .print-only h2{ font-family:var(--font-display); margin-bottom:4px; }
     .print-only .p-date{ color:#555; font-size:12px; margin-bottom:6px; }
     .print-only table{ width:100%; border-collapse:collapse; margin-top:10px; }
-    .print-only th, .print-only td{ border:1px solid #333; padding:4px 5px; text-align:center; font-size:10.5px; }
+    .print-only th, .print-only td{ border:1px solid var(--line); padding:4px 5px; text-align:center; font-size:10.5px; }
     .print-only th{ background:#eee; }
     .print-only td.p-group-row, .print-only tr.p-group-row td{ background:#dfe9f5; font-weight:800; text-align:start; }
-    .print-only th.sos-group-th{ background:#FFE066; }
-    .print-only td.sos-branch-name-cell{ background:#eef7f1; font-weight:800; text-align:start; }
+    .print-only table.sos-print-table th, .print-only table.sos-print-table td{ border:1px solid var(--line); }
+    .print-only th.sos-id-th-print{ background:var(--navy-deep); color:#fff; font-family:var(--font-display); }
+    .print-only th.sos-group-th{ background:#F6A623; color:var(--navy-deep); font-family:var(--font-display); font-weight:800; }
+    .print-only th.sos-col-th-print{ background:var(--sky-light); color:var(--navy-deep); }
+    .print-only td.sos-branch-name-cell{
+      background:#FFF6D6; font-weight:800; text-align:start; width:150px; max-width:150px;
+      white-space:normal; word-break:break-word; overflow:hidden;
+      display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; line-height:1.25;
+    }
     .print-only td.sos-pct-cell{ background:#92D050 !important; font-weight:800; }
   }
 
@@ -634,7 +641,9 @@
   .sos-secondary-row .link-btn .ico{ width:16px; height:16px; }
 
   /* ---------- SOS: categories/columns manager & branch list as collapsible accordions ---------- */
-  .sos-cats-manager, .sos-cards{ display:none; }
+  .sos-table-scroll{ display:none; }
+  .sos-cats-manager{ display:block; margin-bottom:14px; }
+  .sos-cards{ display:flex; flex-direction:column; gap:10px; }
   .sos-cats-manager .mg-body{ display:flex; flex-direction:column; gap:10px; }
   .sos-cat-manager-item{ border:1.5px solid var(--line); border-radius:var(--radius-sm); overflow:hidden; }
   .sos-cat-manager-head{
@@ -648,7 +657,6 @@
   .sos-cat-manager-col .sos-col-label-input{ width:auto; min-width:50px; }
 
   /* branch accordion list */
-  .sos-cards{ flex-direction:column; gap:10px; }
   details.sos-branch-details{
     background:var(--white); border:1px solid var(--line); border-radius:16px;
     box-shadow:var(--shadow-card); overflow:hidden;
@@ -684,12 +692,6 @@
   .sos-card-fields .sos-card-field input{ text-align:center; font-weight:400; }
   .sos-card-empty-cats{ padding:0; }
   .sos-mg-body-inner{ padding:0 14px 14px; }
-
-  @media (max-width: 720px){
-    .sos-table-scroll{ display:none; }
-    .sos-cats-manager{ display:block; }
-    .sos-cards{ display:flex; }
-  }
 
   .inline-add-row input{ flex:1; padding:10px 12px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body); }
 
@@ -898,6 +900,7 @@
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="config.js"></script>
 
 <div class="bg-daisies" id="bgDaisies"></div>
@@ -1058,6 +1061,11 @@ const I18N = {
     sos_column_name_label: "اسم الخانة",
     sos_add_column_confirm_btn: "إضافة الخانة",
     sos_add_column_modal_hint: "أضف أي عدد من الخانات التي تحتاجها وسمّها كما تشاء، ثم اضغط \"تم\".",
+    sos_download_choice_title: "اختر صيغة التنزيل",
+    sos_download_pdf_option: "PDF / طباعة",
+    sos_download_excel_option: "ملف إكسل (Excel)",
+    sos_excel_generating: "جارٍ تجهيز ملف الإكسل...",
+    sos_excel_error: "تعذّر إنشاء ملف الإكسل، تحقق من الاتصال بالإنترنت وحاول مجددًا.",
     sos_print_title: "تقرير SOS - توزيع المنتجات حسب الفروع",
     sos_download_branch_title: "تنزيل تقرير هذا الفرع",
     sos_download_all_btn: "تنزيل كل الفروع",
@@ -1411,6 +1419,11 @@ const I18N = {
     sos_column_name_label: "Field name",
     sos_add_column_confirm_btn: "Add Field",
     sos_add_column_modal_hint: "Add as many fields as you need and name them however you like, then press \"Close\".",
+    sos_download_choice_title: "Choose download format",
+    sos_download_pdf_option: "PDF / Print",
+    sos_download_excel_option: "Excel file",
+    sos_excel_generating: "Preparing the Excel file...",
+    sos_excel_error: "Couldn't create the Excel file, check your internet connection and try again.",
     sos_print_title: "SOS Report - Product Distribution by Branch",
     sos_download_branch_title: "Download this branch's report",
     sos_download_all_btn: "Download all branches",
@@ -4422,10 +4435,10 @@ function attachSosTabEvents(){
   if(addCatBtn) addCatBtn.onclick = ()=> openAddSosCategoryModal();
 
   const dlBtn = document.getElementById("sosDownloadBtn");
-  if(dlBtn) dlBtn.onclick = ()=> downloadSosReport();
+  if(dlBtn) dlBtn.onclick = ()=> openSosDownloadChoiceModal();
 
   document.querySelectorAll("[data-sos-download-branch]").forEach(btn=>{
-    btn.onclick = (e)=>{ e.stopPropagation(); downloadSosReport(btn.getAttribute("data-sos-download-branch")); };
+    btn.onclick = (e)=>{ e.stopPropagation(); openSosDownloadChoiceModal(btn.getAttribute("data-sos-download-branch")); };
   });
 
   document.querySelectorAll("[data-sos-cat-name]").forEach(inp=>{
@@ -4600,7 +4613,7 @@ function downloadSosReport(branchId){
   const branches = branchId ? allBranches.filter(b=>b.id===branchId) : allBranches;
 
   const groupHeaderCells = categories.map(cat=>`<th colspan="${Math.max(cat.columns.length,1)}" class="sos-group-th">${escapeHtml(cat.name)}</th>`).join("");
-  const subHeaderCells = categories.map(cat=> cat.columns.map(col=>`<th>${escapeHtml(col.label)}</th>`).join("")).join("");
+  const subHeaderCells = categories.map(cat=> cat.columns.map(col=>`<th class="sos-col-th-print">${escapeHtml(col.label)}</th>`).join("")).join("");
 
   const bodyRows = branches.map(b=>{
     const idCells = `<td>${escapeHtml(b.merch||'')}</td><td>${escapeHtml(b.sap||'')}</td><td class="sos-branch-name-cell">${escapeHtml(b.name||'')}</td>`;
@@ -4616,9 +4629,9 @@ function downloadSosReport(branchId){
   const titleSuffix = branchId && branches[0] ? ` - ${escapeHtml(branches[0].name || '')}` : "";
   printArea.innerHTML = `
     <h2>${t('sos_print_title')}${titleSuffix}</h2>
-    <table>
+    <table class="sos-print-table">
       <thead>
-        <tr><th rowspan="2">${t('sos_col_merch')}</th><th rowspan="2">${t('sos_col_sap')}</th><th rowspan="2">${t('sos_col_customer')}</th>${groupHeaderCells}</tr>
+        <tr><th rowspan="2" class="sos-id-th-print">${t('sos_col_merch')}</th><th rowspan="2" class="sos-id-th-print">${t('sos_col_sap')}</th><th rowspan="2" class="sos-id-th-print">${t('sos_col_customer')}</th>${groupHeaderCells}</tr>
         <tr>${subHeaderCells}</tr>
       </thead>
       <tbody>${bodyRows || `<tr><td colspan="${totalCols}">${t('sos_empty_rows_hint')}</td></tr>`}</tbody>
@@ -4626,6 +4639,136 @@ function downloadSosReport(branchId){
   `;
   toast(t('print_hint'));
   setTimeout(()=> window.print(), 300);
+}
+
+function openSosDownloadChoiceModal(branchId){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeSosDlChoiceModal">&times;</button>
+      <h3>${ICON.download} ${t('sos_download_choice_title')}</h3>
+      <button class="btn btn-primary" id="sosDlPdfBtn" style="width:100%; margin-bottom:10px;">${t('sos_download_pdf_option')}</button>
+      <button class="btn btn-ghost" id="sosDlExcelBtn" style="width:100%;">${t('sos_download_excel_option')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  wrap.querySelector("#closeSosDlChoiceModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  wrap.querySelector("#sosDlPdfBtn").onclick = ()=>{ wrap.remove(); downloadSosReport(branchId); };
+  wrap.querySelector("#sosDlExcelBtn").onclick = ()=>{ wrap.remove(); downloadSosExcel(branchId); };
+}
+
+async function downloadSosExcel(branchId){
+  if(typeof ExcelJS === "undefined"){ toast(t('sos_excel_error')); return; }
+  toast(t('sos_excel_generating'));
+  try{
+    const data = state.sos && Array.isArray(state.sos.categories) ? state.sos : defaultSosData();
+    const categories = data.categories || [];
+    const allBranches = data.branches || [];
+    const branches = branchId ? allBranches.filter(b=>b.id===branchId) : allBranches;
+
+    const NAVY_DEEP = "FF0E4526", ORANGE = "FFF6A623", SKY_LIGHT = "FFCFEFE6",
+          YELLOW = "FFFFF6D6", GREEN = "FF92D050", BORDER_CLR = "FFDCEFE3", WHITE = "FFFFFFFF";
+    const thinBorder = { top:{style:"thin",color:{argb:BORDER_CLR}}, left:{style:"thin",color:{argb:BORDER_CLR}}, bottom:{style:"thin",color:{argb:BORDER_CLR}}, right:{style:"thin",color:{argb:BORDER_CLR}} };
+
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet(t('tab_sos'), { views:[{ rightToLeft:true }] });
+
+    const totalColCount = 3 + categories.reduce((n,c)=> n + Math.max(c.columns.length,1), 0);
+    // title row
+    ws.mergeCells(1,1,1,totalColCount);
+    const titleCell = ws.getCell(1,1);
+    titleCell.value = t('sos_print_title') + (branchId && branches[0] ? ` - ${branches[0].name||''}` : "");
+    titleCell.font = { bold:true, size:14, color:{argb:NAVY_DEEP} };
+    titleCell.alignment = { horizontal:"center", vertical:"middle" };
+    ws.getRow(1).height = 26;
+
+    // header row 1 (row 2 in sheet): id columns + category groups
+    const headRow1 = 2, headRow2 = 3;
+    ["sos_col_merch","sos_col_sap","sos_col_customer"].forEach((k,i)=>{
+      ws.mergeCells(headRow1, i+1, headRow2, i+1);
+      const c = ws.getCell(headRow1, i+1);
+      c.value = t(k);
+      c.font = { bold:true, color:{argb:WHITE} };
+      c.fill = { type:"pattern", pattern:"solid", fgColor:{argb:NAVY_DEEP} };
+      c.alignment = { horizontal:"center", vertical:"middle", wrapText:true };
+      c.border = thinBorder;
+      const c2 = ws.getCell(headRow2, i+1);
+      c2.fill = { type:"pattern", pattern:"solid", fgColor:{argb:NAVY_DEEP} };
+      c2.border = thinBorder;
+    });
+
+    let colCursor = 4;
+    const colMeta = []; // {col:excelColIndex, isPct}
+    categories.forEach(cat=>{
+      const span = Math.max(cat.columns.length,1);
+      ws.mergeCells(headRow1, colCursor, headRow1, colCursor+span-1);
+      const gc = ws.getCell(headRow1, colCursor);
+      gc.value = cat.name;
+      gc.font = { bold:true, color:{argb:NAVY_DEEP} };
+      gc.fill = { type:"pattern", pattern:"solid", fgColor:{argb:ORANGE} };
+      gc.alignment = { horizontal:"center", vertical:"middle", wrapText:true };
+      for(let i=0;i<span;i++){
+        const cell = ws.getCell(headRow1, colCursor+i);
+        cell.border = thinBorder;
+        const sub = ws.getCell(headRow2, colCursor+i);
+        sub.value = cat.columns[i] ? cat.columns[i].label : "";
+        sub.font = { bold:true, color:{argb:NAVY_DEEP} };
+        sub.fill = { type:"pattern", pattern:"solid", fgColor:{argb:SKY_LIGHT} };
+        sub.alignment = { horizontal:"center", vertical:"middle", wrapText:true };
+        sub.border = thinBorder;
+        colMeta.push({ col: colCursor+i, isPct: cat.columns[i] ? isSosPercentColumn(cat.columns[i]) : false, colId: cat.columns[i] ? cat.columns[i].id : null });
+      }
+      colCursor += span;
+    });
+
+    let rowCursor = headRow2 + 1;
+    branches.forEach(b=>{
+      const merchCell = ws.getCell(rowCursor,1); merchCell.value = b.merch||""; merchCell.border = thinBorder; merchCell.alignment = { horizontal:"center", vertical:"middle" };
+      const sapCell = ws.getCell(rowCursor,2); sapCell.value = b.sap||""; sapCell.border = thinBorder; sapCell.alignment = { horizontal:"center", vertical:"middle" };
+      const nameCell = ws.getCell(rowCursor,3);
+      nameCell.value = b.name||"";
+      nameCell.font = { bold:true };
+      nameCell.fill = { type:"pattern", pattern:"solid", fgColor:{argb:YELLOW} };
+      nameCell.alignment = { horizontal:"right", vertical:"middle" };
+      nameCell.border = thinBorder;
+
+      colMeta.forEach(cm=>{
+        const val = cm.colId ? sosCellValue(b, cm.colId) : "";
+        const cell = ws.getCell(rowCursor, cm.col);
+        cell.value = (val==="") ? "" : Number(val);
+        cell.alignment = { horizontal:"center", vertical:"middle" };
+        cell.border = thinBorder;
+        if(cm.isPct && val!==""){
+          cell.fill = { type:"pattern", pattern:"solid", fgColor:{argb:GREEN} };
+          cell.font = { bold:true };
+        }
+      });
+      rowCursor++;
+    });
+
+    // column widths
+    ws.getColumn(1).width = 12;
+    ws.getColumn(2).width = 12;
+    ws.getColumn(3).width = 28;
+    for(let i=4;i<=totalColCount;i++) ws.getColumn(i).width = 10;
+
+    const buffer = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const fileSuffix = branchId && branches[0] ? `-${(branches[0].name||"").replace(/[^\u0600-\u06FFa-zA-Z0-9]+/g,"_")}` : "-all";
+    a.href = url;
+    a.download = `SOS-Report${fileSuffix}.xlsx`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 3000);
+  }catch(err){
+    console.error(err);
+    toast(t('sos_excel_error'));
+  }
 }
 
 /* ---------- BRANCH ICON MODAL ---------- */
