@@ -446,16 +446,17 @@
     .print-only h2{ font-family:var(--font-display); margin-bottom:4px; }
     .print-only .p-date{ color:#555; font-size:12px; margin-bottom:6px; }
     .print-only table{ width:100%; border-collapse:collapse; margin-top:10px; }
+    .print-only table.sos-print-table{ width:auto; max-width:100%; margin-left:auto; margin-right:auto; table-layout:auto; }
     .print-only th, .print-only td{ border:1px solid var(--line); padding:4px 5px; text-align:center; font-size:10.5px; }
     .print-only th{ background:#eee; }
     .print-only td.p-group-row, .print-only tr.p-group-row td{ background:#dfe9f5; font-weight:800; text-align:start; }
-    .print-only table.sos-print-table th, .print-only table.sos-print-table td{ border:1px solid var(--line); }
+    .print-only table.sos-print-table th, .print-only table.sos-print-table td{ border:1px solid var(--line); padding:3px 6px; white-space:nowrap; }
     .print-only th.sos-id-th-print{ background:var(--navy-deep); color:#fff; font-family:var(--font-display); }
     .print-only th.sos-group-th{ background:#F6A623; color:var(--navy-deep); font-family:var(--font-display); font-weight:800; }
     .print-only th.sos-col-th-print{ background:var(--sky-light); color:var(--navy-deep); }
     .print-only td.sos-branch-name-cell{
-      background:#FFF6D6; font-weight:800; text-align:start; width:150px; max-width:150px;
-      white-space:normal; word-break:break-word; overflow:hidden;
+      background:#FFF6D6; font-weight:800; text-align:start; max-width:150px;
+      white-space:normal !important; word-break:break-word; overflow:hidden;
       display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; line-height:1.25;
     }
     .print-only td.sos-pct-cell{ background:#92D050 !important; font-weight:800; }
