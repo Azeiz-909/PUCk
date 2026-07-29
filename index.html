@@ -440,6 +440,7 @@
   .print-only{ display:none; }
   @media print{
     @page{ size: landscape; margin:10mm; }
+    *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
     body > *:not(.print-only){ display:none !important; }
     .print-only{ display:block !important; padding:10px; direction:rtl; }
     .print-only h2{ font-family:var(--font-display); margin-bottom:4px; }
@@ -448,6 +449,9 @@
     .print-only th, .print-only td{ border:1px solid #333; padding:4px 5px; text-align:center; font-size:10.5px; }
     .print-only th{ background:#eee; }
     .print-only td.p-group-row, .print-only tr.p-group-row td{ background:#dfe9f5; font-weight:800; text-align:start; }
+    .print-only th.sos-group-th{ background:#FFE066; }
+    .print-only td.sos-branch-name-cell{ background:#eef7f1; font-weight:800; text-align:start; }
+    .print-only td.sos-pct-cell{ background:#92D050 !important; font-weight:800; }
   }
 
   /* ---------- product grid (public) ---------- */
@@ -580,6 +584,113 @@
     border-radius:12px; padding:9px 14px; font-size:13.5px; font-weight:700; cursor:pointer; background:transparent;
   }
   .inline-add-row{ display:flex; gap:8px; margin-top:12px; }
+
+  /* ---------- SOS tab (editable spreadsheet) ---------- */
+  .sos-panel{ max-width:100%; }
+  .sos-toolbar{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+  .sos-table-scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius-sm); }
+  table.sos-table{ border-collapse:collapse; width:max-content; min-width:100%; font-size:12.5px; }
+  table.sos-table th, table.sos-table td{ border:1px solid var(--line); padding:4px; text-align:center; white-space:nowrap; }
+  table.sos-table thead th{ background:var(--navy); color:#fff; font-family:var(--font-display); font-weight:700; }
+  .sos-id-th{ background:var(--navy-deep) !important; min-width:70px; }
+  .sos-cat-th{ background:#F6A623 !important; color:var(--navy-deep) !important; }
+  .sos-cat-th-row{ display:flex; align-items:center; justify-content:center; gap:4px; }
+  .sos-cat-name-input{
+    border:none; background:transparent; color:var(--navy-deep); font-family:var(--font-display);
+    font-weight:800; font-size:12px; text-align:center; width:100px;
+  }
+  .sos-col-th{ background:var(--sky-light) !important; color:var(--navy-deep) !important; }
+  .sos-col-label-input{
+    border:none; background:transparent; color:var(--navy-deep); font-family:var(--font-body);
+    font-size:11.5px; text-align:center; width:64px;
+  }
+  .sos-mini-btn{
+    border:none; background:rgba(255,255,255,0.35); color:inherit; border-radius:6px;
+    width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:12px; flex:none;
+  }
+  .sos-mini-btn.sos-mini-danger{ color:var(--danger); }
+  .sos-id-input{
+    border:1px solid transparent; background:transparent; text-align:center; width:90px;
+    font-family:var(--font-body); font-size:12.5px; color:var(--ink); padding:4px;
+  }
+  .sos-id-input:focus{ outline:none; border-color:var(--sky); background:var(--white); }
+  .sos-val-input{
+    border:1px solid transparent; background:transparent; text-align:center; width:60px;
+    font-family:var(--font-body); font-size:12.5px; color:var(--ink); padding:4px;
+  }
+  .sos-val-input:focus{ outline:none; border-color:var(--sky); background:var(--white); }
+  .sos-yellow-input{ background:#FFF6D6 !important; font-weight:700; }
+  .sos-pct-cell{ background:#92D050 !important; }
+  .sos-pct-cell .sos-val-input{ color:var(--navy-deep); font-weight:800; }
+  .sos-card-fields .sos-card-field.sos-pct-field input{ background:#92D050 !important; color:var(--navy-deep); font-weight:800; border-color:#7BB93E; }
+
+  /* ---------- SOS: simplified single-row toolbar + slim secondary action ---------- */
+  .sos-secondary-row{ margin:8px 0 4px; }
+  .sos-secondary-row .link-btn{
+    background:none; border:none; color:var(--navy); font-family:var(--font-body); font-weight:700;
+    font-size:12.5px; display:inline-flex; align-items:center; gap:5px; cursor:pointer; padding:4px 2px;
+  }
+  .sos-secondary-row .link-btn .ico{ width:16px; height:16px; }
+
+  /* ---------- SOS: categories/columns manager & branch list as collapsible accordions ---------- */
+  .sos-cats-manager, .sos-cards{ display:none; }
+  .sos-cats-manager .mg-body{ display:flex; flex-direction:column; gap:10px; }
+  .sos-cat-manager-item{ border:1.5px solid var(--line); border-radius:var(--radius-sm); overflow:hidden; }
+  .sos-cat-manager-head{
+    background:#F6A623; color:var(--navy-deep); display:flex; align-items:center; gap:6px; padding:8px 10px;
+  }
+  .sos-cat-manager-head .sos-cat-name-input{ flex:1; width:auto; text-align:start; font-size:13.5px; }
+  .sos-cat-manager-cols{ display:flex; flex-wrap:wrap; gap:6px; padding:8px 10px; background:var(--sky-light); }
+  .sos-cat-manager-col{
+    display:flex; align-items:center; gap:4px; background:var(--white); border-radius:8px; padding:2px 6px;
+  }
+  .sos-cat-manager-col .sos-col-label-input{ width:auto; min-width:50px; }
+
+  /* branch accordion list */
+  .sos-cards{ flex-direction:column; gap:10px; }
+  details.sos-branch-details{
+    background:var(--white); border:1px solid var(--line); border-radius:16px;
+    box-shadow:var(--shadow-card); overflow:hidden;
+  }
+  details.sos-branch-details[open]{ box-shadow:var(--shadow-soft); }
+  details.sos-branch-details summary{
+    list-style:none; cursor:pointer; padding:12px 14px; display:flex; align-items:center; gap:10px;
+    justify-content:space-between; -webkit-tap-highlight-color:transparent;
+  }
+  details.sos-branch-details summary::-webkit-details-marker{ display:none; }
+  .sos-branch-summary-title{ min-width:0; flex:1; }
+  .sos-branch-summary-title .ar{
+    font-family:var(--font-display); font-weight:800; font-size:14px; color:var(--navy-deep);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .sos-branch-summary-title .en{ font-size:11.5px; color:#7C93B8; margin-top:1px; }
+  .sos-branch-summary-actions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+
+  .sos-identity-fields{ display:flex; flex-wrap:wrap; gap:10px; padding:2px 0 14px; }
+  .sos-card-field{ display:flex; flex-direction:column; gap:4px; font-size:11.5px; color:#7C9A8B; font-family:var(--font-body); flex:1 1 100px; }
+  .sos-card-field.wide{ flex:1 1 100%; }
+  .sos-card-field input{
+    border:1.5px solid var(--line); border-radius:8px; padding:9px 10px; font-family:var(--font-body); font-size:14px;
+    color:var(--navy-deep); background:var(--paper); font-weight:700;
+  }
+  .sos-card-field input:focus{ outline:none; border-color:var(--sky); background:var(--white); }
+  .sos-card-section{ padding:12px 0 0; border-top:1px dashed var(--line); }
+  .sos-card-section + .sos-card-section{ margin-top:12px; }
+  .sos-card-section-title{
+    font-family:var(--font-display); font-weight:800; color:var(--navy-deep); font-size:13px; margin-bottom:8px;
+  }
+  .sos-card-fields{ display:grid; grid-template-columns:repeat(auto-fill, minmax(100px,1fr)); gap:8px; }
+  .sos-card-fields .sos-card-field input{ text-align:center; font-weight:400; }
+  .sos-card-empty-cats{ padding:0; }
+  .sos-mg-body-inner{ padding:0 14px 14px; }
+
+  @media (max-width: 720px){
+    .sos-table-scroll{ display:none; }
+    .sos-cats-manager{ display:block; }
+    .sos-cards{ display:flex; }
+  }
+
   .inline-add-row input{ flex:1; padding:10px 12px; border-radius:10px; border:1.5px solid var(--line); font-family:var(--font-body); }
 
   .chip-mini-btn{
@@ -866,13 +977,14 @@ let state = {
   planogramItems: [],
   planogramSeen: {},
   documentation: [],
+  sos: { categories: [], branches: [] },
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
 let session = { user: null, viewOnly: false };
 let managerUI = { tab: "accounts" };
 function canEdit(){ return !!(session.user && !session.viewOnly); }
-let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null };
+let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null, sosBranchId: null };
 let pendingDocPhotos = [];
 let pendingDocDeadline = null;
 let pendingDocCountdownInterval = null;
@@ -924,6 +1036,33 @@ const I18N = {
     tab_products: "المنتجات",
     tab_users: "المستخدمون",
     tab_appearance: "الخط والمظهر",
+    tab_sos: "SOS",
+    sos_hint: "جدول قابل للتعديل مباشرة مثل إكسل: أضف صفًا لكل فرع/عميل، وأضف عمودًا أو قسمًا (منتج) جديدًا حسب الحاجة. كل خانة تُحفظ فور الخروج منها، وزر التنزيل يُخرج نفس الجدول جاهزًا للطباعة أو الحفظ كـ PDF لإرساله للموظف.",
+    add_sos_row_btn: "إضافة فرع",
+    add_sos_category_btn: "إضافة منتج (قسم أعمدة)",
+    sos_col_merch: "Merch",
+    sos_col_sap: "SAP",
+    sos_col_customer: "اسم العميل",
+    sos_empty_rows_hint: "لا توجد فروع بعد. اضغط \"إضافة فرع\" للبدء.",
+    add_column_btn: "إضافة عمود",
+    delete_column_title: "حذف العمود",
+    delete_category_title: "حذف المنتج/القسم",
+    confirm_delete_column: "هل تريد حذف هذا العمود من كل الفروع؟",
+    confirm_delete_category: "هل تريد حذف هذا المنتج وكل أعمدته من الجدول؟",
+    confirm_delete_sos_row: "هل تريد حذف هذا الفرع من الجدول؟",
+    toast_sos_min_one_column: "يجب أن يبقى عمود واحد على الأقل داخل كل منتج",
+    sos_category_name_label: "اسم المنتج/القسم",
+    sos_default_col_total: "الإجمالي",
+    sos_default_col_ratio: "النسبة %",
+    sos_new_column_default_label: "عمود جديد",
+    sos_column_name_label: "اسم الخانة",
+    sos_add_column_confirm_btn: "إضافة الخانة",
+    sos_add_column_modal_hint: "أضف أي عدد من الخانات التي تحتاجها وسمّها كما تشاء، ثم اضغط \"تم\".",
+    sos_print_title: "تقرير SOS - توزيع المنتجات حسب الفروع",
+    sos_download_branch_title: "تنزيل تقرير هذا الفرع",
+    sos_download_all_btn: "تنزيل كل الفروع",
+    sos_manager_home_label: "SOS",
+    sos_manage_categories_title: "المنتجات والأعمدة",
     tab_layout: "طريقة العرض",
     current_branches: "الفروع الحالية",
     delete_branch_title: "حذف الفرع",
@@ -1250,6 +1389,33 @@ const I18N = {
     tab_products: "Products",
     tab_users: "Users",
     tab_appearance: "Font & Appearance",
+    tab_sos: "SOS",
+    sos_hint: "A directly editable spreadsheet, just like Excel: add a row for each branch/customer, and add a column or a new section (product) as needed. Every cell saves as soon as you leave it, and the download button produces the same table ready to print or save as PDF to send to the employee.",
+    add_sos_row_btn: "Add Branch",
+    add_sos_category_btn: "Add Product (column group)",
+    sos_col_merch: "Merch",
+    sos_col_sap: "SAP",
+    sos_col_customer: "Customer Name",
+    sos_empty_rows_hint: "No branches yet. Click \"Add Branch\" to get started.",
+    add_column_btn: "Add Column",
+    delete_column_title: "Delete Column",
+    delete_category_title: "Delete Product/Section",
+    confirm_delete_column: "Delete this column from every branch?",
+    confirm_delete_category: "Delete this product and all of its columns from the table?",
+    confirm_delete_sos_row: "Delete this branch from the table?",
+    toast_sos_min_one_column: "At least one column must remain inside each product",
+    sos_category_name_label: "Product/Section Name",
+    sos_default_col_total: "Total",
+    sos_default_col_ratio: "Ratio %",
+    sos_new_column_default_label: "New Column",
+    sos_column_name_label: "Field name",
+    sos_add_column_confirm_btn: "Add Field",
+    sos_add_column_modal_hint: "Add as many fields as you need and name them however you like, then press \"Close\".",
+    sos_print_title: "SOS Report - Product Distribution by Branch",
+    sos_download_branch_title: "Download this branch's report",
+    sos_download_all_btn: "Download all branches",
+    sos_manager_home_label: "SOS",
+    sos_manage_categories_title: "Products & Columns",
     tab_layout: "Display Layout",
     current_branches: "Current Branches",
     delete_branch_title: "Delete branch",
@@ -1580,6 +1746,23 @@ function branchColumns(b){ return (b && (b.columns===1 || b.columns===2)) ? b.co
 function branchNotices(b){ return (b && Array.isArray(b.notices)) ? b.notices : []; }
 function branchIcon(b){ return (b && b.icon && b.icon.type) ? b.icon : { type:"daisy", value:"" }; }
 
+/* ---------------- SOS (Share of Shelf) default seed ----------------
+   نفس أسماء المجموعات الظاهرة في الجدول المرجعي، وكل مجموعة تبدأ
+   بعمودين (الإجمالي / النسبة %) وللمدير أن يضيف أو يحذف أعمدة كما يشاء. */
+function defaultSosCategories(){
+  const names = [
+    "Glass jar 50%", "St.cream 35%", "Mozzrella 40%", "Kraft Tin 60%", "Lurpak 45%",
+    "Cook & Whip Cream", "Labneh 25%", "Tub 40%", "SBUX 45%", "Galaxy 6x2", "Arla Protein",
+  ];
+  return names.map(n=> ({
+    id: uid(), name: n,
+    columns: [ { id: uid(), label: "الإجمالي" }, { id: uid(), label: "النسبة %" } ],
+  }));
+}
+function defaultSosData(){
+  return { categories: defaultSosCategories(), branches: [] };
+}
+
 /* ---------------- DAILY INVENTORY: seed catalog products per branch ---------------- */
 function ensureCatalogSeededForBranch(branchId){
   const existingSkus = new Set(state.products.filter(p=>p.branchId===branchId).map(p=>p.sku).filter(Boolean));
@@ -1786,7 +1969,7 @@ async function loadAll(){
     "puck:monthlyEntries", "puck:monthlyDuplicates", "puck:monthlyOverrides",
     "puck:catalogOverrides", "puck:catalogGroupOverrides", "puck:customCatalogGroups",
     "puck:managerAlertSettings", "puck:messages", "puck:planogramItems",
-    "puck:planogramSeen", "puck:documentation",
+    "puck:planogramSeen", "puck:documentation", "puck:sos",
   ];
   const results = await Promise.all(KV_KEYS.map(k => storageGet(k, null)));
   const kv = {};
@@ -1811,6 +1994,7 @@ async function loadAll(){
     "puck:planogramItems": ()=> [],
     "puck:planogramSeen": ()=> ({}),
     "puck:documentation": ()=> [],
+    "puck:sos": defaultSosData,
   };
   const stateKeyByKvKey = {
     "puck:branches": "branches", "puck:products": "products", "puck:users": "users",
@@ -1821,7 +2005,7 @@ async function loadAll(){
     "puck:catalogGroupOverrides": "catalogGroupOverrides", "puck:customCatalogGroups": "customCatalogGroups",
     "puck:managerAlertSettings": "managerAlertSettings", "puck:messages": "messages",
     "puck:planogramItems": "planogramItems", "puck:planogramSeen": "planogramSeen",
-    "puck:documentation": "documentation",
+    "puck:documentation": "documentation", "puck:sos": "sos",
   };
 
   const writesNeeded = [];
@@ -1838,6 +2022,11 @@ async function loadAll(){
 
   await migrateLegacyBranchOwnership();
   await ensureCatalogSeededAllBranches();
+
+  if(!state.sos || Array.isArray(state.sos) || !Array.isArray(state.sos.categories)){
+    state.sos = defaultSosData();
+    await storageSet("puck:sos", state.sos);
+  }
 
   {
     const sevenDaysAgo = Date.now() - (7*24*3600*1000);
@@ -3290,6 +3479,10 @@ function renderManagerHomeScreen(){
         <div class="ico" style="font-size:34px;">🏬</div>
         <div class="lbl">${t('tab_branches')}</div>
       </div>
+      <div class="inventory-opt" data-mgoto="sos">
+        <div class="ico" style="font-size:34px;">📋</div>
+        <div class="lbl">${t('sos_manager_home_label')}</div>
+      </div>
       <div class="inventory-opt" data-mgoto="planogram">
         <div class="ico" style="font-size:34px;">🗺️</div>
         <div class="lbl">${t('planogram_word')}</div>
@@ -3594,6 +3787,7 @@ function attachManagerScreenEvents(){
     el.onclick = ()=>{
       const dest = el.getAttribute("data-mgoto");
       if(dest === "branches") openAdminPanel();
+      else if(dest === "sos") openAdminPanel("sos");
       else if(dest === "planogram") goPlanogram();
       else if(dest === "employees") goManagerEmployees();
       else if(dest === "documentation") goManagerDocumentation();
@@ -3863,8 +4057,8 @@ async function deletePlanogramItem(id){
 /* =========================================================
    ADMIN PANEL
 ========================================================= */
-function openAdminPanel(){
-  adminUI.tab = "branches";
+function openAdminPanel(targetTab){
+  adminUI.tab = targetTab || "branches";
   const vb = visibleBranchesForCurrentUser();
   adminUI.selectedBranchForProducts = vb[0] ? vb[0].id : null;
   renderAdminOverlay();
@@ -3895,6 +4089,7 @@ function renderAdminOverlay(){
   const allTabs = [
     {id:"branches", label:t('tab_branches')},
     {id:"products", label:t('tab_products')},
+    {id:"sos", label:t('tab_sos')},
     {id:"users", label:t('tab_users')},
     {id:"appearance", label:t('tab_appearance')},
   ];
@@ -3927,6 +4122,7 @@ function renderAdminOverlay(){
 function renderAdminTab(tab){
   if(tab==="branches") return renderBranchesTab();
   if(tab==="products") return renderProductsTab();
+  if(tab==="sos") return renderSosTab();
   if(tab==="users") return renderUsersTab();
   if(tab==="appearance") return renderAppearanceTab();
   return "";
@@ -4042,6 +4238,394 @@ function attachBranchesTabEvents(){
   document.querySelectorAll("[data-manage-notices]").forEach(b=>{
     b.onclick = ()=> openBranchNoticesModal(b.getAttribute("data-manage-notices"));
   });
+}
+
+/* ---------- SOS TAB (Share of Shelf spreadsheet) ----------
+   صفحة كاملة شبيهة بجدول إكسل: أعمدة ثابتة (Merch / SAP / اسم العميل)
+   ثم مجموعات أعمدة لكل "منتج/قسم" (مثال: Glass jar 50%) وتحت كل مجموعة
+   أعمدة فرعية بعدد حر (الإجمالي، النسبة، أو أي عمود آخر يضيفه المدير).
+   كل خلية قابلة للتعديل مباشرة وتُحفظ فور الخروج منها، وتُطبع/تُنزّل
+   بنفس شكل الجدول تمامًا لإرسالها للموظف. ---------------------------- */
+function sosCellKey(colId){ return colId; }
+function sosCellValue(branch, colId){
+  const v = (branch.values || {})[colId];
+  return (v===undefined || v===null) ? "" : v;
+}
+
+function isSosPercentColumn(col){ return /%|٪/.test(col.label||""); }
+function renderSosTab(){
+  const data = state.sos && Array.isArray(state.sos.categories) ? state.sos : defaultSosData();
+  const categories = data.categories || [];
+  const branches = data.branches || [];
+
+  const catHeaderCells = categories.map(cat=>`
+    <th colspan="${Math.max(cat.columns.length,1)}" class="sos-cat-th">
+      <div class="sos-cat-th-row">
+        <input type="text" class="sos-cat-name-input" data-sos-cat-name="${cat.id}" value="${escapeHtml(cat.name)}">
+        <button class="sos-mini-btn" data-add-sos-column="${cat.id}" title="${t('add_column_btn')}">${ICON.plus}</button>
+        <button class="sos-mini-btn sos-mini-danger" data-del-sos-category="${cat.id}" title="${t('delete_category_title')}">${ICON.trash}</button>
+      </div>
+    </th>
+  `).join("");
+
+  const subHeaderCells = categories.map(cat=> cat.columns.map(col=>`
+    <th class="sos-col-th">
+      <input type="text" class="sos-col-label-input" data-sos-col-label="${col.id}" data-cat="${cat.id}" value="${escapeHtml(col.label)}">
+      <button class="sos-mini-btn sos-mini-danger" data-del-sos-column="${col.id}" data-cat="${cat.id}" title="${t('delete_column_title')}">&times;</button>
+    </th>
+  `).join("")).join("");
+
+  const bodyRows = branches.map(b=>{
+    const idCells = `
+      <td><input type="text" class="sos-id-input" data-sos-field="merch" data-branch="${b.id}" value="${escapeHtml(b.merch||'')}"></td>
+      <td><input type="text" class="sos-id-input" data-sos-field="sap" data-branch="${b.id}" value="${escapeHtml(b.sap||'')}"></td>
+      <td><input type="text" class="sos-id-input sos-yellow-input" data-sos-field="name" data-branch="${b.id}" value="${escapeHtml(b.name||'')}"></td>
+    `;
+    const valCells = categories.map(cat=> cat.columns.map(col=>{
+      const val = sosCellValue(b,col.id);
+      const pctClass = (isSosPercentColumn(col) && val!=="") ? " sos-pct-cell" : "";
+      return `<td class="${pctClass.trim()}"><input type="number" class="sos-val-input" data-sos-val="${col.id}" data-branch="${b.id}" value="${val}"></td>`;
+    }).join("")).join("");
+    return `<tr>${idCells}${valCells}<td><button class="sos-mini-btn sos-mini-danger" data-del-sos-row="${b.id}" title="${t('delete_branch_title')}">${ICON.trash}</button></td></tr>`;
+  }).join("");
+
+  const totalCols = 3 + categories.reduce((n,c)=> n + Math.max(c.columns.length,1), 0) + 1;
+
+  // ---- mobile: categories/columns manager (add/rename/delete columns & products), collapsible ----
+  const catsManagerItems = categories.map(cat=>`
+    <div class="sos-cat-manager-item">
+      <div class="sos-cat-manager-head">
+        <input type="text" class="sos-cat-name-input" data-sos-cat-name="${cat.id}" value="${escapeHtml(cat.name)}">
+        <button class="sos-mini-btn" data-add-sos-column="${cat.id}" title="${t('add_column_btn')}">${ICON.plus}</button>
+        <button class="sos-mini-btn sos-mini-danger" data-del-sos-category="${cat.id}" title="${t('delete_category_title')}">${ICON.trash}</button>
+      </div>
+      <div class="sos-cat-manager-cols">
+        ${cat.columns.map(col=>`
+          <span class="sos-cat-manager-col">
+            <input type="text" class="sos-col-label-input" data-sos-col-label="${col.id}" data-cat="${cat.id}" value="${escapeHtml(col.label)}">
+            <button class="sos-mini-btn sos-mini-danger" data-del-sos-column="${col.id}" data-cat="${cat.id}" title="${t('delete_column_title')}">&times;</button>
+          </span>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  const catsManagerHtml = `
+    <details class="monthly-group sos-cats-manager">
+      <summary>
+        <div class="mg-title">
+          <div class="ar">${t('sos_manage_categories_title')}</div>
+        </div>
+        <div class="mg-meta">
+          <span class="mg-count">${categories.length}</span>
+          <span class="mg-chevron">${ICON.chevron}</span>
+        </div>
+      </summary>
+      <div class="mg-body sos-mg-body-inner">
+        ${catsManagerItems || `<p class="hint" style="margin:0;">${t('sos_empty_rows_hint')}</p>`}
+      </div>
+    </details>
+  `;
+
+  // ---- mobile: one collapsible entry per branch, closed by default ----
+  const cardsHtml = branches.map(b=>{
+    const catsSections = categories.map(cat=>`
+      <div class="sos-card-section">
+        <div class="sos-card-section-title">${escapeHtml(cat.name)}</div>
+        <div class="sos-card-fields">
+          ${cat.columns.map(col=>{
+            const val = sosCellValue(b,col.id);
+            const pctClass = (isSosPercentColumn(col) && val!=="") ? " sos-pct-field" : "";
+            return `
+            <label class="sos-card-field${pctClass}">
+              <span>${escapeHtml(col.label)}</span>
+              <input type="number" class="sos-val-input" data-sos-val="${col.id}" data-branch="${b.id}" value="${val}">
+            </label>
+          `;}).join("")}
+        </div>
+      </div>
+    `).join("");
+    return `
+      <details class="sos-branch-details" data-sos-card="${b.id}">
+        <summary>
+          <div class="sos-branch-summary-title">
+            <div class="ar">${escapeHtml(b.name || t('sos_col_customer'))}</div>
+            <div class="en">${t('sos_col_merch')}: ${escapeHtml(b.merch||'—')} · ${t('sos_col_sap')}: ${escapeHtml(b.sap||'—')}</div>
+          </div>
+          <div class="sos-branch-summary-actions">
+            <button class="sos-mini-btn" data-sos-download-branch="${b.id}" title="${t('sos_download_branch_title')}">${ICON.download}</button>
+            <button class="sos-mini-btn sos-mini-danger" data-del-sos-row="${b.id}" title="${t('delete_branch_title')}">${ICON.trash}</button>
+            <span class="mg-chevron">${ICON.chevron}</span>
+          </div>
+        </summary>
+        <div class="sos-mg-body-inner">
+          <div class="sos-identity-fields">
+            <label class="sos-card-field"><span>${t('sos_col_merch')}</span><input type="text" data-sos-field="merch" data-branch="${b.id}" value="${escapeHtml(b.merch||'')}"></label>
+            <label class="sos-card-field"><span>${t('sos_col_sap')}</span><input type="text" data-sos-field="sap" data-branch="${b.id}" value="${escapeHtml(b.sap||'')}"></label>
+            <label class="sos-card-field wide"><span>${t('sos_col_customer')}</span><input type="text" data-sos-field="name" data-branch="${b.id}" value="${escapeHtml(b.name||'')}"></label>
+          </div>
+          ${catsSections || `<p class="hint sos-card-empty-cats">${t('sos_empty_rows_hint')}</p>`}
+        </div>
+      </details>
+    `;
+  }).join("");
+
+  return `
+    <div class="panel-card sos-panel">
+      <div class="sos-toolbar">
+        <button class="btn btn-primary btn-small" id="addSosRowBtn">${ICON.plus} ${t('add_sos_row_btn')}</button>
+        <button class="btn-download btn-small" id="sosDownloadBtn">${ICON.download} ${t('sos_download_all_btn')}</button>
+      </div>
+      <div class="sos-secondary-row">
+        <button class="link-btn" id="addSosCategoryBtn"><span class="ico">${ICON.plus}</span>${t('add_sos_category_btn')}</button>
+      </div>
+
+      <div class="sos-table-scroll">
+        <table class="sos-table">
+          <thead>
+            <tr>
+              <th rowspan="2" class="sos-id-th">${t('sos_col_merch')}</th>
+              <th rowspan="2" class="sos-id-th">${t('sos_col_sap')}</th>
+              <th rowspan="2" class="sos-id-th">${t('sos_col_customer')}</th>
+              ${catHeaderCells}
+              <th rowspan="2" class="sos-id-th"></th>
+            </tr>
+            <tr>${subHeaderCells}</tr>
+          </thead>
+          <tbody>
+            ${bodyRows || `<tr><td colspan="${totalCols}" style="text-align:center; padding:20px;">${t('sos_empty_rows_hint')}</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+
+      ${catsManagerHtml}
+      <div class="sos-cards">
+        ${cardsHtml || `<p class="hint">${t('sos_empty_rows_hint')}</p>`}
+      </div>
+    </div>
+  `;
+}
+
+async function saveSosData(){ await storageSet("puck:sos", state.sos); }
+
+function attachSosTabEvents(){
+  if(!state.sos || !Array.isArray(state.sos.categories)) state.sos = defaultSosData();
+
+  const addRowBtn = document.getElementById("addSosRowBtn");
+  if(addRowBtn) addRowBtn.onclick = async ()=>{
+    state.sos.branches.push({ id: uid(), merch:"", sap:"", name:"", values:{} });
+    await saveSosData();
+    renderAdminOverlay();
+  };
+
+  const addCatBtn = document.getElementById("addSosCategoryBtn");
+  if(addCatBtn) addCatBtn.onclick = ()=> openAddSosCategoryModal();
+
+  const dlBtn = document.getElementById("sosDownloadBtn");
+  if(dlBtn) dlBtn.onclick = ()=> downloadSosReport();
+
+  document.querySelectorAll("[data-sos-download-branch]").forEach(btn=>{
+    btn.onclick = (e)=>{ e.stopPropagation(); downloadSosReport(btn.getAttribute("data-sos-download-branch")); };
+  });
+
+  document.querySelectorAll("[data-sos-cat-name]").forEach(inp=>{
+    inp.onchange = async ()=>{
+      const cat = state.sos.categories.find(c=>c.id===inp.getAttribute("data-sos-cat-name"));
+      if(!cat) return;
+      cat.name = inp.value.trim();
+      await saveSosData();
+      toast(t('toast_change_saved'));
+    };
+  });
+  document.querySelectorAll("[data-sos-col-label]").forEach(inp=>{
+    inp.onchange = async ()=>{
+      const cat = state.sos.categories.find(c=>c.id===inp.getAttribute("data-cat"));
+      if(!cat) return;
+      const col = cat.columns.find(c=>c.id===inp.getAttribute("data-sos-col-label"));
+      if(!col) return;
+      col.label = inp.value.trim();
+      await saveSosData();
+      toast(t('toast_change_saved'));
+    };
+  });
+  document.querySelectorAll("[data-add-sos-column]").forEach(b=>{
+    b.onclick = (e)=>{ e.stopPropagation(); openAddSosColumnModal(b.getAttribute("data-add-sos-column")); };
+  });
+  document.querySelectorAll("[data-del-sos-column]").forEach(b=>{
+    b.onclick = async ()=>{
+      const cat = state.sos.categories.find(c=>c.id===b.getAttribute("data-cat"));
+      if(!cat) return;
+      const colId = b.getAttribute("data-del-sos-column");
+      if(cat.columns.length<=1){ toast(t('toast_sos_min_one_column')); return; }
+      if(!confirm(t('confirm_delete_column'))) return;
+      cat.columns = cat.columns.filter(c=>c.id!==colId);
+      state.sos.branches.forEach(br=>{ if(br.values) delete br.values[colId]; });
+      await saveSosData();
+      toast(t('toast_change_saved'));
+      renderAdminOverlay();
+    };
+  });
+  document.querySelectorAll("[data-del-sos-category]").forEach(b=>{
+    b.onclick = async ()=>{
+      const catId = b.getAttribute("data-del-sos-category");
+      if(!confirm(t('confirm_delete_category'))) return;
+      const cat = state.sos.categories.find(c=>c.id===catId);
+      state.sos.categories = state.sos.categories.filter(c=>c.id!==catId);
+      if(cat){
+        const colIds = new Set(cat.columns.map(c=>c.id));
+        state.sos.branches.forEach(br=>{
+          if(!br.values) return;
+          colIds.forEach(cid=> delete br.values[cid]);
+        });
+      }
+      await saveSosData();
+      toast(t('toast_change_saved'));
+      renderAdminOverlay();
+    };
+  });
+  document.querySelectorAll("[data-sos-field]").forEach(inp=>{
+    inp.onchange = async ()=>{
+      const branch = state.sos.branches.find(b=>b.id===inp.getAttribute("data-branch"));
+      if(!branch) return;
+      branch[inp.getAttribute("data-sos-field")] = inp.value.trim();
+      await saveSosData();
+      toast(t('toast_change_saved'));
+    };
+  });
+  document.querySelectorAll("[data-sos-val]").forEach(inp=>{
+    inp.onchange = async ()=>{
+      const branch = state.sos.branches.find(b=>b.id===inp.getAttribute("data-branch"));
+      if(!branch) return;
+      if(!branch.values) branch.values = {};
+      branch.values[inp.getAttribute("data-sos-val")] = parseFloat(inp.value) || 0;
+      await saveSosData();
+      toast(t('toast_change_saved'));
+    };
+  });
+  document.querySelectorAll("[data-del-sos-row]").forEach(b=>{
+    b.onclick = async (e)=>{
+      e.stopPropagation();
+      const id = b.getAttribute("data-del-sos-row");
+      if(!confirm(t('confirm_delete_sos_row'))) return;
+      state.sos.branches = state.sos.branches.filter(x=>x.id!==id);
+      await saveSosData();
+      toast(t('toast_change_saved'));
+      renderAdminOverlay();
+    };
+  });
+}
+
+function openAddSosCategoryModal(){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeAddSosCatModal">&times;</button>
+      <h3>${ICON.plus} ${t('add_sos_category_btn')}</h3>
+      <div class="field"><label>${t('sos_category_name_label')}</label><input id="newSosCatName" type="text" placeholder="${t('sos_category_name_label')}"></div>
+      <button class="btn btn-primary" id="saveNewSosCatBtn" style="width:100%;">${t('save_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeAddSosCatModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("saveNewSosCatBtn").onclick = async ()=>{
+    const name = document.getElementById("newSosCatName").value.trim();
+    if(!name){ toast(t('toast_enter_category_name')); return; }
+    if(!state.sos || !Array.isArray(state.sos.categories)) state.sos = defaultSosData();
+    state.sos.categories.push({
+      id: uid(), name,
+      columns: [ { id: uid(), label: t('sos_default_col_total') }, { id: uid(), label: t('sos_default_col_ratio') } ]
+    });
+    await saveSosData();
+    wrap.remove();
+    toast(t('toast_change_saved'));
+    renderAdminOverlay();
+  };
+}
+
+function openAddSosColumnModal(catId){
+  const cat = state.sos.categories.find(c=>c.id===catId);
+  if(!cat) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeAddSosColModal">&times;</button>
+      <h3>${ICON.plus} ${t('add_column_btn')}</h3>
+      <p class="hint" style="margin:0 0 12px;">${escapeHtml(cat.name)} — ${t('sos_add_column_modal_hint')}</p>
+      <div class="field"><label>${t('sos_column_name_label')}</label><input id="newSosColName" type="text" placeholder="${t('sos_column_name_label')}"></div>
+      <button class="btn btn-primary" id="addSosColConfirmBtn" style="width:100%;">${ICON.plus} ${t('sos_add_column_confirm_btn')}</button>
+      <div id="newSosColList" class="sos-cat-manager-cols" style="margin-top:12px; padding:0;"></div>
+      <button class="btn btn-ghost" id="doneAddSosColBtn" style="width:100%; margin-top:14px;">${t('close_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  const listEl = wrap.querySelector("#newSosColList");
+  const inputEl = wrap.querySelector("#newSosColName");
+
+  function refreshList(){
+    listEl.innerHTML = cat.columns.map(c=>`<span class="sos-cat-manager-col">${escapeHtml(c.label)}</span>`).join("");
+  }
+  refreshList();
+
+  wrap.querySelector("#closeAddSosColModal").onclick = ()=>{ wrap.remove(); renderAdminOverlay(); };
+  wrap.onclick = (e)=>{ if(e.target===wrap){ wrap.remove(); renderAdminOverlay(); } };
+
+  async function addCol(){
+    const name = inputEl.value.trim();
+    if(!name){ toast(t('toast_enter_category_name')); return; }
+    cat.columns.push({ id: uid(), label: name });
+    await saveSosData();
+    inputEl.value = "";
+    inputEl.focus();
+    refreshList();
+  }
+  wrap.querySelector("#addSosColConfirmBtn").onclick = addCol;
+  inputEl.onkeydown = (e)=>{ if(e.key==="Enter"){ e.preventDefault(); addCol(); } };
+  wrap.querySelector("#doneAddSosColBtn").onclick = ()=>{ wrap.remove(); renderAdminOverlay(); };
+}
+
+function downloadSosReport(branchId){
+  let printArea = document.getElementById("sosPrintArea");
+  if(!printArea){
+    printArea = document.createElement("div");
+    printArea.id = "sosPrintArea";
+    printArea.className = "print-only";
+    document.body.appendChild(printArea);
+  }
+  const data = state.sos && Array.isArray(state.sos.categories) ? state.sos : defaultSosData();
+  const categories = data.categories || [];
+  const allBranches = data.branches || [];
+  const branches = branchId ? allBranches.filter(b=>b.id===branchId) : allBranches;
+
+  const groupHeaderCells = categories.map(cat=>`<th colspan="${Math.max(cat.columns.length,1)}" class="sos-group-th">${escapeHtml(cat.name)}</th>`).join("");
+  const subHeaderCells = categories.map(cat=> cat.columns.map(col=>`<th>${escapeHtml(col.label)}</th>`).join("")).join("");
+
+  const bodyRows = branches.map(b=>{
+    const idCells = `<td>${escapeHtml(b.merch||'')}</td><td>${escapeHtml(b.sap||'')}</td><td class="sos-branch-name-cell">${escapeHtml(b.name||'')}</td>`;
+    const valCells = categories.map(cat=> cat.columns.map(col=>{
+      const val = sosCellValue(b,col.id);
+      const pctClass = (isSosPercentColumn(col) && val!=="") ? " sos-pct-cell" : "";
+      return `<td class="${pctClass.trim()}">${val}</td>`;
+    }).join("")).join("");
+    return `<tr>${idCells}${valCells}</tr>`;
+  }).join("");
+
+  const totalCols = 3 + categories.reduce((n,c)=> n + Math.max(c.columns.length,1), 0);
+  const titleSuffix = branchId && branches[0] ? ` - ${escapeHtml(branches[0].name || '')}` : "";
+  printArea.innerHTML = `
+    <h2>${t('sos_print_title')}${titleSuffix}</h2>
+    <table>
+      <thead>
+        <tr><th rowspan="2">${t('sos_col_merch')}</th><th rowspan="2">${t('sos_col_sap')}</th><th rowspan="2">${t('sos_col_customer')}</th>${groupHeaderCells}</tr>
+        <tr>${subHeaderCells}</tr>
+      </thead>
+      <tbody>${bodyRows || `<tr><td colspan="${totalCols}">${t('sos_empty_rows_hint')}</td></tr>`}</tbody>
+    </table>
+  `;
+  toast(t('print_hint'));
+  setTimeout(()=> window.print(), 300);
 }
 
 /* ---------- BRANCH ICON MODAL ---------- */
@@ -5479,6 +6063,7 @@ function downloadMonthlyPdf(branchId){
 function attachAdminTabEvents(tab){
   if(tab==="branches") attachBranchesTabEvents();
   if(tab==="products") attachProductsTabEvents();
+  if(tab==="sos") attachSosTabEvents();
   if(tab==="users") attachUsersTabEvents();
   if(tab==="appearance") attachAppearanceTabEvents();
 }
