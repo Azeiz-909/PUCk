@@ -4166,7 +4166,7 @@ function renderAdminOverlay(){
   el.innerHTML = `
     <div class="admin-shell">
       <div class="admin-top">
-        <h2>${ICON.gear} ${t('admin_title')}</h2>
+        <h2>${t('admin_title')}</h2>
         <div style="display:flex; gap:8px;">
           <button class="admin-back-btn" id="adminBackBtn">${ICON.back} ${t('admin_back')}</button>
           <button class="logout-btn" id="logoutBtn">${ICON.logout} ${t('logout')}</button>
@@ -4355,7 +4355,26 @@ function sosNormalizeData(data){
       }
     });
   }
+  if(data && Array.isArray(data.branches)){
+    data.branches.forEach(b=>{
+      if(!b) return;
+      if(b.merch) b.merch = toWesternDigits(b.merch);
+      if(b.sap) b.sap = toWesternDigits(b.sap);
+      if(b.name) b.name = toWesternDigits(b.name);
+    });
+  }
   return data;
+}
+
+/* Numbers (Merch/SAP codes, etc.) must always stay in standard Western digits,
+   even if typed on an Arabic keyboard/locale that inserts Arabic-Indic digits. */
+function toWesternDigits(str){
+  if(typeof str !== "string") return str;
+  const map = {
+    "٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9",
+    "۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9",
+  };
+  return str.replace(/[٠-٩۰-۹]/g, ch=> map[ch] !== undefined ? map[ch] : ch);
 }
 
 function sosCellKey(colId){ return colId; }
@@ -4619,7 +4638,7 @@ function attachSosTabEvents(){
     inp.onchange = async ()=>{
       const branch = state.sos.branches.find(b=>b.id===inp.getAttribute("data-branch"));
       if(!branch) return;
-      branch[inp.getAttribute("data-sos-field")] = inp.value.trim();
+      branch[inp.getAttribute("data-sos-field")] = toWesternDigits(inp.value.trim());
       await saveSosData();
       toast(tEn('toast_change_saved'));
     };
@@ -4948,6 +4967,7 @@ async function downloadSosAllBranchesA4Excel(){
           const val = sosCellValue(b, col.id);
           const cell = ws.getCell(rowCursor, 4+i);
           cell.value = (val==="") ? "" : Number(val);
+          cell.numFmt = "[$-409]General"; // force Western digits regardless of Excel/Windows locale
           cell.font = { size: fSize };
           cell.alignment = { horizontal:"center", vertical:"middle" };
           cell.border = thinBorder;
@@ -5088,6 +5108,7 @@ async function downloadSosExcel(branchId){
         const val = cm.colId ? sosCellValue(b, cm.colId) : "";
         const cell = ws.getCell(rowCursor, cm.col);
         cell.value = (val==="") ? "" : Number(val);
+          cell.numFmt = "[$-409]General"; // force Western digits regardless of Excel/Windows locale
         cell.font = { size: fSize };
         cell.alignment = { horizontal:"center", vertical:"middle" };
         cell.border = thinBorder;
@@ -5356,7 +5377,7 @@ function renderProductsTab(){
   function groupBlockHtml(titleAr, titleEn, items){
     const rows = items.map(adminProductRowHtml).join("");
     return `
-      <details class="monthly-group" open>
+      <details class="monthly-group">
         <summary>
           <div class="mg-title">
             <div class="ar">${escapeHtml(titleAr)}</div>
