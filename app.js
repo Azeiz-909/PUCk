@@ -15,9 +15,9 @@ const SEED_IMG = {
    CONSTANTS
 ========================================================= */
 const YEAR = 2026;
-const MONTHS_AR = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const MONTHS_AR = ["ÙŠÙ†Ø§ÙŠØ±","ÙØ¨Ø±Ø§ÙŠØ±","Ù…Ø§Ø±Ø³","Ø£Ø¨Ø±ÙŠÙ„","Ù…Ø§ÙŠÙˆ","ÙŠÙˆÙ†ÙŠÙˆ","ÙŠÙˆÙ„ÙŠÙˆ","Ø£ØºØ³Ø·Ø³","Ø³Ø¨ØªÙ…Ø¨Ø±","Ø£ÙƒØªÙˆØ¨Ø±","Ù†ÙˆÙÙ…Ø¨Ø±","Ø¯ÙŠØ³Ù…Ø¨Ø±"];
 const MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const MONTHS_AR_ABBR3 = ["ينا","فبر","مار","أبر","ماي","يون","يول","أغس","سبت","أكت","نوف","ديس"];
+const MONTHS_AR_ABBR3 = ["ÙŠÙ†Ø§","ÙØ¨Ø±","Ù…Ø§Ø±","Ø£Ø¨Ø±","Ù…Ø§ÙŠ","ÙŠÙˆÙ†","ÙŠÙˆÙ„","Ø£ØºØ³","Ø³Ø¨Øª","Ø£ÙƒØª","Ù†ÙˆÙ","Ø¯ÙŠØ³"];
 const MONTHS_EN_ABBR3 = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 function curMonths(){ return lang === "en" ? MONTHS_EN : MONTHS_AR; }
 function curMonthsAbbr3(){ return lang === "en" ? MONTHS_EN_ABBR3 : MONTHS_AR_ABBR3; }
@@ -27,14 +27,14 @@ function monthNumAbbr(monthIndex1based){
 }
 
 /* =========================================================
-   MONTHLY INVENTORY — PRODUCT CATALOG (from source sheet)
+   MONTHLY INVENTORY â€” PRODUCT CATALOG (from source sheet)
    Each group mirrors a category from the uploaded market list.
    Items keep their original SKU and Arabic/English naming.
 ========================================================= */
-const PRODUCT_CATALOG = [{"id":"g1-puck-cheese-cream","titleAr":"أرلا جبن كريمي","titleEn":"Arla Cheese Cream","items":[{"id":"p602238","sku":"602238","ar":"كاسات أرلا 1100 جم","en":"Arla Blue Jar 1100G","weightValue":1100,"weightUnit":"g"},{"id":"p592474","sku":"592474","ar":"كاسات أرلا 130 جم","en":"Arla Blue Jar 130G","weightValue":130,"weightUnit":"g"},{"id":"p592479","sku":"592479","ar":"كاسات أرلا 230 جم","en":"Arla Blue Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p798952","sku":"798952","ar":"الدسم قلیل كاسات أرلا 240 جم","en":"Arla Blue Jar 240G - LF","weightValue":240,"weightUnit":"g"},{"id":"p798955","sku":"798955","ar":"الدسم قلیل كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - LF","weightValue":500,"weightUnit":"g"},{"id":"p602061","sku":"602061","ar":"برومو كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - Promo","weightValue":500,"weightUnit":"g"},{"id":"p602059","sku":"602059","ar":"كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - Single","weightValue":500,"weightUnit":"g"},{"id":"p588330","sku":"588330","ar":"دي فایتمین كاسات أرلا 500 جم","en":"Arla Blue Jar 500G - Vit D","weightValue":500,"weightUnit":"g"},{"id":"p592349","sku":"592349","ar":"برومو كاسات أرلا 900 جم","en":"Arla Blue Jar 900G - Promo","weightValue":900,"weightUnit":"g"},{"id":"p592348","sku":"592348","ar":"كاسات أرلا 900 جم","en":"Arla Blue Jar 900G - Single","weightValue":900,"weightUnit":"g"},{"id":"p584323","sku":"584323","ar":"كاسات أرلا برومو الدسم قلیل 500 جم","en":"Arla Blue Jar 2*500G - Low Fat Promo","weightValue":500,"weightUnit":"g"},{"id":"p798967","sku":"798967","ar":"شیدار كاسات أرلا 500 جم","en":"Arla Gold Jar 500G","weightValue":500,"weightUnit":"g"},{"id":"p584322","sku":"584322","ar":"شیدار كاسات أرلا برومو 500 جم","en":"Arla Gold Jar 500G Promo","weightValue":500,"weightUnit":"g"},{"id":"p798922","sku":"798922","ar":"سكویز أرلا 400 جم","en":"Arla Squeeze 400G","weightValue":400,"weightUnit":"g"},{"id":"p599593","sku":"599593","ar":"سكویز أرلا 750 جم","en":"Arla Squeeze 750G","weightValue":750,"weightUnit":"g"},{"id":"p608399","sku":"608399","ar":"سكویز أرلا 200 جم","en":"Arla Squeeze 200G","weightValue":200,"weightUnit":"g"}]},{"id":"g2-kraft-cheese-jars","titleAr":"شیدر جبن كرافت","titleEn":"KRAFT CHEESE JARS","items":[{"id":"p88759","sku":"88759","ar":"كاسات كرفت 140 جم","en":"Kraft Gold Jar 140G","weightValue":140,"weightUnit":"g"},{"id":"p88760","sku":"88760","ar":"كاسات كرفت 230 جم","en":"Kraft Gold Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p586372","sku":"586372","ar":"الدسم قلیل كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Low Fat","weightValue":480,"weightUnit":"g"},{"id":"p88766","sku":"88766","ar":"برومو كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Promo","weightValue":480,"weightUnit":"g"},{"id":"p88761","sku":"88761","ar":"كاسات كرفت 480 جم","en":"Kraft Gold Jar 480G - Single","weightValue":480,"weightUnit":"g"},{"id":"p88767","sku":"88767","ar":"برومو كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Promo","weightValue":870,"weightUnit":"g"},{"id":"p88762","sku":"88762","ar":"كاسات كرفت 870 جم","en":"Kraft Gold Jar 870G - Single","weightValue":870,"weightUnit":"g"},{"id":"p88765","sku":"88765","ar":"*3كاسات كرفت برومو 230 جم","en":"Kraft Gold Jar 3*4*230G Promo","weightValue":230,"weightUnit":"g"},{"id":"p88763","sku":"88763","ar":"سكویز كرفت 440 جم","en":"Kraft Gold Squeeze 440G","weightValue":440,"weightUnit":"g"},{"id":"p88764","sku":"88764","ar":"سكویز كرفت 790 جم","en":"Kraft Gold Squeeze 790G","weightValue":790,"weightUnit":"g"}]},{"id":"g3-kraft-slices-cheddar-pac","titleAr":"شرائح جبن كرافت","titleEn":"KRAFT SLICES & cheddar packets","items":[{"id":"p702145","sku":"702145","ar":"شرائح كرفت 200 جم","en":"Kraft Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p702146","sku":"702146","ar":"لیت شرائح كرفت 200 جم","en":"Kraft Sclices 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p701741","sku":"701741","ar":"شرائح كرفت 400 جم","en":"Kraft Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p701742","sku":"701742","ar":"لیت شرائح كرفت 400 جم","en":"Kraft Sclices 400G - Light","weightValue":400,"weightUnit":"g"},{"id":"p81388","sku":"81388","ar":"بلوك جبنھ كرفت 250 جم","en":"Kraft Cheddar Packets 250G","weightValue":250,"weightUnit":"g"},{"id":"p81389","sku":"81389","ar":"بلوك جبنھ كرفت 500 جم","en":"Kraft Cheddar Packets 500G","weightValue":500,"weightUnit":"g"}]},{"id":"g4-kraft-tins","titleAr":"علب كرافت","titleEn":"KRAFT TINS","items":[{"id":"p88770","sku":"88770","ar":"علب كرفت 100 جم","en":"Kraft Can 100G","weightValue":100,"weightUnit":"g"},{"id":"p88773","sku":"88773","ar":"برومو علب كرفت 100 جم","en":"Kraft Can 100G - Promo 6 Pcs","weightValue":100,"weightUnit":"g"},{"id":"p88771","sku":"88771","ar":"علب كرفت 190 جم","en":"Kraft Can 190G","weightValue":190,"weightUnit":"g"},{"id":"p88769","sku":"88769","ar":"علب كرفت 50 جم","en":"Kraft Can 50G","weightValue":50,"weightUnit":"g"},{"id":"p88772","sku":"88772","ar":"برومو علب كرفت 50 جم","en":"Kraft Can 50G - Promo 8 Pcs","weightValue":50,"weightUnit":"g"}]},{"id":"g5-puck-sqare-triangles-tub","titleAr":"لبنھ /حلوم جبن/ مثلث جبن /مربع بن","titleEn":"Arla Sqare/ Triangles/Tubs/Hollomi & Labnehs","items":[{"id":"p601480","sku":"601480","ar":"مربعات أرلا 108 جم","en":"Arla Square 108G","weightValue":108,"weightUnit":"g"},{"id":"p601479","sku":"601479","ar":"مربعات أرلا 216 جم","en":"Arla Square 216G","weightValue":216,"weightUnit":"g"},{"id":"p601478","sku":"601478","ar":"مربعات أرلا 432 جم","en":"Arla Square 432G","weightValue":432,"weightUnit":"g"},{"id":"p601378","sku":"601378","ar":"مثلثات أرلا 120 جم","en":"Arla Triangles 120G","weightValue":120,"weightUnit":"g"},{"id":"p601382","sku":"601382","ar":"برومو مثلثات أرلا 120 جم","en":"Arla Triangles 120G - Promo","weightValue":120,"weightUnit":"g"},{"id":"p601380","sku":"601380","ar":"مثلثات أرلا 240 جم","en":"Arla Triangles 240G","weightValue":240,"weightUnit":"g"},{"id":"p599370","sku":"599370","ar":"مثلثات أرلا 360 جم","en":"Arla Triangles 360G","weightValue":360,"weightUnit":"g"},{"id":"p599497","sku":"599497","ar":"مثلثات أرلا 480 جم","en":"Arla Triangles 480G","weightValue":480,"weightUnit":"g"},{"id":"p596684","sku":"596684","ar":"عادي طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G","weightValue":200,"weightUnit":"g"},{"id":"p596690","sku":"596690","ar":"واعشاب ثوم طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G - Garlic & Herbs","weightValue":200,"weightUnit":"g"},{"id":"p596700","sku":"596700","ar":"لیت طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p596704","sku":"596704","ar":"بالزیتون طبق جبن أرلا 200 جم","en":"Arla CC Tub 200G - Olive","weightValue":200,"weightUnit":"g"},{"id":"p596754","sku":"596754","ar":"عادي طبق جبن أرلا 300 جم","en":"Arla CC Tub 300G","weightValue":300,"weightUnit":"g"},{"id":"p596762","sku":"596762","ar":"بالزیتون طبق جبن أرلا 300 جم","en":"Arla CC Tub 300G - Olive","weightValue":300,"weightUnit":"g"},{"id":"p598056","sku":"598056","ar":"طبق جبن أرلا عضوي 150 جم","en":"Arla CC Tub 150G - Organic","weightValue":150,"weightUnit":"g"},{"id":"p603152","sku":"603152","ar":"حلومي جبن أرلا 200 جم","en":"Arla Halloumi 200G","weightValue":200,"weightUnit":"g"},{"id":"p603708","sku":"603708","ar":"حلومي جبن أرلا الدسم قلیل 200 جم","en":"Arla Halloumi 200G light","weightValue":200,"weightUnit":"g"},{"id":"p605300","sku":"605300","ar":"حلومي جبن الثلث البقرات 200 جم","en":"TTC Grill Chease 200G","weightValue":200,"weightUnit":"g"},{"id":"p799117","sku":"799117","ar":"لبنھ أرلا 180 جم","en":"Arla Labneh 180g","weightValue":180,"weightUnit":"g"},{"id":"p586094","sku":"586094","ar":"زعتر لبنھ أرلا 180 جم","en":"Arla Labneh 180g - Zaater","weightValue":180,"weightUnit":"g"},{"id":"p799120","sku":"799120","ar":"لبنھ أرلا 400 جم","en":"Arla Labneh 400g","weightValue":400,"weightUnit":"g"},{"id":"p799123","sku":"799123","ar":"لبنھ أرلا 650 جم","en":"Arla Labneh 650g","weightValue":650,"weightUnit":"g"},{"id":"p599575","sku":"599575","ar":"لبنانیة وصفة لبنھ أرلا 400 جم","en":"Arla Labneh 400g-Lebanese recipe","weightValue":400,"weightUnit":"g"},{"id":"p599585","sku":"599585","ar":"لبنانیة وصفة لبنھ أرلا 180 جم","en":"Arla Labneh 180g-Lebanese recipe","weightValue":180,"weightUnit":"g"}]},{"id":"g6-whipping-cooking-cream-a","titleAr":"والصلصات الطبخ وكریمة الخفق كریمة","titleEn":"whipping, cooking cream and sauces","items":[{"id":"p607050","sku":"607050","ar":"طبخ كریمة أرلا 1 لتر","en":"Arla Cooking Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607049","sku":"607049","ar":"طبخ كریمة أرلا 200 مل","en":"Arla Cooking Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607048","sku":"607048","ar":"طبخ كریمة أرلا 500 مل","en":"Arla Cooking Cream 500ml","weightValue":500,"weightUnit":"ml"},{"id":"p607055","sku":"607055","ar":"لیت طبخ كریمة أرلا 500 مل","en":"Arla Cooking Cream 500ml - Light","weightValue":500,"weightUnit":"ml"},{"id":"p607061","sku":"607061","ar":"اجبان اربعھ صلصة أرلا","en":"Arla Sauce - 4 Cheese","weightValue":0,"weightUnit":"g"},{"id":"p607059","sku":"607059","ar":"البشامیل صلصة أرلا","en":"Arla Sauce - Bechamel","weightValue":0,"weightUnit":"g"},{"id":"p607062","sku":"607062","ar":"المشروم صلصة أرلا","en":"Arla Sauce - Mashroom","weightValue":0,"weightUnit":"g"},{"id":"p607058","sku":"607058","ar":"الطماطم صلصة أرلا","en":"Arla Sauce - Tomato","weightValue":0,"weightUnit":"g"},{"id":"p601611","sku":"601611","ar":"بخاخ خفق أرلا 250 جم","en":"Arla Whipping Spray 250G","weightValue":250,"weightUnit":"g"},{"id":"p607071","sku":"607071","ar":"خفق كریمة أرلا 1 لتر","en":"Arla Whipping Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607070","sku":"607070","ar":"خفق كریمة أرلا 200 مل","en":"Arla Whipping Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607069","sku":"607069","ar":"خفق كریمة أرلا 500 مل","en":"Arla Whipping Cream 500ml","weightValue":500,"weightUnit":"ml"}]},{"id":"g7-puck-slices-and-naturals","titleAr":"شرائح &طبیعیة شرائح","titleEn":"Arla Slices and naturals slices","items":[{"id":"p54443","sku":"54443","ar":"شیدار طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Cheddar","weightValue":150,"weightUnit":"g"},{"id":"p49761","sku":"49761","ar":"ایمتال طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Emmental","weightValue":150,"weightUnit":"g"},{"id":"p49760","sku":"49760","ar":"جودا طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Gouda","weightValue":150,"weightUnit":"g"},{"id":"p49758","sku":"49758","ar":"ھافارتي طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Havarti","weightValue":150,"weightUnit":"g"},{"id":"p590403","sku":"590403","ar":"جیلبینو ھافارتي طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Havati/Jalapeno","weightValue":150,"weightUnit":"g"},{"id":"p49795","sku":"49795","ar":"موزریل طبیعیة شرائح أرلا 150 جم","en":"Arla NAT. Slices 150G - Mozzarella","weightValue":150,"weightUnit":"g"},{"id":"p602501","sku":"602501","ar":"عادیة شرائح أرلا 200 جم","en":"Arla Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p602502","sku":"602502","ar":"شیدار شرائح أرلا 200 جم","en":"Arla Sclices 200G - Cheddar","weightValue":200,"weightUnit":"g"},{"id":"p602500","sku":"602500","ar":"الدسم قلیل شرائح أرلا 200 جم","en":"Arla Sclices 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p602473","sku":"602473","ar":"عادیة شرائح أرلا 400 جم","en":"Arla Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p603473","sku":"603473","ar":"شیدار شرائح أرلا 400 جم","en":"Arla Sclices 400G - Cheddar","weightValue":400,"weightUnit":"g"}]},{"id":"g8-puck-mozarellah","titleAr":"موزریل أرلا","titleEn":"Arla Mozarellah","items":[{"id":"p607074","sku":"607074","ar":"شیدار موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Chedder","weightValue":180,"weightUnit":"g"},{"id":"p607092","sku":"607092","ar":"قشقوان موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Kashkaval","weightValue":180,"weightUnit":"g"},{"id":"p607091","sku":"607091","ar":"مكس تكس موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Tex Mex","weightValue":180,"weightUnit":"g"},{"id":"p607079","sku":"607079","ar":"موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p594709","sku":"594709","ar":"شیدار موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Chedder","weightValue":400,"weightUnit":"g"},{"id":"p594719","sku":"594719","ar":"قشقوان موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Kashkaval","weightValue":400,"weightUnit":"g"},{"id":"p594713","sku":"594713","ar":"مكس تكس موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Tex Mex","weightValue":400,"weightUnit":"g"},{"id":"p607081","sku":"607081","ar":"موزریل جبن أرلا 900 جم","en":"Arla Shredded Cheese 900G","weightValue":900,"weightUnit":"g"},{"id":"p597226","sku":"597226","ar":"موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p608390","sku":"608390","ar":"مكس شیدار موزریل جبن أرلا 180 جم","en":"Arla Shredded Cheese 180G - Chedder mix","weightValue":180,"weightUnit":"g"},{"id":"p608387","sku":"608387","ar":"مكس شیدار موزریل جبن أرلا 400 جم","en":"Arla Shredded Cheese 400G - Chedder mix","weightValue":400,"weightUnit":"g"}]},{"id":"g9-three-cows-feta-cheese-a","titleAr":"فیتا /موزریل بقرات ثلث","titleEn":"Three Cows Feta cheese and Mozzarella","items":[{"id":"p607113","sku":"607113","ar":"بقرات ثلث موزریل 180 جم","en":"TTC Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p607114","sku":"607114","ar":"بقرات ثلث موزریل 400 جم","en":"TTC Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p607115","sku":"607115","ar":"بقرات ثلث موزریل 900 جم","en":"TTC Shredded Cheese 900G","weightValue":900,"weightUnit":"g"}]},{"id":"g10-feta-puck-and-ttc","titleAr":"الثلث والبقرات أرلا فیتا","titleEn":"Feta Arla and TTC","items":[{"id":"p598191","sku":"598191","ar":"مكعبات فیتا أرلا 410 جم","en":"Arla Feta Cubes 410G","weightValue":410,"weightUnit":"g"},{"id":"p598123","sku":"598123","ar":"واعشاب ثوم مكعبات فیتا أرلا 410 جم","en":"Arla Feta Cubes 410G - Gar/Pars","weightValue":410,"weightUnit":"g"},{"id":"p598101","sku":"598101","ar":"وبابریكا حار فلفل مكعبات فیتا أرلا 410 جم","en":"Arla Feta Cubes 410G - Pepper/Chilli","weightValue":410,"weightUnit":"g"},{"id":"p796232","sku":"796232","ar":"بقرات ثلث فیتا 200 جم","en":"TTC Feta 200g","weightValue":200,"weightUnit":"g"},{"id":"p796239","sku":"796239","ar":"الدسم قلیل بقرات ثلث فیتا 200 جم","en":"TTC Feta 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p796236","sku":"796236","ar":"بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G","weightValue":500,"weightUnit":"g"},{"id":"p796229","sku":"796229","ar":"الدسم قلیل بقرات ثلث فیتا 500 جم","en":"TTC Feta 500G - LF","weightValue":500,"weightUnit":"g"}]},{"id":"g11-arla-organic-and-milk-po","titleAr":"العضوي الحلیب ارل &مجفف حلیب أرلا","titleEn":"Arla Organic and milk powder","items":[{"id":"p63899","sku":"63899","ar":"الدسم كامل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Full Fat","weightValue":1,"weightUnit":"l"},{"id":"p65373","sku":"65373","ar":"الدسم قلیل عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Low Fat","weightValue":1,"weightUnit":"l"},{"id":"p65389","sku":"65389","ar":"شوكوتھ عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Choco","weightValue":200,"weightUnit":"ml"},{"id":"p65386","sku":"65386","ar":"الدسم كامل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Full Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65959","sku":"65959","ar":"الدسم قلیل عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Low Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65960","sku":"65960","ar":"فراولة عضوي حلیب ارل 200 مل","en":"Arla Organic UHT Milk 200ml - Strawberry","weightValue":200,"weightUnit":"ml"},{"id":"p588383","sku":"588383","ar":"لكتوز من خالي عضوي حلیب ارل 1 لتر","en":"Arla Organic UHT Milk 1L - Lactose Free","weightValue":1,"weightUnit":"l"}]},{"id":"g12-st-cream-thick-cream","titleAr":"وقیمر قشطة","titleEn":"St. Cream & Thick Cream","items":[{"id":"p582417","sku":"582417","ar":"قشطة أرلا 160 جم","en":"Arla Str. Cream 160G","weightValue":160,"weightUnit":"g"},{"id":"p582428","sku":"582428","ar":"بالعسل قشطة أرلا 160 جم","en":"Arla Str. Cream 160G - Honey","weightValue":160,"weightUnit":"g"},{"id":"p582425","sku":"582425","ar":"لیت قشطة أرلا 160 جم","en":"Arla Str. Cream 160G - Light","weightValue":160,"weightUnit":"g"},{"id":"p582432","sku":"582432","ar":"بالفراولة قشطة أرلا 160 جم","en":"Arla Str. Cream 160G - Strawberry","weightValue":160,"weightUnit":"g"},{"id":"p582421","sku":"582421","ar":"برومو قشطة أرلا 160 جم","en":"Arla Str. Cream 160G Promo","weightValue":160,"weightUnit":"g"},{"id":"p591438","sku":"591438","ar":"دي فیتامین قشطة أرلا 160 جم","en":"Arla Str. Cream 160G -Vit D","weightValue":160,"weightUnit":"g"},{"id":"p591966","sku":"591966","ar":"دي فیتامین قشطة أرلا برومو 160 جم","en":"Arla Str. Cream 160G Promo Vit D","weightValue":160,"weightUnit":"g"},{"id":"p607011","sku":"607011","ar":"قیمر أرلا 125 مل","en":"Arla Thick Cream 125ml","weightValue":125,"weightUnit":"ml"},{"id":"p607013","sku":"607013","ar":"(1+3)برومو قیمر أرلا 125 مل","en":"Arla Thick Cream 125ml (3+1) Promo","weightValue":125,"weightUnit":"ml"},{"id":"p607012","sku":"607012","ar":"قیمر أرلا 250 مل","en":"Arla Thick Cream 250ml","weightValue":250,"weightUnit":"ml"},{"id":"p607008","sku":"607008","ar":"برومو قیمر أرلا 250 مل","en":"Arla Thick Cream 250ml - Promo","weightValue":250,"weightUnit":"ml"}]},{"id":"g13-evap-milk","titleAr":"مبخر شاي حلیب","titleEn":"EVAP MILK","items":[{"id":"p597989","sku":"597989","ar":"شاي حلیب أرلا 170 جم","en":"Arla Evap Milk 170G","weightValue":170,"weightUnit":"g"}]},{"id":"g14-starbucks","titleAr":"ستاربكس قھوة","titleEn":"Starbucks","items":[{"id":"p607045","sku":"607045","ar":"لیتھ ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caffe Latte","weightValue":220,"weightUnit":"ml"},{"id":"p607047","sku":"607047","ar":"كابتشینو ستاربكس 220 مل","en":"SBUX Classic 220 ml - Cappucino","weightValue":220,"weightUnit":"ml"},{"id":"p607046","sku":"607046","ar":"كارمیل ستاربكس 220 مل","en":"SBUX Classic 220 ml - Caramel Mach","weightValue":220,"weightUnit":"ml"},{"id":"p607044","sku":"607044","ar":"موكا ستاربكس 220 مل","en":"SBUX Classic 220 ml - Mocha","weightValue":220,"weightUnit":"ml"},{"id":"p38881","sku":"38881","ar":"شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p68529","sku":"68529","ar":"سكر بدون شوت دبل ستاربكس 200 مل","en":"SBUX Double Shot 200ml - No Added Sugar","weightValue":200,"weightUnit":"ml"},{"id":"p54397","sku":"54397","ar":"كارمیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Caramel","weightValue":250,"weightUnit":"ml"},{"id":"p49820","sku":"49820","ar":"قھوة فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Coffee","weightValue":250,"weightUnit":"ml"},{"id":"p89261","sku":"89261","ar":"كوكیز فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Cookies","weightValue":250,"weightUnit":"ml"},{"id":"p49918","sku":"49918","ar":"موكا فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Mocha","weightValue":250,"weightUnit":"ml"},{"id":"p66899","sku":"66899","ar":"فانیل فرابوتشینو ستاربكس 250 مل","en":"SBUX Frappuccino 250ml - Vanilla","weightValue":250,"weightUnit":"ml"},{"id":"p595113","sku":"595113","ar":"سكر بدون كارمیل فرابوتشینو س 250 مل","en":"SBUX Frappuccino 250ml - Caramel No sugar","weightValue":250,"weightUnit":"ml"},{"id":"p601814","sku":"601814","ar":"شوت تربل ستاربكس 300 مل","en":"SBUX Triple Shot 300ml","weightValue":300,"weightUnit":"ml"}]},{"id":"g15-lurpak-butter","titleAr":"مملحة غیر زبدة لورباك","titleEn":"Lurpak Butter","items":[{"id":"p584543","sku":"584543","ar":"زبده لورباك غیرمملحة 100 جم","en":"Lurpak Butter 100G - UnSalted","weightValue":100,"weightUnit":"g"},{"id":"p86174","sku":"86174","ar":"زبدة لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted","weightValue":200,"weightUnit":"g"},{"id":"p86474","sku":"86474","ar":"زبدة لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted","weightValue":200,"weightUnit":"g"},{"id":"p86019","sku":"86019","ar":"زبدة لورباك عضویة غیرمملحة 200 جم","en":"Lurpak Butter 200G - UnSalted - Organic","weightValue":200,"weightUnit":"g"},{"id":"p86482","sku":"86482","ar":"زبدة لوربك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted","weightValue":400,"weightUnit":"g"},{"id":"p596278","sku":"596278","ar":"لورباك مملحة غیر 50 جم","en":"Lurpak Butter 50G - UnSalted","weightValue":50,"weightUnit":"g"},{"id":"p80661","sku":"80661","ar":"لورباك مملحة غیر 10 جم","en":"Lurpak Butter 10G - UnSalted","weightValue":10,"weightUnit":"g"},{"id":"p89111","sku":"89111","ar":"بخاخ رذاذ لورباك 200 مل","en":"Lurpak Cooking Mist 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p88790","sku":"88790","ar":"سوفت لورباك مملحة 200 جم","en":"Lurpak Butter 200G - Salted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88789","sku":"88789","ar":"سوفت لورباك مملحة غیر 200 جم","en":"Lurpak Butter 200G - UnSalted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88786","sku":"88786","ar":"سوفت لورباك مملحة 400 جم","en":"Lurpak Butter 400G - Salted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p88785","sku":"88785","ar":"سوفت لورباك مملحة غیر 400 جم","en":"Lurpak Butter 400G - UnSalted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p596537","sku":"596537","ar":"لورباك مملحة غير 50 جم","en":"Lurpak Butter 50G -( 5+ 1 ) UnSalted","weightValue":50,"weightUnit":"g"}]},{"id":"g16-danya-juice","titleAr":"دانیا عصیر","titleEn":"Danya Juice","items":[{"id":"p593530","sku":"593530","ar":"احمر عنب عصیر دانیة 1 لتر","en":"Danya Red Grape 1L","weightValue":1,"weightUnit":"l"},{"id":"p593550","sku":"593550","ar":"ابیض عنب عصیر دانیة 1 لتر","en":"Danya White Grape 1L","weightValue":1,"weightUnit":"l"}]},{"id":"g17-galaxy-milk","titleAr":"حليب جالكسي","titleEn":"Galaxy Milk","items":[{"id":"p595889","sku":"595889","ar":"الكرامیل و بالشوكولتة الحلیب سي 220 مل","en":"Galaxy 10X220ML Choc Milk Caramel Flavo","weightValue":220,"weightUnit":"ml"},{"id":"p595886","sku":"595886","ar":"الممیزة بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Signature Chocolate Milk","weightValue":220,"weightUnit":"ml"},{"id":"p595892","sku":"595892","ar":"البندق و بالشوكولتة الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Choc Milk Hazlnut Flavor","weightValue":220,"weightUnit":"ml"},{"id":"p599495","sku":"599495","ar":"الھند بجوز الحلیب جالكسي 220 مل","en":"Galaxy 10X220ML Coconut Flavor LTO","weightValue":220,"weightUnit":"ml"}]},{"id":"g18-arla-protein","titleAr":"بروتین أرل","titleEn":"Arla Protein","items":[{"id":"p598942","sku":"598942","ar":"شوكلتة بودنق بروتین 200 جم","en":"Pudding Choco ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598897","sku":"598897","ar":"كارامیل بودنق بروتین 200 جم","en":"Pudding caramel ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598922","sku":"598922","ar":"بندق بودنق بروتین 200 جم","en":"Pudding hazulnut ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p604815","sku":"604815","ar":"ازرق توت زبادي بروتین آرل 150 جم","en":"Arla Protein bluebery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604813","sku":"604813","ar":"فروت باشن زبادي بروتین آرل 150 جم","en":"Arla Protein peach passion yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604814","sku":"604814","ar":"فراولة زبادي بروتین آرل 150 جم","en":"Arla Protein strewbery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p338037","sku":"338037","ar":"شوكلتة بروتین حلیب 250 مل","en":"Arla Protine Shake chocolate 250Ml","weightValue":250,"weightUnit":"ml"},{"id":"p604487","sku":"604487","ar":"بروتين حليب فراولة 225 مل","en":"Arla Protine Shake Strawberry 225Ml","weightValue":225,"weightUnit":"ml"}]},{"id":"g19-puck-square-promo","titleAr":"أرلا مربعات - عرض ترويجي","titleEn":"Arla Square Promo","items":[{"id":"p607096","sku":"607096","ar":"مربع أرلا 108 جم","en":"Arla square 3×108g","weightValue":108,"weightUnit":"g"},{"id":"p607123","sku":"607123","ar":"مربع أرلا برومو 216 جم","en":"Arla square Promo KSA 8X3X216G","weightValue":216,"weightUnit":"g"},{"id":"p338619","sku":"338619","ar":"بودنج بروتين آرل كريم بروليه 200 جم","en":"Arla protein Pudding Creame brulee 20g 6x200g","weightValue":20,"weightUnit":"g"}]}];
+const PRODUCT_CATALOG = [{"id":"g1-puck-cheese-cream","titleAr":"Ø£Ø±Ù„Ø§ Ø¬Ø¨Ù† ÙƒØ±ÙŠÙ…ÙŠ","titleEn":"Arla Cheese Cream","items":[{"id":"p602238","sku":"602238","ar":"ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 1100 Ø¬Ù…","en":"Arla Blue Jar 1100G","weightValue":1100,"weightUnit":"g"},{"id":"p592474","sku":"592474","ar":"ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 130 Ø¬Ù…","en":"Arla Blue Jar 130G","weightValue":130,"weightUnit":"g"},{"id":"p592479","sku":"592479","ar":"ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 230 Ø¬Ù…","en":"Arla Blue Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p798952","sku":"798952","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 240 Ø¬Ù…","en":"Arla Blue Jar 240G - LF","weightValue":240,"weightUnit":"g"},{"id":"p798955","sku":"798955","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 500 Ø¬Ù…","en":"Arla Blue Jar 500G - LF","weightValue":500,"weightUnit":"g"},{"id":"p602061","sku":"602061","ar":"Ø¨Ø±ÙˆÙ…Ùˆ ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 500 Ø¬Ù…","en":"Arla Blue Jar 500G - Promo","weightValue":500,"weightUnit":"g"},{"id":"p602059","sku":"602059","ar":"ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 500 Ø¬Ù…","en":"Arla Blue Jar 500G - Single","weightValue":500,"weightUnit":"g"},{"id":"p588330","sku":"588330","ar":"Ø¯ÙŠ ÙØ§ÛŒØªÙ…ÛŒÙ† ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 500 Ø¬Ù…","en":"Arla Blue Jar 500G - Vit D","weightValue":500,"weightUnit":"g"},{"id":"p592349","sku":"592349","ar":"Ø¨Ø±ÙˆÙ…Ùˆ ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 900 Ø¬Ù…","en":"Arla Blue Jar 900G - Promo","weightValue":900,"weightUnit":"g"},{"id":"p592348","sku":"592348","ar":"ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 900 Ø¬Ù…","en":"Arla Blue Jar 900G - Single","weightValue":900,"weightUnit":"g"},{"id":"p584323","sku":"584323","ar":"ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ Ø¨Ø±ÙˆÙ…Ùˆ Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ 500 Ø¬Ù…","en":"Arla Blue Jar 2*500G - Low Fat Promo","weightValue":500,"weightUnit":"g"},{"id":"p798967","sku":"798967","ar":"Ø´ÛŒØ¯Ø§Ø± ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ 500 Ø¬Ù…","en":"Arla Gold Jar 500G","weightValue":500,"weightUnit":"g"},{"id":"p584322","sku":"584322","ar":"Ø´ÛŒØ¯Ø§Ø± ÙƒØ§Ø³Ø§Øª Ø£Ø±Ù„Ø§ Ø¨Ø±ÙˆÙ…Ùˆ 500 Ø¬Ù…","en":"Arla Gold Jar 500G Promo","weightValue":500,"weightUnit":"g"},{"id":"p798922","sku":"798922","ar":"Ø³ÙƒÙˆÛŒØ² Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Squeeze 400G","weightValue":400,"weightUnit":"g"},{"id":"p599593","sku":"599593","ar":"Ø³ÙƒÙˆÛŒØ² Ø£Ø±Ù„Ø§ 750 Ø¬Ù…","en":"Arla Squeeze 750G","weightValue":750,"weightUnit":"g"},{"id":"p608399","sku":"608399","ar":"Ø³ÙƒÙˆÛŒØ² Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla Squeeze 200G","weightValue":200,"weightUnit":"g"}]},{"id":"g2-kraft-cheese-jars","titleAr":"Ø´ÛŒØ¯Ø± Ø¬Ø¨Ù† ÙƒØ±Ø§ÙØª","titleEn":"KRAFT CHEESE JARS","items":[{"id":"p88759","sku":"88759","ar":"ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 140 Ø¬Ù…","en":"Kraft Gold Jar 140G","weightValue":140,"weightUnit":"g"},{"id":"p88760","sku":"88760","ar":"ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 230 Ø¬Ù…","en":"Kraft Gold Jar 230G","weightValue":230,"weightUnit":"g"},{"id":"p586372","sku":"586372","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 480 Ø¬Ù…","en":"Kraft Gold Jar 480G - Low Fat","weightValue":480,"weightUnit":"g"},{"id":"p88766","sku":"88766","ar":"Ø¨Ø±ÙˆÙ…Ùˆ ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 480 Ø¬Ù…","en":"Kraft Gold Jar 480G - Promo","weightValue":480,"weightUnit":"g"},{"id":"p88761","sku":"88761","ar":"ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 480 Ø¬Ù…","en":"Kraft Gold Jar 480G - Single","weightValue":480,"weightUnit":"g"},{"id":"p88767","sku":"88767","ar":"Ø¨Ø±ÙˆÙ…Ùˆ ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 870 Ø¬Ù…","en":"Kraft Gold Jar 870G - Promo","weightValue":870,"weightUnit":"g"},{"id":"p88762","sku":"88762","ar":"ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª 870 Ø¬Ù…","en":"Kraft Gold Jar 870G - Single","weightValue":870,"weightUnit":"g"},{"id":"p88765","sku":"88765","ar":"*3ÙƒØ§Ø³Ø§Øª ÙƒØ±ÙØª Ø¨Ø±ÙˆÙ…Ùˆ 230 Ø¬Ù…","en":"Kraft Gold Jar 3*4*230G Promo","weightValue":230,"weightUnit":"g"},{"id":"p88763","sku":"88763","ar":"Ø³ÙƒÙˆÛŒØ² ÙƒØ±ÙØª 440 Ø¬Ù…","en":"Kraft Gold Squeeze 440G","weightValue":440,"weightUnit":"g"},{"id":"p88764","sku":"88764","ar":"Ø³ÙƒÙˆÛŒØ² ÙƒØ±ÙØª 790 Ø¬Ù…","en":"Kraft Gold Squeeze 790G","weightValue":790,"weightUnit":"g"}]},{"id":"g3-kraft-slices-cheddar-pac","titleAr":"Ø´Ø±Ø§Ø¦Ø­ Ø¬Ø¨Ù† ÙƒØ±Ø§ÙØª","titleEn":"KRAFT SLICES & cheddar packets","items":[{"id":"p702145","sku":"702145","ar":"Ø´Ø±Ø§Ø¦Ø­ ÙƒØ±ÙØª 200 Ø¬Ù…","en":"Kraft Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p702146","sku":"702146","ar":"Ù„ÛŒØª Ø´Ø±Ø§Ø¦Ø­ ÙƒØ±ÙØª 200 Ø¬Ù…","en":"Kraft Sclices 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p701741","sku":"701741","ar":"Ø´Ø±Ø§Ø¦Ø­ ÙƒØ±ÙØª 400 Ø¬Ù…","en":"Kraft Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p701742","sku":"701742","ar":"Ù„ÛŒØª Ø´Ø±Ø§Ø¦Ø­ ÙƒØ±ÙØª 400 Ø¬Ù…","en":"Kraft Sclices 400G - Light","weightValue":400,"weightUnit":"g"},{"id":"p81388","sku":"81388","ar":"Ø¨Ù„ÙˆÙƒ Ø¬Ø¨Ù†Ú¾ ÙƒØ±ÙØª 250 Ø¬Ù…","en":"Kraft Cheddar Packets 250G","weightValue":250,"weightUnit":"g"},{"id":"p81389","sku":"81389","ar":"Ø¨Ù„ÙˆÙƒ Ø¬Ø¨Ù†Ú¾ ÙƒØ±ÙØª 500 Ø¬Ù…","en":"Kraft Cheddar Packets 500G","weightValue":500,"weightUnit":"g"}]},{"id":"g4-kraft-tins","titleAr":"Ø¹Ù„Ø¨ ÙƒØ±Ø§ÙØª","titleEn":"KRAFT TINS","items":[{"id":"p88770","sku":"88770","ar":"Ø¹Ù„Ø¨ ÙƒØ±ÙØª 100 Ø¬Ù…","en":"Kraft Can 100G","weightValue":100,"weightUnit":"g"},{"id":"p88773","sku":"88773","ar":"Ø¨Ø±ÙˆÙ…Ùˆ Ø¹Ù„Ø¨ ÙƒØ±ÙØª 100 Ø¬Ù…","en":"Kraft Can 100G - Promo 6 Pcs","weightValue":100,"weightUnit":"g"},{"id":"p88771","sku":"88771","ar":"Ø¹Ù„Ø¨ ÙƒØ±ÙØª 190 Ø¬Ù…","en":"Kraft Can 190G","weightValue":190,"weightUnit":"g"},{"id":"p88769","sku":"88769","ar":"Ø¹Ù„Ø¨ ÙƒØ±ÙØª 50 Ø¬Ù…","en":"Kraft Can 50G","weightValue":50,"weightUnit":"g"},{"id":"p88772","sku":"88772","ar":"Ø¨Ø±ÙˆÙ…Ùˆ Ø¹Ù„Ø¨ ÙƒØ±ÙØª 50 Ø¬Ù…","en":"Kraft Can 50G - Promo 8 Pcs","weightValue":50,"weightUnit":"g"}]},{"id":"g5-puck-sqare-triangles-tub","titleAr":"Ù„Ø¨Ù†Ú¾ /Ø­Ù„ÙˆÙ… Ø¬Ø¨Ù†/ Ù…Ø«Ù„Ø« Ø¬Ø¨Ù† /Ù…Ø±Ø¨Ø¹ Ø¨Ù†","titleEn":"Arla Sqare/ Triangles/Tubs/Hollomi & Labnehs","items":[{"id":"p601480","sku":"601480","ar":"Ù…Ø±Ø¨Ø¹Ø§Øª Ø£Ø±Ù„Ø§ 108 Ø¬Ù…","en":"Arla Square 108G","weightValue":108,"weightUnit":"g"},{"id":"p601479","sku":"601479","ar":"Ù…Ø±Ø¨Ø¹Ø§Øª Ø£Ø±Ù„Ø§ 216 Ø¬Ù…","en":"Arla Square 216G","weightValue":216,"weightUnit":"g"},{"id":"p601478","sku":"601478","ar":"Ù…Ø±Ø¨Ø¹Ø§Øª Ø£Ø±Ù„Ø§ 432 Ø¬Ù…","en":"Arla Square 432G","weightValue":432,"weightUnit":"g"},{"id":"p601378","sku":"601378","ar":"Ù…Ø«Ù„Ø«Ø§Øª Ø£Ø±Ù„Ø§ 120 Ø¬Ù…","en":"Arla Triangles 120G","weightValue":120,"weightUnit":"g"},{"id":"p601382","sku":"601382","ar":"Ø¨Ø±ÙˆÙ…Ùˆ Ù…Ø«Ù„Ø«Ø§Øª Ø£Ø±Ù„Ø§ 120 Ø¬Ù…","en":"Arla Triangles 120G - Promo","weightValue":120,"weightUnit":"g"},{"id":"p601380","sku":"601380","ar":"Ù…Ø«Ù„Ø«Ø§Øª Ø£Ø±Ù„Ø§ 240 Ø¬Ù…","en":"Arla Triangles 240G","weightValue":240,"weightUnit":"g"},{"id":"p599370","sku":"599370","ar":"Ù…Ø«Ù„Ø«Ø§Øª Ø£Ø±Ù„Ø§ 360 Ø¬Ù…","en":"Arla Triangles 360G","weightValue":360,"weightUnit":"g"},{"id":"p599497","sku":"599497","ar":"Ù…Ø«Ù„Ø«Ø§Øª Ø£Ø±Ù„Ø§ 480 Ø¬Ù…","en":"Arla Triangles 480G","weightValue":480,"weightUnit":"g"},{"id":"p596684","sku":"596684","ar":"Ø¹Ø§Ø¯ÙŠ Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla CC Tub 200G","weightValue":200,"weightUnit":"g"},{"id":"p596690","sku":"596690","ar":"ÙˆØ§Ø¹Ø´Ø§Ø¨ Ø«ÙˆÙ… Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla CC Tub 200G - Garlic & Herbs","weightValue":200,"weightUnit":"g"},{"id":"p596700","sku":"596700","ar":"Ù„ÛŒØª Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla CC Tub 200G - Light","weightValue":200,"weightUnit":"g"},{"id":"p596704","sku":"596704","ar":"Ø¨Ø§Ù„Ø²ÛŒØªÙˆÙ† Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla CC Tub 200G - Olive","weightValue":200,"weightUnit":"g"},{"id":"p596754","sku":"596754","ar":"Ø¹Ø§Ø¯ÙŠ Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 300 Ø¬Ù…","en":"Arla CC Tub 300G","weightValue":300,"weightUnit":"g"},{"id":"p596762","sku":"596762","ar":"Ø¨Ø§Ù„Ø²ÛŒØªÙˆÙ† Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 300 Ø¬Ù…","en":"Arla CC Tub 300G - Olive","weightValue":300,"weightUnit":"g"},{"id":"p598056","sku":"598056","ar":"Ø·Ø¨Ù‚ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ Ø¹Ø¶ÙˆÙŠ 150 Ø¬Ù…","en":"Arla CC Tub 150G - Organic","weightValue":150,"weightUnit":"g"},{"id":"p603152","sku":"603152","ar":"Ø­Ù„ÙˆÙ…ÙŠ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla Halloumi 200G","weightValue":200,"weightUnit":"g"},{"id":"p603708","sku":"603708","ar":"Ø­Ù„ÙˆÙ…ÙŠ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ 200 Ø¬Ù…","en":"Arla Halloumi 200G light","weightValue":200,"weightUnit":"g"},{"id":"p605300","sku":"605300","ar":"Ø­Ù„ÙˆÙ…ÙŠ Ø¬Ø¨Ù† Ø§Ù„Ø«Ù„Ø« Ø§Ù„Ø¨Ù‚Ø±Ø§Øª 200 Ø¬Ù…","en":"TTC Grill Chease 200G","weightValue":200,"weightUnit":"g"},{"id":"p799117","sku":"799117","ar":"Ù„Ø¨Ù†Ú¾ Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Labneh 180g","weightValue":180,"weightUnit":"g"},{"id":"p586094","sku":"586094","ar":"Ø²Ø¹ØªØ± Ù„Ø¨Ù†Ú¾ Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Labneh 180g - Zaater","weightValue":180,"weightUnit":"g"},{"id":"p799120","sku":"799120","ar":"Ù„Ø¨Ù†Ú¾ Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Labneh 400g","weightValue":400,"weightUnit":"g"},{"id":"p799123","sku":"799123","ar":"Ù„Ø¨Ù†Ú¾ Ø£Ø±Ù„Ø§ 650 Ø¬Ù…","en":"Arla Labneh 650g","weightValue":650,"weightUnit":"g"},{"id":"p599575","sku":"599575","ar":"Ù„Ø¨Ù†Ø§Ù†ÛŒØ© ÙˆØµÙØ© Ù„Ø¨Ù†Ú¾ Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Labneh 400g-Lebanese recipe","weightValue":400,"weightUnit":"g"},{"id":"p599585","sku":"599585","ar":"Ù„Ø¨Ù†Ø§Ù†ÛŒØ© ÙˆØµÙØ© Ù„Ø¨Ù†Ú¾ Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Labneh 180g-Lebanese recipe","weightValue":180,"weightUnit":"g"}]},{"id":"g6-whipping-cooking-cream-a","titleAr":"ÙˆØ§Ù„ØµÙ„ØµØ§Øª Ø§Ù„Ø·Ø¨Ø® ÙˆÙƒØ±ÛŒÙ…Ø© Ø§Ù„Ø®ÙÙ‚ ÙƒØ±ÛŒÙ…Ø©","titleEn":"whipping, cooking cream and sauces","items":[{"id":"p607050","sku":"607050","ar":"Ø·Ø¨Ø® ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 1 Ù„ØªØ±","en":"Arla Cooking Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607049","sku":"607049","ar":"Ø·Ø¨Ø® ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 200 Ù…Ù„","en":"Arla Cooking Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607048","sku":"607048","ar":"Ø·Ø¨Ø® ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 500 Ù…Ù„","en":"Arla Cooking Cream 500ml","weightValue":500,"weightUnit":"ml"},{"id":"p607055","sku":"607055","ar":"Ù„ÛŒØª Ø·Ø¨Ø® ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 500 Ù…Ù„","en":"Arla Cooking Cream 500ml - Light","weightValue":500,"weightUnit":"ml"},{"id":"p607061","sku":"607061","ar":"Ø§Ø¬Ø¨Ø§Ù† Ø§Ø±Ø¨Ø¹Ú¾ ØµÙ„ØµØ© Ø£Ø±Ù„Ø§","en":"Arla Sauce - 4 Cheese","weightValue":0,"weightUnit":"g"},{"id":"p607059","sku":"607059","ar":"Ø§Ù„Ø¨Ø´Ø§Ù…ÛŒÙ„ ØµÙ„ØµØ© Ø£Ø±Ù„Ø§","en":"Arla Sauce - Bechamel","weightValue":0,"weightUnit":"g"},{"id":"p607062","sku":"607062","ar":"Ø§Ù„Ù…Ø´Ø±ÙˆÙ… ØµÙ„ØµØ© Ø£Ø±Ù„Ø§","en":"Arla Sauce - Mashroom","weightValue":0,"weightUnit":"g"},{"id":"p607058","sku":"607058","ar":"Ø§Ù„Ø·Ù…Ø§Ø·Ù… ØµÙ„ØµØ© Ø£Ø±Ù„Ø§","en":"Arla Sauce - Tomato","weightValue":0,"weightUnit":"g"},{"id":"p601611","sku":"601611","ar":"Ø¨Ø®Ø§Ø® Ø®ÙÙ‚ Ø£Ø±Ù„Ø§ 250 Ø¬Ù…","en":"Arla Whipping Spray 250G","weightValue":250,"weightUnit":"g"},{"id":"p607071","sku":"607071","ar":"Ø®ÙÙ‚ ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 1 Ù„ØªØ±","en":"Arla Whipping Cream 1L","weightValue":1,"weightUnit":"l"},{"id":"p607070","sku":"607070","ar":"Ø®ÙÙ‚ ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 200 Ù…Ù„","en":"Arla Whipping Cream 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p607069","sku":"607069","ar":"Ø®ÙÙ‚ ÙƒØ±ÛŒÙ…Ø© Ø£Ø±Ù„Ø§ 500 Ù…Ù„","en":"Arla Whipping Cream 500ml","weightValue":500,"weightUnit":"ml"}]},{"id":"g7-puck-slices-and-naturals","titleAr":"Ø´Ø±Ø§Ø¦Ø­ &Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­","titleEn":"Arla Slices and naturals slices","items":[{"id":"p54443","sku":"54443","ar":"Ø´ÛŒØ¯Ø§Ø± Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 150 Ø¬Ù…","en":"Arla NAT. Slices 150G - Cheddar","weightValue":150,"weightUnit":"g"},{"id":"p49761","sku":"49761","ar":"Ø§ÛŒÙ…ØªØ§Ù„ Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 150 Ø¬Ù…","en":"Arla NAT. Slices 150G - Emmental","weightValue":150,"weightUnit":"g"},{"id":"p49760","sku":"49760","ar":"Ø¬ÙˆØ¯Ø§ Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 150 Ø¬Ù…","en":"Arla NAT. Slices 150G - Gouda","weightValue":150,"weightUnit":"g"},{"id":"p49758","sku":"49758","ar":"Ú¾Ø§ÙØ§Ø±ØªÙŠ Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 150 Ø¬Ù…","en":"Arla NAT. Slices 150G - Havarti","weightValue":150,"weightUnit":"g"},{"id":"p590403","sku":"590403","ar":"Ø¬ÛŒÙ„Ø¨ÛŒÙ†Ùˆ Ú¾Ø§ÙØ§Ø±ØªÙŠ Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 150 Ø¬Ù…","en":"Arla NAT. Slices 150G - Havati/Jalapeno","weightValue":150,"weightUnit":"g"},{"id":"p49795","sku":"49795","ar":"Ù…ÙˆØ²Ø±ÛŒÙ„ Ø·Ø¨ÛŒØ¹ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 150 Ø¬Ù…","en":"Arla NAT. Slices 150G - Mozzarella","weightValue":150,"weightUnit":"g"},{"id":"p602501","sku":"602501","ar":"Ø¹Ø§Ø¯ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla Sclices 200G","weightValue":200,"weightUnit":"g"},{"id":"p602502","sku":"602502","ar":"Ø´ÛŒØ¯Ø§Ø± Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla Sclices 200G - Cheddar","weightValue":200,"weightUnit":"g"},{"id":"p602500","sku":"602500","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 200 Ø¬Ù…","en":"Arla Sclices 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p602473","sku":"602473","ar":"Ø¹Ø§Ø¯ÛŒØ© Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Sclices 400G","weightValue":400,"weightUnit":"g"},{"id":"p603473","sku":"603473","ar":"Ø´ÛŒØ¯Ø§Ø± Ø´Ø±Ø§Ø¦Ø­ Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Sclices 400G - Cheddar","weightValue":400,"weightUnit":"g"}]},{"id":"g8-puck-mozarellah","titleAr":"Ù…ÙˆØ²Ø±ÛŒÙ„ Ø£Ø±Ù„Ø§","titleEn":"Arla Mozarellah","items":[{"id":"p607074","sku":"607074","ar":"Ø´ÛŒØ¯Ø§Ø± Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Shredded Cheese 180G - Chedder","weightValue":180,"weightUnit":"g"},{"id":"p607092","sku":"607092","ar":"Ù‚Ø´Ù‚ÙˆØ§Ù† Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Shredded Cheese 180G - Kashkaval","weightValue":180,"weightUnit":"g"},{"id":"p607091","sku":"607091","ar":"Ù…ÙƒØ³ ØªÙƒØ³ Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Shredded Cheese 180G - Tex Mex","weightValue":180,"weightUnit":"g"},{"id":"p607079","sku":"607079","ar":"Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p594709","sku":"594709","ar":"Ø´ÛŒØ¯Ø§Ø± Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Shredded Cheese 400G - Chedder","weightValue":400,"weightUnit":"g"},{"id":"p594719","sku":"594719","ar":"Ù‚Ø´Ù‚ÙˆØ§Ù† Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Shredded Cheese 400G - Kashkaval","weightValue":400,"weightUnit":"g"},{"id":"p594713","sku":"594713","ar":"Ù…ÙƒØ³ ØªÙƒØ³ Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Shredded Cheese 400G - Tex Mex","weightValue":400,"weightUnit":"g"},{"id":"p607081","sku":"607081","ar":"Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 900 Ø¬Ù…","en":"Arla Shredded Cheese 900G","weightValue":900,"weightUnit":"g"},{"id":"p597226","sku":"597226","ar":"Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p608390","sku":"608390","ar":"Ù…ÙƒØ³ Ø´ÛŒØ¯Ø§Ø± Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 180 Ø¬Ù…","en":"Arla Shredded Cheese 180G - Chedder mix","weightValue":180,"weightUnit":"g"},{"id":"p608387","sku":"608387","ar":"Ù…ÙƒØ³ Ø´ÛŒØ¯Ø§Ø± Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¬Ø¨Ù† Ø£Ø±Ù„Ø§ 400 Ø¬Ù…","en":"Arla Shredded Cheese 400G - Chedder mix","weightValue":400,"weightUnit":"g"}]},{"id":"g9-three-cows-feta-cheese-a","titleAr":"ÙÛŒØªØ§ /Ù…ÙˆØ²Ø±ÛŒÙ„ Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø«","titleEn":"Three Cows Feta cheese and Mozzarella","items":[{"id":"p607113","sku":"607113","ar":"Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« Ù…ÙˆØ²Ø±ÛŒÙ„ 180 Ø¬Ù…","en":"TTC Shredded Cheese 180G","weightValue":180,"weightUnit":"g"},{"id":"p607114","sku":"607114","ar":"Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« Ù…ÙˆØ²Ø±ÛŒÙ„ 400 Ø¬Ù…","en":"TTC Shredded Cheese 400G","weightValue":400,"weightUnit":"g"},{"id":"p607115","sku":"607115","ar":"Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« Ù…ÙˆØ²Ø±ÛŒÙ„ 900 Ø¬Ù…","en":"TTC Shredded Cheese 900G","weightValue":900,"weightUnit":"g"}]},{"id":"g10-feta-puck-and-ttc","titleAr":"Ø§Ù„Ø«Ù„Ø« ÙˆØ§Ù„Ø¨Ù‚Ø±Ø§Øª Ø£Ø±Ù„Ø§ ÙÛŒØªØ§","titleEn":"Feta Arla and TTC","items":[{"id":"p598191","sku":"598191","ar":"Ù…ÙƒØ¹Ø¨Ø§Øª ÙÛŒØªØ§ Ø£Ø±Ù„Ø§ 410 Ø¬Ù…","en":"Arla Feta Cubes 410G","weightValue":410,"weightUnit":"g"},{"id":"p598123","sku":"598123","ar":"ÙˆØ§Ø¹Ø´Ø§Ø¨ Ø«ÙˆÙ… Ù…ÙƒØ¹Ø¨Ø§Øª ÙÛŒØªØ§ Ø£Ø±Ù„Ø§ 410 Ø¬Ù…","en":"Arla Feta Cubes 410G - Gar/Pars","weightValue":410,"weightUnit":"g"},{"id":"p598101","sku":"598101","ar":"ÙˆØ¨Ø§Ø¨Ø±ÛŒÙƒØ§ Ø­Ø§Ø± ÙÙ„ÙÙ„ Ù…ÙƒØ¹Ø¨Ø§Øª ÙÛŒØªØ§ Ø£Ø±Ù„Ø§ 410 Ø¬Ù…","en":"Arla Feta Cubes 410G - Pepper/Chilli","weightValue":410,"weightUnit":"g"},{"id":"p796232","sku":"796232","ar":"Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« ÙÛŒØªØ§ 200 Ø¬Ù…","en":"TTC Feta 200g","weightValue":200,"weightUnit":"g"},{"id":"p796239","sku":"796239","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« ÙÛŒØªØ§ 200 Ø¬Ù…","en":"TTC Feta 200G - LF","weightValue":200,"weightUnit":"g"},{"id":"p796236","sku":"796236","ar":"Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« ÙÛŒØªØ§ 500 Ø¬Ù…","en":"TTC Feta 500G","weightValue":500,"weightUnit":"g"},{"id":"p796229","sku":"796229","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ Ø¨Ù‚Ø±Ø§Øª Ø«Ù„Ø« ÙÛŒØªØ§ 500 Ø¬Ù…","en":"TTC Feta 500G - LF","weightValue":500,"weightUnit":"g"}]},{"id":"g11-arla-organic-and-milk-po","titleAr":"Ø§Ù„Ø¹Ø¶ÙˆÙŠ Ø§Ù„Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ &Ù…Ø¬ÙÙ Ø­Ù„ÛŒØ¨ Ø£Ø±Ù„Ø§","titleEn":"Arla Organic and milk powder","items":[{"id":"p63899","sku":"63899","ar":"Ø§Ù„Ø¯Ø³Ù… ÙƒØ§Ù…Ù„ Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 1 Ù„ØªØ±","en":"Arla Organic UHT Milk 1L - Full Fat","weightValue":1,"weightUnit":"l"},{"id":"p65373","sku":"65373","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 1 Ù„ØªØ±","en":"Arla Organic UHT Milk 1L - Low Fat","weightValue":1,"weightUnit":"l"},{"id":"p65389","sku":"65389","ar":"Ø´ÙˆÙƒÙˆØªÚ¾ Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 200 Ù…Ù„","en":"Arla Organic UHT Milk 200ml - Choco","weightValue":200,"weightUnit":"ml"},{"id":"p65386","sku":"65386","ar":"Ø§Ù„Ø¯Ø³Ù… ÙƒØ§Ù…Ù„ Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 200 Ù…Ù„","en":"Arla Organic UHT Milk 200ml - Full Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65959","sku":"65959","ar":"Ø§Ù„Ø¯Ø³Ù… Ù‚Ù„ÛŒÙ„ Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 200 Ù…Ù„","en":"Arla Organic UHT Milk 200ml - Low Fat","weightValue":200,"weightUnit":"ml"},{"id":"p65960","sku":"65960","ar":"ÙØ±Ø§ÙˆÙ„Ø© Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 200 Ù…Ù„","en":"Arla Organic UHT Milk 200ml - Strawberry","weightValue":200,"weightUnit":"ml"},{"id":"p588383","sku":"588383","ar":"Ù„ÙƒØªÙˆØ² Ù…Ù† Ø®Ø§Ù„ÙŠ Ø¹Ø¶ÙˆÙŠ Ø­Ù„ÛŒØ¨ Ø§Ø±Ù„ 1 Ù„ØªØ±","en":"Arla Organic UHT Milk 1L - Lactose Free","weightValue":1,"weightUnit":"l"}]},{"id":"g12-st-cream-thick-cream","titleAr":"ÙˆÙ‚ÛŒÙ…Ø± Ù‚Ø´Ø·Ø©","titleEn":"St. Cream & Thick Cream","items":[{"id":"p582417","sku":"582417","ar":"Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ 160 Ø¬Ù…","en":"Arla Str. Cream 160G","weightValue":160,"weightUnit":"g"},{"id":"p582428","sku":"582428","ar":"Ø¨Ø§Ù„Ø¹Ø³Ù„ Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ 160 Ø¬Ù…","en":"Arla Str. Cream 160G - Honey","weightValue":160,"weightUnit":"g"},{"id":"p582425","sku":"582425","ar":"Ù„ÛŒØª Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ 160 Ø¬Ù…","en":"Arla Str. Cream 160G - Light","weightValue":160,"weightUnit":"g"},{"id":"p582432","sku":"582432","ar":"Ø¨Ø§Ù„ÙØ±Ø§ÙˆÙ„Ø© Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ 160 Ø¬Ù…","en":"Arla Str. Cream 160G - Strawberry","weightValue":160,"weightUnit":"g"},{"id":"p582421","sku":"582421","ar":"Ø¨Ø±ÙˆÙ…Ùˆ Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ 160 Ø¬Ù…","en":"Arla Str. Cream 160G Promo","weightValue":160,"weightUnit":"g"},{"id":"p591438","sku":"591438","ar":"Ø¯ÙŠ ÙÛŒØªØ§Ù…ÛŒÙ† Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ 160 Ø¬Ù…","en":"Arla Str. Cream 160G -Vit D","weightValue":160,"weightUnit":"g"},{"id":"p591966","sku":"591966","ar":"Ø¯ÙŠ ÙÛŒØªØ§Ù…ÛŒÙ† Ù‚Ø´Ø·Ø© Ø£Ø±Ù„Ø§ Ø¨Ø±ÙˆÙ…Ùˆ 160 Ø¬Ù…","en":"Arla Str. Cream 160G Promo Vit D","weightValue":160,"weightUnit":"g"},{"id":"p607011","sku":"607011","ar":"Ù‚ÛŒÙ…Ø± Ø£Ø±Ù„Ø§ 125 Ù…Ù„","en":"Arla Thick Cream 125ml","weightValue":125,"weightUnit":"ml"},{"id":"p607013","sku":"607013","ar":"(1+3)Ø¨Ø±ÙˆÙ…Ùˆ Ù‚ÛŒÙ…Ø± Ø£Ø±Ù„Ø§ 125 Ù…Ù„","en":"Arla Thick Cream 125ml (3+1) Promo","weightValue":125,"weightUnit":"ml"},{"id":"p607012","sku":"607012","ar":"Ù‚ÛŒÙ…Ø± Ø£Ø±Ù„Ø§ 250 Ù…Ù„","en":"Arla Thick Cream 250ml","weightValue":250,"weightUnit":"ml"},{"id":"p607008","sku":"607008","ar":"Ø¨Ø±ÙˆÙ…Ùˆ Ù‚ÛŒÙ…Ø± Ø£Ø±Ù„Ø§ 250 Ù…Ù„","en":"Arla Thick Cream 250ml - Promo","weightValue":250,"weightUnit":"ml"}]},{"id":"g13-evap-milk","titleAr":"Ù…Ø¨Ø®Ø± Ø´Ø§ÙŠ Ø­Ù„ÛŒØ¨","titleEn":"EVAP MILK","items":[{"id":"p597989","sku":"597989","ar":"Ø´Ø§ÙŠ Ø­Ù„ÛŒØ¨ Ø£Ø±Ù„Ø§ 170 Ø¬Ù…","en":"Arla Evap Milk 170G","weightValue":170,"weightUnit":"g"}]},{"id":"g14-starbucks","titleAr":"Ø³ØªØ§Ø±Ø¨ÙƒØ³ Ù‚Ú¾ÙˆØ©","titleEn":"Starbucks","items":[{"id":"p607045","sku":"607045","ar":"Ù„ÛŒØªÚ¾ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 220 Ù…Ù„","en":"SBUX Classic 220 ml - Caffe Latte","weightValue":220,"weightUnit":"ml"},{"id":"p607047","sku":"607047","ar":"ÙƒØ§Ø¨ØªØ´ÛŒÙ†Ùˆ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 220 Ù…Ù„","en":"SBUX Classic 220 ml - Cappucino","weightValue":220,"weightUnit":"ml"},{"id":"p607046","sku":"607046","ar":"ÙƒØ§Ø±Ù…ÛŒÙ„ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 220 Ù…Ù„","en":"SBUX Classic 220 ml - Caramel Mach","weightValue":220,"weightUnit":"ml"},{"id":"p607044","sku":"607044","ar":"Ù…ÙˆÙƒØ§ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 220 Ù…Ù„","en":"SBUX Classic 220 ml - Mocha","weightValue":220,"weightUnit":"ml"},{"id":"p38881","sku":"38881","ar":"Ø´ÙˆØª Ø¯Ø¨Ù„ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 200 Ù…Ù„","en":"SBUX Double Shot 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p68529","sku":"68529","ar":"Ø³ÙƒØ± Ø¨Ø¯ÙˆÙ† Ø´ÙˆØª Ø¯Ø¨Ù„ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 200 Ù…Ù„","en":"SBUX Double Shot 200ml - No Added Sugar","weightValue":200,"weightUnit":"ml"},{"id":"p54397","sku":"54397","ar":"ÙƒØ§Ø±Ù…ÛŒÙ„ ÙØ±Ø§Ø¨ÙˆØªØ´ÛŒÙ†Ùˆ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 250 Ù…Ù„","en":"SBUX Frappuccino 250ml - Caramel","weightValue":250,"weightUnit":"ml"},{"id":"p49820","sku":"49820","ar":"Ù‚Ú¾ÙˆØ© ÙØ±Ø§Ø¨ÙˆØªØ´ÛŒÙ†Ùˆ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 250 Ù…Ù„","en":"SBUX Frappuccino 250ml - Coffee","weightValue":250,"weightUnit":"ml"},{"id":"p89261","sku":"89261","ar":"ÙƒÙˆÙƒÛŒØ² ÙØ±Ø§Ø¨ÙˆØªØ´ÛŒÙ†Ùˆ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 250 Ù…Ù„","en":"SBUX Frappuccino 250ml - Cookies","weightValue":250,"weightUnit":"ml"},{"id":"p49918","sku":"49918","ar":"Ù…ÙˆÙƒØ§ ÙØ±Ø§Ø¨ÙˆØªØ´ÛŒÙ†Ùˆ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 250 Ù…Ù„","en":"SBUX Frappuccino 250ml - Mocha","weightValue":250,"weightUnit":"ml"},{"id":"p66899","sku":"66899","ar":"ÙØ§Ù†ÛŒÙ„ ÙØ±Ø§Ø¨ÙˆØªØ´ÛŒÙ†Ùˆ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 250 Ù…Ù„","en":"SBUX Frappuccino 250ml - Vanilla","weightValue":250,"weightUnit":"ml"},{"id":"p595113","sku":"595113","ar":"Ø³ÙƒØ± Ø¨Ø¯ÙˆÙ† ÙƒØ§Ø±Ù…ÛŒÙ„ ÙØ±Ø§Ø¨ÙˆØªØ´ÛŒÙ†Ùˆ Ø³ 250 Ù…Ù„","en":"SBUX Frappuccino 250ml - Caramel No sugar","weightValue":250,"weightUnit":"ml"},{"id":"p601814","sku":"601814","ar":"Ø´ÙˆØª ØªØ±Ø¨Ù„ Ø³ØªØ§Ø±Ø¨ÙƒØ³ 300 Ù…Ù„","en":"SBUX Triple Shot 300ml","weightValue":300,"weightUnit":"ml"}]},{"id":"g15-lurpak-butter","titleAr":"Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± Ø²Ø¨Ø¯Ø© Ù„ÙˆØ±Ø¨Ø§Ùƒ","titleEn":"Lurpak Butter","items":[{"id":"p584543","sku":"584543","ar":"Ø²Ø¨Ø¯Ù‡ Ù„ÙˆØ±Ø¨Ø§Ùƒ ØºÛŒØ±Ù…Ù…Ù„Ø­Ø© 100 Ø¬Ù…","en":"Lurpak Butter 100G - UnSalted","weightValue":100,"weightUnit":"g"},{"id":"p86174","sku":"86174","ar":"Ø²Ø¨Ø¯Ø© Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© 200 Ø¬Ù…","en":"Lurpak Butter 200G - Salted","weightValue":200,"weightUnit":"g"},{"id":"p86474","sku":"86474","ar":"Ø²Ø¨Ø¯Ø© Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± 200 Ø¬Ù…","en":"Lurpak Butter 200G - UnSalted","weightValue":200,"weightUnit":"g"},{"id":"p86019","sku":"86019","ar":"Ø²Ø¨Ø¯Ø© Ù„ÙˆØ±Ø¨Ø§Ùƒ Ø¹Ø¶ÙˆÛŒØ© ØºÛŒØ±Ù…Ù…Ù„Ø­Ø© 200 Ø¬Ù…","en":"Lurpak Butter 200G - UnSalted - Organic","weightValue":200,"weightUnit":"g"},{"id":"p86482","sku":"86482","ar":"Ø²Ø¨Ø¯Ø© Ù„ÙˆØ±Ø¨Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± 400 Ø¬Ù…","en":"Lurpak Butter 400G - UnSalted","weightValue":400,"weightUnit":"g"},{"id":"p596278","sku":"596278","ar":"Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± 50 Ø¬Ù…","en":"Lurpak Butter 50G - UnSalted","weightValue":50,"weightUnit":"g"},{"id":"p80661","sku":"80661","ar":"Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± 10 Ø¬Ù…","en":"Lurpak Butter 10G - UnSalted","weightValue":10,"weightUnit":"g"},{"id":"p89111","sku":"89111","ar":"Ø¨Ø®Ø§Ø® Ø±Ø°Ø§Ø° Ù„ÙˆØ±Ø¨Ø§Ùƒ 200 Ù…Ù„","en":"Lurpak Cooking Mist 200ml","weightValue":200,"weightUnit":"ml"},{"id":"p88790","sku":"88790","ar":"Ø³ÙˆÙØª Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© 200 Ø¬Ù…","en":"Lurpak Butter 200G - Salted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88789","sku":"88789","ar":"Ø³ÙˆÙØª Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± 200 Ø¬Ù…","en":"Lurpak Butter 200G - UnSalted/Soft","weightValue":200,"weightUnit":"g"},{"id":"p88786","sku":"88786","ar":"Ø³ÙˆÙØª Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© 400 Ø¬Ù…","en":"Lurpak Butter 400G - Salted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p88785","sku":"88785","ar":"Ø³ÙˆÙØª Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÛŒØ± 400 Ø¬Ù…","en":"Lurpak Butter 400G - UnSalted/Soft","weightValue":400,"weightUnit":"g"},{"id":"p596537","sku":"596537","ar":"Ù„ÙˆØ±Ø¨Ø§Ùƒ Ù…Ù…Ù„Ø­Ø© ØºÙŠØ± 50 Ø¬Ù…","en":"Lurpak Butter 50G -( 5+ 1 ) UnSalted","weightValue":50,"weightUnit":"g"}]},{"id":"g16-danya-juice","titleAr":"Ø¯Ø§Ù†ÛŒØ§ Ø¹ØµÛŒØ±","titleEn":"Danya Juice","items":[{"id":"p593530","sku":"593530","ar":"Ø§Ø­Ù…Ø± Ø¹Ù†Ø¨ Ø¹ØµÛŒØ± Ø¯Ø§Ù†ÛŒØ© 1 Ù„ØªØ±","en":"Danya Red Grape 1L","weightValue":1,"weightUnit":"l"},{"id":"p593550","sku":"593550","ar":"Ø§Ø¨ÛŒØ¶ Ø¹Ù†Ø¨ Ø¹ØµÛŒØ± Ø¯Ø§Ù†ÛŒØ© 1 Ù„ØªØ±","en":"Danya White Grape 1L","weightValue":1,"weightUnit":"l"}]},{"id":"g17-galaxy-milk","titleAr":"Ø­Ù„ÙŠØ¨ Ø¬Ø§Ù„ÙƒØ³ÙŠ","titleEn":"Galaxy Milk","items":[{"id":"p595889","sku":"595889","ar":"Ø§Ù„ÙƒØ±Ø§Ù…ÛŒÙ„ Ùˆ Ø¨Ø§Ù„Ø´ÙˆÙƒÙˆÙ„ØªØ© Ø§Ù„Ø­Ù„ÛŒØ¨ Ø³ÙŠ 220 Ù…Ù„","en":"Galaxy 10X220ML Choc Milk Caramel Flavo","weightValue":220,"weightUnit":"ml"},{"id":"p595886","sku":"595886","ar":"Ø§Ù„Ù…Ù…ÛŒØ²Ø© Ø¨Ø§Ù„Ø´ÙˆÙƒÙˆÙ„ØªØ© Ø§Ù„Ø­Ù„ÛŒØ¨ Ø¬Ø§Ù„ÙƒØ³ÙŠ 220 Ù…Ù„","en":"Galaxy 10X220ML Signature Chocolate Milk","weightValue":220,"weightUnit":"ml"},{"id":"p595892","sku":"595892","ar":"Ø§Ù„Ø¨Ù†Ø¯Ù‚ Ùˆ Ø¨Ø§Ù„Ø´ÙˆÙƒÙˆÙ„ØªØ© Ø§Ù„Ø­Ù„ÛŒØ¨ Ø¬Ø§Ù„ÙƒØ³ÙŠ 220 Ù…Ù„","en":"Galaxy 10X220ML Choc Milk Hazlnut Flavor","weightValue":220,"weightUnit":"ml"},{"id":"p599495","sku":"599495","ar":"Ø§Ù„Ú¾Ù†Ø¯ Ø¨Ø¬ÙˆØ² Ø§Ù„Ø­Ù„ÛŒØ¨ Ø¬Ø§Ù„ÙƒØ³ÙŠ 220 Ù…Ù„","en":"Galaxy 10X220ML Coconut Flavor LTO","weightValue":220,"weightUnit":"ml"}]},{"id":"g18-arla-protein","titleAr":"Ø¨Ø±ÙˆØªÛŒÙ† Ø£Ø±Ù„","titleEn":"Arla Protein","items":[{"id":"p598942","sku":"598942","ar":"Ø´ÙˆÙƒÙ„ØªØ© Ø¨ÙˆØ¯Ù†Ù‚ Ø¨Ø±ÙˆØªÛŒÙ† 200 Ø¬Ù…","en":"Pudding Choco ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598897","sku":"598897","ar":"ÙƒØ§Ø±Ø§Ù…ÛŒÙ„ Ø¨ÙˆØ¯Ù†Ù‚ Ø¨Ø±ÙˆØªÛŒÙ† 200 Ø¬Ù…","en":"Pudding caramel ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p598922","sku":"598922","ar":"Ø¨Ù†Ø¯Ù‚ Ø¨ÙˆØ¯Ù†Ù‚ Ø¨Ø±ÙˆØªÛŒÙ† 200 Ø¬Ù…","en":"Pudding hazulnut ArlaProtein","weightValue":200,"weightUnit":"g"},{"id":"p604815","sku":"604815","ar":"Ø§Ø²Ø±Ù‚ ØªÙˆØª Ø²Ø¨Ø§Ø¯ÙŠ Ø¨Ø±ÙˆØªÛŒÙ† Ø¢Ø±Ù„ 150 Ø¬Ù…","en":"Arla Protein bluebery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604813","sku":"604813","ar":"ÙØ±ÙˆØª Ø¨Ø§Ø´Ù† Ø²Ø¨Ø§Ø¯ÙŠ Ø¨Ø±ÙˆØªÛŒÙ† Ø¢Ø±Ù„ 150 Ø¬Ù…","en":"Arla Protein peach passion yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p604814","sku":"604814","ar":"ÙØ±Ø§ÙˆÙ„Ø© Ø²Ø¨Ø§Ø¯ÙŠ Ø¨Ø±ÙˆØªÛŒÙ† Ø¢Ø±Ù„ 150 Ø¬Ù…","en":"Arla Protein strewbery yogurt 150gm","weightValue":150,"weightUnit":"g"},{"id":"p338037","sku":"338037","ar":"Ø´ÙˆÙƒÙ„ØªØ© Ø¨Ø±ÙˆØªÛŒÙ† Ø­Ù„ÛŒØ¨ 250 Ù…Ù„","en":"Arla Protine Shake chocolate 250Ml","weightValue":250,"weightUnit":"ml"},{"id":"p604487","sku":"604487","ar":"Ø¨Ø±ÙˆØªÙŠÙ† Ø­Ù„ÙŠØ¨ ÙØ±Ø§ÙˆÙ„Ø© 225 Ù…Ù„","en":"Arla Protine Shake Strawberry 225Ml","weightValue":225,"weightUnit":"ml"}]},{"id":"g19-puck-square-promo","titleAr":"Ø£Ø±Ù„Ø§ Ù…Ø±Ø¨Ø¹Ø§Øª - Ø¹Ø±Ø¶ ØªØ±ÙˆÙŠØ¬ÙŠ","titleEn":"Arla Square Promo","items":[{"id":"p607096","sku":"607096","ar":"Ù…Ø±Ø¨Ø¹ Ø£Ø±Ù„Ø§ 108 Ø¬Ù…","en":"Arla square 3Ã—108g","weightValue":108,"weightUnit":"g"},{"id":"p607123","sku":"607123","ar":"Ù…Ø±Ø¨Ø¹ Ø£Ø±Ù„Ø§ Ø¨Ø±ÙˆÙ…Ùˆ 216 Ø¬Ù…","en":"Arla square Promo KSA 8X3X216G","weightValue":216,"weightUnit":"g"},{"id":"p338619","sku":"338619","ar":"Ø¨ÙˆØ¯Ù†Ø¬ Ø¨Ø±ÙˆØªÙŠÙ† Ø¢Ø±Ù„ ÙƒØ±ÙŠÙ… Ø¨Ø±ÙˆÙ„ÙŠÙ‡ 200 Ø¬Ù…","en":"Arla protein Pudding Creame brulee 20g 6x200g","weightValue":20,"weightUnit":"g"}]}];
 const FONT_OPTIONS = [
-  {value:"'Tajawal', sans-serif", label:"تجول (Tajawal)"},
-  {value:"'Cairo', sans-serif", label:"القاهرة (Cairo)"},
+  {value:"'Tajawal', sans-serif", label:"ØªØ¬ÙˆÙ„ (Tajawal)"},
+  {value:"'Cairo', sans-serif", label:"Ø§Ù„Ù‚Ø§Ù‡Ø±Ø© (Cairo)"},
   {value:"'Arial', sans-serif", label:"Arial"},
   {value:"'Tahoma', sans-serif", label:"Tahoma"},
   {value:"'Segoe UI', sans-serif", label:"Segoe UI"},
@@ -92,366 +92,366 @@ let lang = (function(){
 
 const I18N = {
   ar: {
-    control_panel: "لوحة التحكم",
-    hero_eyebrow: "بوابة الميرشندايزر",
-    hero_title: "اختر الفرع لعرض منتجاته",
-    hero_sub: "تابع تواريخ العروض وأوزان المنتجات لكل فرع أولاً بأول",
-    branches_section: "الفروع",
-    no_branches_home: "لا توجد فروع بعد. أضف فروعًا من لوحة التحكم.",
-    product_word: "منتج",
-    back: "رجوع",
-    promo_ended: "انتهت مدة العرض",
-    ends_in: "ينتهي خلال",
-    day_word: "يوم",
-    days_word: "أيام",
-    date_start: "البداية",
-    date_end: "النهاية",
-    no_products_branch: "لا توجد منتجات مضافة لهذا الفرع بعد.",
-    products_of_branch: "منتجات فرع",
-    current_word: "الحالية",
-    login_title: "لوحة التحكم",
-    login_hint: "أدخل بيانات الدخول الخاصة بك",
-    username_label: "اسم المستخدم",
-    password_label: "كلمة المرور",
-    login_submit: "تسجيل الدخول",
-    login_error: "اسم المستخدم أو كلمة المرور غير صحيحة",
-    fc_title: "تعيين كلمة مرور جديدة",
-    fc_hint: "هذا أول تسجيل دخول لك، الرجاء تعيين كلمة مرور جديدة بدل الرمز المؤقت",
-    new_password_label: "كلمة المرور الجديدة",
-    confirm_password_label: "تأكيد كلمة المرور",
-    fc_submit: "حفظ ومتابعة",
-    fc_err_short: "كلمة المرور يجب ألا تقل عن 4 أحرف",
-    fc_err_mismatch: "كلمتا المرور غير متطابقتين",
-    toast_pass_updated: "تم تحديث كلمة المرور بنجاح",
-    admin_title: "لوحة تحكم الميرشندايزر",
-    logout: "تسجيل الخروج",
-    tab_branches: "الفروع",
-    tab_products: "المنتجات",
-    tab_users: "المستخدمون",
-    tab_appearance: "الخط والمظهر",
+    control_panel: "Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ…",
+    hero_eyebrow: "Ø¨ÙˆØ§Ø¨Ø© Ø§Ù„Ù…ÙŠØ±Ø´Ù†Ø¯Ø§ÙŠØ²Ø±",
+    hero_title: "Ø§Ø®ØªØ± Ø§Ù„ÙØ±Ø¹ Ù„Ø¹Ø±Ø¶ Ù…Ù†ØªØ¬Ø§ØªÙ‡",
+    hero_sub: "ØªØ§Ø¨Ø¹ ØªÙˆØ§Ø±ÙŠØ® Ø§Ù„Ø¹Ø±ÙˆØ¶ ÙˆØ£ÙˆØ²Ø§Ù† Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª Ù„ÙƒÙ„ ÙØ±Ø¹ Ø£ÙˆÙ„Ø§Ù‹ Ø¨Ø£ÙˆÙ„",
+    branches_section: "Ø§Ù„ÙØ±ÙˆØ¹",
+    no_branches_home: "Ù„Ø§ ØªÙˆØ¬Ø¯ ÙØ±ÙˆØ¹ Ø¨Ø¹Ø¯. Ø£Ø¶Ù ÙØ±ÙˆØ¹Ù‹Ø§ Ù…Ù† Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ….",
+    product_word: "Ù…Ù†ØªØ¬",
+    back: "Ø±Ø¬ÙˆØ¹",
+    promo_ended: "Ø§Ù†ØªÙ‡Øª Ù…Ø¯Ø© Ø§Ù„Ø¹Ø±Ø¶",
+    ends_in: "ÙŠÙ†ØªÙ‡ÙŠ Ø®Ù„Ø§Ù„",
+    day_word: "ÙŠÙˆÙ…",
+    days_word: "Ø£ÙŠØ§Ù…",
+    date_start: "Ø§Ù„Ø¨Ø¯Ø§ÙŠØ©",
+    date_end: "Ø§Ù„Ù†Ù‡Ø§ÙŠØ©",
+    no_products_branch: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ù…Ø¶Ø§ÙØ© Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹ Ø¨Ø¹Ø¯.",
+    products_of_branch: "Ù…Ù†ØªØ¬Ø§Øª ÙØ±Ø¹",
+    current_word: "Ø§Ù„Ø­Ø§Ù„ÙŠØ©",
+    login_title: "Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ…",
+    login_hint: "Ø£Ø¯Ø®Ù„ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¯Ø®ÙˆÙ„ Ø§Ù„Ø®Ø§ØµØ© Ø¨Ùƒ",
+    username_label: "Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…",
+    password_label: "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±",
+    login_submit: "ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø¯Ø®ÙˆÙ„",
+    login_error: "Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… Ø£Ùˆ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± ØµØ­ÙŠØ­Ø©",
+    fc_title: "ØªØ¹ÙŠÙŠÙ† ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ø¬Ø¯ÙŠØ¯Ø©",
+    fc_hint: "Ù‡Ø°Ø§ Ø£ÙˆÙ„ ØªØ³Ø¬ÙŠÙ„ Ø¯Ø®ÙˆÙ„ Ù„ÙƒØŒ Ø§Ù„Ø±Ø¬Ø§Ø¡ ØªØ¹ÙŠÙŠÙ† ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ø¬Ø¯ÙŠØ¯Ø© Ø¨Ø¯Ù„ Ø§Ù„Ø±Ù…Ø² Ø§Ù„Ù…Ø¤Ù‚Øª",
+    new_password_label: "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø©",
+    confirm_password_label: "ØªØ£ÙƒÙŠØ¯ ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±",
+    fc_submit: "Ø­ÙØ¸ ÙˆÙ…ØªØ§Ø¨Ø¹Ø©",
+    fc_err_short: "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± ÙŠØ¬Ø¨ Ø£Ù„Ø§ ØªÙ‚Ù„ Ø¹Ù† 4 Ø£Ø­Ø±Ù",
+    fc_err_mismatch: "ÙƒÙ„Ù…ØªØ§ Ø§Ù„Ù…Ø±ÙˆØ± ØºÙŠØ± Ù…ØªØ·Ø§Ø¨Ù‚ØªÙŠÙ†",
+    toast_pass_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø¨Ù†Ø¬Ø§Ø­",
+    admin_title: "Ù„ÙˆØ­Ø© ØªØ­ÙƒÙ… Ø§Ù„Ù…ÙŠØ±Ø´Ù†Ø¯Ø§ÙŠØ²Ø±",
+    logout: "ØªØ³Ø¬ÙŠÙ„ Ø§Ù„Ø®Ø±ÙˆØ¬",
+    tab_branches: "Ø§Ù„ÙØ±ÙˆØ¹",
+    tab_products: "Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª",
+    tab_users: "Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ÙˆÙ†",
+    tab_appearance: "Ø§Ù„Ø®Ø· ÙˆØ§Ù„Ù…Ø¸Ù‡Ø±",
     tab_sos: "SOS",
-    sos_hint: "جدول قابل للتعديل مباشرة مثل إكسل: أضف صفًا لكل فرع/عميل، وأضف عمودًا أو قسمًا (منتج) جديدًا حسب الحاجة. كل خانة تُحفظ فور الخروج منها، وزر التنزيل يُخرج نفس الجدول جاهزًا للطباعة أو الحفظ كـ PDF لإرساله للموظف.",
-    add_sos_row_btn: "إضافة فرع",
-    add_sos_category_btn: "إضافة منتج (قسم أعمدة)",
+    sos_hint: "Ø¬Ø¯ÙˆÙ„ Ù‚Ø§Ø¨Ù„ Ù„Ù„ØªØ¹Ø¯ÙŠÙ„ Ù…Ø¨Ø§Ø´Ø±Ø© Ù…Ø«Ù„ Ø¥ÙƒØ³Ù„: Ø£Ø¶Ù ØµÙÙ‹Ø§ Ù„ÙƒÙ„ ÙØ±Ø¹/Ø¹Ù…ÙŠÙ„ØŒ ÙˆØ£Ø¶Ù Ø¹Ù…ÙˆØ¯Ù‹Ø§ Ø£Ùˆ Ù‚Ø³Ù…Ù‹Ø§ (Ù…Ù†ØªØ¬) Ø¬Ø¯ÙŠØ¯Ù‹Ø§ Ø­Ø³Ø¨ Ø§Ù„Ø­Ø§Ø¬Ø©. ÙƒÙ„ Ø®Ø§Ù†Ø© ØªÙØ­ÙØ¸ ÙÙˆØ± Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù†Ù‡Ø§ØŒ ÙˆØ²Ø± Ø§Ù„ØªÙ†Ø²ÙŠÙ„ ÙŠÙØ®Ø±Ø¬ Ù†ÙØ³ Ø§Ù„Ø¬Ø¯ÙˆÙ„ Ø¬Ø§Ù‡Ø²Ù‹Ø§ Ù„Ù„Ø·Ø¨Ø§Ø¹Ø© Ø£Ùˆ Ø§Ù„Ø­ÙØ¸ ÙƒÙ€ PDF Ù„Ø¥Ø±Ø³Ø§Ù„Ù‡ Ù„Ù„Ù…ÙˆØ¸Ù.",
+    add_sos_row_btn: "Ø¥Ø¶Ø§ÙØ© ÙØ±Ø¹",
+    add_sos_category_btn: "Ø¥Ø¶Ø§ÙØ© Ù…Ù†ØªØ¬ (Ù‚Ø³Ù… Ø£Ø¹Ù…Ø¯Ø©)",
     sos_col_merch: "Merch",
     sos_col_sap: "SAP",
-    sos_col_customer: "اسم العميل",
-    sos_empty_rows_hint: "لا توجد فروع بعد. اضغط \"إضافة فرع\" للبدء.",
-    add_column_btn: "إضافة عمود",
-    delete_column_title: "حذف العمود",
-    delete_category_title: "حذف المنتج/القسم",
-    confirm_delete_column: "هل تريد حذف هذا العمود من كل الفروع؟",
-    confirm_delete_category: "هل تريد حذف هذا المنتج وكل أعمدته من الجدول؟",
-    confirm_delete_sos_row: "هل تريد حذف هذا الفرع من الجدول؟",
-    toast_sos_min_one_column: "يجب أن يبقى عمود واحد على الأقل داخل كل منتج",
-    sos_category_name_label: "اسم المنتج/القسم",
-    sos_default_col_total: "الإجمالي",
-    sos_default_col_ratio: "النسبة %",
-    sos_new_column_default_label: "عمود جديد",
-    sos_column_name_label: "اسم الخانة",
-    sos_add_column_confirm_btn: "إضافة الخانة",
-    sos_add_column_modal_hint: "أضف أي عدد من الخانات التي تحتاجها وسمّها كما تشاء، ثم اضغط \"تم\".",
-    sos_download_choice_title: "اختر صيغة التنزيل",
-    sos_download_pdf_option: "PDF / طباعة",
-    sos_download_excel_option: "ملف إكسل (Excel)",
-    sos_excel_generating: "جارٍ تجهيز ملف الإكسل...",
-    sos_excel_error: "تعذّر إنشاء ملف الإكسل، تحقق من الاتصال بالإنترنت وحاول مجددًا.",
-    sos_print_title: "تقرير SOS - توزيع المنتجات حسب الفروع",
-    sos_download_branch_title: "تنزيل تقرير هذا الفرع",
-    sos_download_all_btn: "تنزيل كل الفروع",
-    sos_download_all_a4_btn: "تنزيل كل الفروع (A4)",
+    sos_col_customer: "Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„",
+    sos_empty_rows_hint: "Ù„Ø§ ØªÙˆØ¬Ø¯ ÙØ±ÙˆØ¹ Ø¨Ø¹Ø¯. Ø§Ø¶ØºØ· \"Ø¥Ø¶Ø§ÙØ© ÙØ±Ø¹\" Ù„Ù„Ø¨Ø¯Ø¡.",
+    add_column_btn: "Ø¥Ø¶Ø§ÙØ© Ø¹Ù…ÙˆØ¯",
+    delete_column_title: "Ø­Ø°Ù Ø§Ù„Ø¹Ù…ÙˆØ¯",
+    delete_category_title: "Ø­Ø°Ù Ø§Ù„Ù…Ù†ØªØ¬/Ø§Ù„Ù‚Ø³Ù…",
+    confirm_delete_column: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„Ø¹Ù…ÙˆØ¯ Ù…Ù† ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹ØŸ",
+    confirm_delete_category: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„Ù…Ù†ØªØ¬ ÙˆÙƒÙ„ Ø£Ø¹Ù…Ø¯ØªÙ‡ Ù…Ù† Ø§Ù„Ø¬Ø¯ÙˆÙ„ØŸ",
+    confirm_delete_sos_row: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹ Ù…Ù† Ø§Ù„Ø¬Ø¯ÙˆÙ„ØŸ",
+    toast_sos_min_one_column: "ÙŠØ¬Ø¨ Ø£Ù† ÙŠØ¨Ù‚Ù‰ Ø¹Ù…ÙˆØ¯ ÙˆØ§Ø­Ø¯ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„ Ø¯Ø§Ø®Ù„ ÙƒÙ„ Ù…Ù†ØªØ¬",
+    sos_category_name_label: "Ø§Ø³Ù… Ø§Ù„Ù…Ù†ØªØ¬/Ø§Ù„Ù‚Ø³Ù…",
+    sos_default_col_total: "Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ",
+    sos_default_col_ratio: "Ø§Ù„Ù†Ø³Ø¨Ø© %",
+    sos_new_column_default_label: "Ø¹Ù…ÙˆØ¯ Ø¬Ø¯ÙŠØ¯",
+    sos_column_name_label: "Ø§Ø³Ù… Ø§Ù„Ø®Ø§Ù†Ø©",
+    sos_add_column_confirm_btn: "Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ø®Ø§Ù†Ø©",
+    sos_add_column_modal_hint: "Ø£Ø¶Ù Ø£ÙŠ Ø¹Ø¯Ø¯ Ù…Ù† Ø§Ù„Ø®Ø§Ù†Ø§Øª Ø§Ù„ØªÙŠ ØªØ­ØªØ§Ø¬Ù‡Ø§ ÙˆØ³Ù…Ù‘Ù‡Ø§ ÙƒÙ…Ø§ ØªØ´Ø§Ø¡ØŒ Ø«Ù… Ø§Ø¶ØºØ· \"ØªÙ…\".",
+    sos_download_choice_title: "Ø§Ø®ØªØ± ØµÙŠØºØ© Ø§Ù„ØªÙ†Ø²ÙŠÙ„",
+    sos_download_pdf_option: "PDF / Ø·Ø¨Ø§Ø¹Ø©",
+    sos_download_excel_option: "Ù…Ù„Ù Ø¥ÙƒØ³Ù„ (Excel)",
+    sos_excel_generating: "Ø¬Ø§Ø±Ù ØªØ¬Ù‡ÙŠØ² Ù…Ù„Ù Ø§Ù„Ø¥ÙƒØ³Ù„...",
+    sos_excel_error: "ØªØ¹Ø°Ù‘Ø± Ø¥Ù†Ø´Ø§Ø¡ Ù…Ù„Ù Ø§Ù„Ø¥ÙƒØ³Ù„ØŒ ØªØ­Ù‚Ù‚ Ù…Ù† Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø¥Ù†ØªØ±Ù†Øª ÙˆØ­Ø§ÙˆÙ„ Ù…Ø¬Ø¯Ø¯Ù‹Ø§.",
+    sos_print_title: "ØªÙ‚Ø±ÙŠØ± SOS - ØªÙˆØ²ÙŠØ¹ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª Ø­Ø³Ø¨ Ø§Ù„ÙØ±ÙˆØ¹",
+    sos_download_branch_title: "ØªÙ†Ø²ÙŠÙ„ ØªÙ‚Ø±ÙŠØ± Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹",
+    sos_download_all_btn: "ØªÙ†Ø²ÙŠÙ„ ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹",
+    sos_download_all_a4_btn: "ØªÙ†Ø²ÙŠÙ„ ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹ (A4)",
     sos_manager_home_label: "SOS",
-    sos_manage_categories_title: "المنتجات والأعمدة",
-    sos_name_font_size_label: "حجم خط اسم المحل",
-    sos_pct_column_checkbox: "هذه خانة نسبة % (تُنقل تلقائيًا لنهاية جدول هذا المنتج)",
-    sos_print_note_placeholder: "اكتب اسم/تاريخ/ملاحظة تظهر أعلى الطباعة فقط (اختياري)",
-    tab_layout: "طريقة العرض",
-    current_branches: "الفروع الحالية",
-    delete_branch_title: "حذف الفرع",
-    add_branch: "إضافة فرع",
-    new_branch_placeholder: "اسم الفرع، مثال: كارفور",
-    add_word: "إضافة",
-    branch_delete_hint: "حذف الفرع سيؤدي أيضًا لحذف جميع منتجاته من الموقع.",
-    toast_enter_branch_name: "الرجاء إدخال اسم الفرع",
-    toast_branch_added: "تمت إضافة الفرع",
-    assign_employees_label: "اختيار الموظفين لهذا الفرع",
-    no_employees_to_assign: "لا يوجد موظفون لإضافتهم بعد",
-    toast_select_at_least_one_employee: "الرجاء اختيار موظف واحد على الأقل",
-    daily_prep_title: "التحضير اليومي",
-    daily_prep_edit_tooltip: "تعديل رابط الاستبيان",
-    daily_prep_modal_title: "رابط التحضير اليومي",
-    daily_prep_modal_hint: "ضع رابط استبيان التحضير اليومي الخاص بك، وسيتم فتحه مباشرة عند الضغط على هذه الخانة.",
-    daily_prep_link_placeholder: "الصق رابط الاستبيان هنا",
-    toast_daily_prep_link_saved: "تم حفظ الرابط",
-    toast_daily_prep_enter_link: "الرجاء إدخال رابط صحيح",
-    branch_created_by_manager_note: "تم إنشاء هذا الفرع بواسطة المدير",
-    view_employee_branches: "فروع الموظف",
-    employee_branches_title: "فروع الموظف",
-    no_employee_branches: "لا توجد فروع لهذا الموظف بعد",
-    confirm_delete_branch: "هل تريد حذف هذا الفرع وجميع منتجاته؟",
-    toast_branch_deleted: "تم حذف الفرع",
-    products_title: "المنتجات",
-    products_need_branch: 'أضف فرعًا أولاً من تبويب "الفروع" قبل إضافة منتجات.',
-    choose_branch: "اختر الفرع",
-    branch_products: "منتجات الفرع",
-    no_products_yet: "لا توجد منتجات بعد لهذا الفرع.",
-    add_new_product: "إضافة منتج جديد",
-    change_word: "تغيير",
-    product_name_placeholder: "اسم المنتج",
-    unit_g: "غ",
-    unit_kg: "كغ",
-    alert_before: "تنبيه الانتهاء قبل",
-    delete_product: "حذف المنتج",
-    toast_change_saved: "تم حفظ التغيير",
-    toast_image_updated: "تم تحديث الصورة",
-    confirm_delete_product: "هل تريد حذف هذا المنتج؟",
-    toast_product_deleted: "تم حذف المنتج",
-    add_product_title: "إضافة منتج",
-    choose_add_method: "اختر طريقة الإضافة",
-    choice_new_lbl: "منتج جديد",
-    choice_new_sub: "إدخال بيانات من الصفر",
-    choice_prev_lbl: "منتج سابق",
-    choice_prev_sub: "اختيار من منتجات مضافة قبل",
-    toast_product_added_edit: "تمت إضافة المنتج، عدّل بياناته أدناه",
-    default_new_product_name: "منتج جديد",
-    prev_modal_title: "منتج سابق",
-    prev_modal_hint: "ابحث واختر منتجًا أو أكثر لإضافته لهذا الفرع",
-    search_placeholder: "ابحث بالاسم...",
-    add_selected: "إضافة المحدد",
-    no_matching_results: "لا توجد نتائج مطابقة",
-    toast_select_at_least_one: "اختر منتجًا واحدًا على الأقل",
-    toast_added_n_products_prefix: "تمت إضافة",
-    users_tab_title: "المستخدمون المصرح لهم بلوحة التحكم",
-    col_username: "اسم المستخدم",
-    col_status: "الحالة",
-    status_pending: "بانتظار تفعيل الرمز",
-    status_active: "نشط",
-    primary_admin_tag: "(المدير الأساسي)",
-    delete_word: "حذف",
-    new_username_placeholder: "اسم المستخدم الجديد",
-    new_user_code_placeholder: "رمز مؤقت (أو اضغط توليد)",
-    gen_code: "توليد رمز",
-    add_user: "إضافة مستخدم",
-    users_hint: "سيُطلب من المستخدم الجديد تعيين كلمة مرور خاصة به عند أول تسجيل دخول باستخدام الرمز المؤقت.",
-    toast_enter_user_code: "الرجاء إدخال اسم المستخدم والرمز المؤقت",
-    toast_user_exists: "اسم المستخدم موجود مسبقًا",
-    toast_user_added_share: "تمت إضافة المستخدم، شارك معه الرمز المؤقت: ",
-    confirm_delete_user: "هل تريد حذف هذا المستخدم؟",
-    toast_user_deleted: "تم حذف المستخدم",
-    edit_word: "تعديل",
-    edit_user_title: "تعديل بيانات الموظف",
-    font_type_title: "نوع الخط",
-    font_family_label: "عائلة الخط",
-    font_weight_label: "وزن الخط",
-    base_font_size_label: "حجم الخط الأساسي: ",
-    upload_custom_font_title: "رفع خط مخصص من الجهاز",
-    custom_suffix: " (مخصص)",
-    toast_font_updated: "تم تحديث الخط",
-    toast_weight_updated: "تم تحديث وزن الخط",
-    toast_size_updated: "تم تحديث حجم الخط",
-    toast_font_uploaded: "تم رفع الخط بنجاح: ",
-    toast_font_deleted: "تم حذف الخط",
-    weight_light: "خفيف", weight_regular: "عادي", weight_medium: "متوسط", weight_bold: "عريض", weight_black: "أسود",
-    layout_title: "طريقة عرض المنتجات في صفحة الفرع",
-    layout_one_col: "صف واحد (عمود)",
-    layout_two_col: "صفين (عمودين)",
-    toast_layout_updated: "تم تحديث طريقة العرض",
-    sub_title: "تنبيهات واتساب",
-    sub_hint: "أدخل رقمك ليتمكن فريق المتابعة من إرسال تنبيه واتساب لك عند اقتراب انتهاء منتج",
-    phone_label: "رقم الجوال (مع رمز الدولة)",
-    phone_placeholder: "مثال: 9665xxxxxxxx",
-    branch_label: "الفرع",
-    all_branches: "كل الفروع",
-    subscribe_btn: "اشتراك",
-    sub_err_phone: "الرجاء إدخال رقم جوال صحيح مع رمز الدولة",
-    toast_subscribed: "تم الاشتراك بنجاح",
-    wa_fab_title: "اشترك في تنبيهات واتساب",
-    lang_toggle_ar: "العربية",
+    sos_manage_categories_title: "Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª ÙˆØ§Ù„Ø£Ø¹Ù…Ø¯Ø©",
+    sos_name_font_size_label: "Ø­Ø¬Ù… Ø®Ø· Ø§Ø³Ù… Ø§Ù„Ù…Ø­Ù„",
+    sos_pct_column_checkbox: "Ù‡Ø°Ù‡ Ø®Ø§Ù†Ø© Ù†Ø³Ø¨Ø© % (ØªÙÙ†Ù‚Ù„ ØªÙ„Ù‚Ø§Ø¦ÙŠÙ‹Ø§ Ù„Ù†Ù‡Ø§ÙŠØ© Ø¬Ø¯ÙˆÙ„ Ù‡Ø°Ø§ Ø§Ù„Ù…Ù†ØªØ¬)",
+    sos_print_note_placeholder: "Ø§ÙƒØªØ¨ Ø§Ø³Ù…/ØªØ§Ø±ÙŠØ®/Ù…Ù„Ø§Ø­Ø¸Ø© ØªØ¸Ù‡Ø± Ø£Ø¹Ù„Ù‰ Ø§Ù„Ø·Ø¨Ø§Ø¹Ø© ÙÙ‚Ø· (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)",
+    tab_layout: "Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ø¹Ø±Ø¶",
+    current_branches: "Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„Ø­Ø§Ù„ÙŠØ©",
+    delete_branch_title: "Ø­Ø°Ù Ø§Ù„ÙØ±Ø¹",
+    add_branch: "Ø¥Ø¶Ø§ÙØ© ÙØ±Ø¹",
+    new_branch_placeholder: "Ø§Ø³Ù… Ø§Ù„ÙØ±Ø¹ØŒ Ù…Ø«Ø§Ù„: ÙƒØ§Ø±ÙÙˆØ±",
+    add_word: "Ø¥Ø¶Ø§ÙØ©",
+    branch_delete_hint: "Ø­Ø°Ù Ø§Ù„ÙØ±Ø¹ Ø³ÙŠØ¤Ø¯ÙŠ Ø£ÙŠØ¶Ù‹Ø§ Ù„Ø­Ø°Ù Ø¬Ù…ÙŠØ¹ Ù…Ù†ØªØ¬Ø§ØªÙ‡ Ù…Ù† Ø§Ù„Ù…ÙˆÙ‚Ø¹.",
+    toast_enter_branch_name: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„ÙØ±Ø¹",
+    toast_branch_added: "ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„ÙØ±Ø¹",
+    assign_employees_label: "Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ† Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹",
+    no_employees_to_assign: "Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù…ÙˆØ¸ÙÙˆÙ† Ù„Ø¥Ø¶Ø§ÙØªÙ‡Ù… Ø¨Ø¹Ø¯",
+    toast_select_at_least_one_employee: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø§Ø®ØªÙŠØ§Ø± Ù…ÙˆØ¸Ù ÙˆØ§Ø­Ø¯ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„",
+    daily_prep_title: "Ø§Ù„ØªØ­Ø¶ÙŠØ± Ø§Ù„ÙŠÙˆÙ…ÙŠ",
+    daily_prep_edit_tooltip: "ØªØ¹Ø¯ÙŠÙ„ Ø±Ø§Ø¨Ø· Ø§Ù„Ø§Ø³ØªØ¨ÙŠØ§Ù†",
+    daily_prep_modal_title: "Ø±Ø§Ø¨Ø· Ø§Ù„ØªØ­Ø¶ÙŠØ± Ø§Ù„ÙŠÙˆÙ…ÙŠ",
+    daily_prep_modal_hint: "Ø¶Ø¹ Ø±Ø§Ø¨Ø· Ø§Ø³ØªØ¨ÙŠØ§Ù† Ø§Ù„ØªØ­Ø¶ÙŠØ± Ø§Ù„ÙŠÙˆÙ…ÙŠ Ø§Ù„Ø®Ø§Øµ Ø¨ÙƒØŒ ÙˆØ³ÙŠØªÙ… ÙØªØ­Ù‡ Ù…Ø¨Ø§Ø´Ø±Ø© Ø¹Ù†Ø¯ Ø§Ù„Ø¶ØºØ· Ø¹Ù„Ù‰ Ù‡Ø°Ù‡ Ø§Ù„Ø®Ø§Ù†Ø©.",
+    daily_prep_link_placeholder: "Ø§Ù„ØµÙ‚ Ø±Ø§Ø¨Ø· Ø§Ù„Ø§Ø³ØªØ¨ÙŠØ§Ù† Ù‡Ù†Ø§",
+    toast_daily_prep_link_saved: "ØªÙ… Ø­ÙØ¸ Ø§Ù„Ø±Ø§Ø¨Ø·",
+    toast_daily_prep_enter_link: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø±Ø§Ø¨Ø· ØµØ­ÙŠØ­",
+    branch_created_by_manager_note: "ØªÙ… Ø¥Ù†Ø´Ø§Ø¡ Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹ Ø¨ÙˆØ§Ø³Ø·Ø© Ø§Ù„Ù…Ø¯ÙŠØ±",
+    view_employee_branches: "ÙØ±ÙˆØ¹ Ø§Ù„Ù…ÙˆØ¸Ù",
+    employee_branches_title: "ÙØ±ÙˆØ¹ Ø§Ù„Ù…ÙˆØ¸Ù",
+    no_employee_branches: "Ù„Ø§ ØªÙˆØ¬Ø¯ ÙØ±ÙˆØ¹ Ù„Ù‡Ø°Ø§ Ø§Ù„Ù…ÙˆØ¸Ù Ø¨Ø¹Ø¯",
+    confirm_delete_branch: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹ ÙˆØ¬Ù…ÙŠØ¹ Ù…Ù†ØªØ¬Ø§ØªÙ‡ØŸ",
+    toast_branch_deleted: "ØªÙ… Ø­Ø°Ù Ø§Ù„ÙØ±Ø¹",
+    products_title: "Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª",
+    products_need_branch: 'Ø£Ø¶Ù ÙØ±Ø¹Ù‹Ø§ Ø£ÙˆÙ„Ø§Ù‹ Ù…Ù† ØªØ¨ÙˆÙŠØ¨ "Ø§Ù„ÙØ±ÙˆØ¹" Ù‚Ø¨Ù„ Ø¥Ø¶Ø§ÙØ© Ù…Ù†ØªØ¬Ø§Øª.',
+    choose_branch: "Ø§Ø®ØªØ± Ø§Ù„ÙØ±Ø¹",
+    branch_products: "Ù…Ù†ØªØ¬Ø§Øª Ø§Ù„ÙØ±Ø¹",
+    no_products_yet: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ø¨Ø¹Ø¯ Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹.",
+    add_new_product: "Ø¥Ø¶Ø§ÙØ© Ù…Ù†ØªØ¬ Ø¬Ø¯ÙŠØ¯",
+    change_word: "ØªØºÙŠÙŠØ±",
+    product_name_placeholder: "Ø§Ø³Ù… Ø§Ù„Ù…Ù†ØªØ¬",
+    unit_g: "Øº",
+    unit_kg: "ÙƒØº",
+    alert_before: "ØªÙ†Ø¨ÙŠÙ‡ Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡ Ù‚Ø¨Ù„",
+    delete_product: "Ø­Ø°Ù Ø§Ù„Ù…Ù†ØªØ¬",
+    toast_change_saved: "ØªÙ… Ø­ÙØ¸ Ø§Ù„ØªØºÙŠÙŠØ±",
+    toast_image_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø§Ù„ØµÙˆØ±Ø©",
+    confirm_delete_product: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„Ù…Ù†ØªØ¬ØŸ",
+    toast_product_deleted: "ØªÙ… Ø­Ø°Ù Ø§Ù„Ù…Ù†ØªØ¬",
+    add_product_title: "Ø¥Ø¶Ø§ÙØ© Ù…Ù†ØªØ¬",
+    choose_add_method: "Ø§Ø®ØªØ± Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ø¥Ø¶Ø§ÙØ©",
+    choice_new_lbl: "Ù…Ù†ØªØ¬ Ø¬Ø¯ÙŠØ¯",
+    choice_new_sub: "Ø¥Ø¯Ø®Ø§Ù„ Ø¨ÙŠØ§Ù†Ø§Øª Ù…Ù† Ø§Ù„ØµÙØ±",
+    choice_prev_lbl: "Ù…Ù†ØªØ¬ Ø³Ø§Ø¨Ù‚",
+    choice_prev_sub: "Ø§Ø®ØªÙŠØ§Ø± Ù…Ù† Ù…Ù†ØªØ¬Ø§Øª Ù…Ø¶Ø§ÙØ© Ù‚Ø¨Ù„",
+    toast_product_added_edit: "ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ù†ØªØ¬ØŒ Ø¹Ø¯Ù‘Ù„ Ø¨ÙŠØ§Ù†Ø§ØªÙ‡ Ø£Ø¯Ù†Ø§Ù‡",
+    default_new_product_name: "Ù…Ù†ØªØ¬ Ø¬Ø¯ÙŠØ¯",
+    prev_modal_title: "Ù…Ù†ØªØ¬ Ø³Ø§Ø¨Ù‚",
+    prev_modal_hint: "Ø§Ø¨Ø­Ø« ÙˆØ§Ø®ØªØ± Ù…Ù†ØªØ¬Ù‹Ø§ Ø£Ùˆ Ø£ÙƒØ«Ø± Ù„Ø¥Ø¶Ø§ÙØªÙ‡ Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹",
+    search_placeholder: "Ø§Ø¨Ø­Ø« Ø¨Ø§Ù„Ø§Ø³Ù…...",
+    add_selected: "Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ø­Ø¯Ø¯",
+    no_matching_results: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù†ØªØ§Ø¦Ø¬ Ù…Ø·Ø§Ø¨Ù‚Ø©",
+    toast_select_at_least_one: "Ø§Ø®ØªØ± Ù…Ù†ØªØ¬Ù‹Ø§ ÙˆØ§Ø­Ø¯Ù‹Ø§ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„",
+    toast_added_n_products_prefix: "ØªÙ…Øª Ø¥Ø¶Ø§ÙØ©",
+    users_tab_title: "Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ÙˆÙ† Ø§Ù„Ù…ØµØ±Ø­ Ù„Ù‡Ù… Ø¨Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ…",
+    col_username: "Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…",
+    col_status: "Ø§Ù„Ø­Ø§Ù„Ø©",
+    status_pending: "Ø¨Ø§Ù†ØªØ¸Ø§Ø± ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø±Ù…Ø²",
+    status_active: "Ù†Ø´Ø·",
+    primary_admin_tag: "(Ø§Ù„Ù…Ø¯ÙŠØ± Ø§Ù„Ø£Ø³Ø§Ø³ÙŠ)",
+    delete_word: "Ø­Ø°Ù",
+    new_username_placeholder: "Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… Ø§Ù„Ø¬Ø¯ÙŠØ¯",
+    new_user_code_placeholder: "Ø±Ù…Ø² Ù…Ø¤Ù‚Øª (Ø£Ùˆ Ø§Ø¶ØºØ· ØªÙˆÙ„ÙŠØ¯)",
+    gen_code: "ØªÙˆÙ„ÙŠØ¯ Ø±Ù…Ø²",
+    add_user: "Ø¥Ø¶Ø§ÙØ© Ù…Ø³ØªØ®Ø¯Ù…",
+    users_hint: "Ø³ÙŠÙØ·Ù„Ø¨ Ù…Ù† Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… Ø§Ù„Ø¬Ø¯ÙŠØ¯ ØªØ¹ÙŠÙŠÙ† ÙƒÙ„Ù…Ø© Ù…Ø±ÙˆØ± Ø®Ø§ØµØ© Ø¨Ù‡ Ø¹Ù†Ø¯ Ø£ÙˆÙ„ ØªØ³Ø¬ÙŠÙ„ Ø¯Ø®ÙˆÙ„ Ø¨Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø§Ù„Ø±Ù…Ø² Ø§Ù„Ù…Ø¤Ù‚Øª.",
+    toast_enter_user_code: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… ÙˆØ§Ù„Ø±Ù…Ø² Ø§Ù„Ù…Ø¤Ù‚Øª",
+    toast_user_exists: "Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… Ù…ÙˆØ¬ÙˆØ¯ Ù…Ø³Ø¨Ù‚Ù‹Ø§",
+    toast_user_added_share: "ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ØŒ Ø´Ø§Ø±Ùƒ Ù…Ø¹Ù‡ Ø§Ù„Ø±Ù…Ø² Ø§Ù„Ù…Ø¤Ù‚Øª: ",
+    confirm_delete_user: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ø§ Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ØŸ",
+    toast_user_deleted: "ØªÙ… Ø­Ø°Ù Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…",
+    edit_word: "ØªØ¹Ø¯ÙŠÙ„",
+    edit_user_title: "ØªØ¹Ø¯ÙŠÙ„ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…ÙˆØ¸Ù",
+    font_type_title: "Ù†ÙˆØ¹ Ø§Ù„Ø®Ø·",
+    font_family_label: "Ø¹Ø§Ø¦Ù„Ø© Ø§Ù„Ø®Ø·",
+    font_weight_label: "ÙˆØ²Ù† Ø§Ù„Ø®Ø·",
+    base_font_size_label: "Ø­Ø¬Ù… Ø§Ù„Ø®Ø· Ø§Ù„Ø£Ø³Ø§Ø³ÙŠ: ",
+    upload_custom_font_title: "Ø±ÙØ¹ Ø®Ø· Ù…Ø®ØµØµ Ù…Ù† Ø§Ù„Ø¬Ù‡Ø§Ø²",
+    custom_suffix: " (Ù…Ø®ØµØµ)",
+    toast_font_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø§Ù„Ø®Ø·",
+    toast_weight_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« ÙˆØ²Ù† Ø§Ù„Ø®Ø·",
+    toast_size_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø­Ø¬Ù… Ø§Ù„Ø®Ø·",
+    toast_font_uploaded: "ØªÙ… Ø±ÙØ¹ Ø§Ù„Ø®Ø· Ø¨Ù†Ø¬Ø§Ø­: ",
+    toast_font_deleted: "ØªÙ… Ø­Ø°Ù Ø§Ù„Ø®Ø·",
+    weight_light: "Ø®ÙÙŠÙ", weight_regular: "Ø¹Ø§Ø¯ÙŠ", weight_medium: "Ù…ØªÙˆØ³Ø·", weight_bold: "Ø¹Ø±ÙŠØ¶", weight_black: "Ø£Ø³ÙˆØ¯",
+    layout_title: "Ø·Ø±ÙŠÙ‚Ø© Ø¹Ø±Ø¶ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª ÙÙŠ ØµÙØ­Ø© Ø§Ù„ÙØ±Ø¹",
+    layout_one_col: "ØµÙ ÙˆØ§Ø­Ø¯ (Ø¹Ù…ÙˆØ¯)",
+    layout_two_col: "ØµÙÙŠÙ† (Ø¹Ù…ÙˆØ¯ÙŠÙ†)",
+    toast_layout_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø·Ø±ÙŠÙ‚Ø© Ø§Ù„Ø¹Ø±Ø¶",
+    sub_title: "ØªÙ†Ø¨ÙŠÙ‡Ø§Øª ÙˆØ§ØªØ³Ø§Ø¨",
+    sub_hint: "Ø£Ø¯Ø®Ù„ Ø±Ù‚Ù…Ùƒ Ù„ÙŠØªÙ…ÙƒÙ† ÙØ±ÙŠÙ‚ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© Ù…Ù† Ø¥Ø±Ø³Ø§Ù„ ØªÙ†Ø¨ÙŠÙ‡ ÙˆØ§ØªØ³Ø§Ø¨ Ù„Ùƒ Ø¹Ù†Ø¯ Ø§Ù‚ØªØ±Ø§Ø¨ Ø§Ù†ØªÙ‡Ø§Ø¡ Ù…Ù†ØªØ¬",
+    phone_label: "Ø±Ù‚Ù… Ø§Ù„Ø¬ÙˆØ§Ù„ (Ù…Ø¹ Ø±Ù…Ø² Ø§Ù„Ø¯ÙˆÙ„Ø©)",
+    phone_placeholder: "Ù…Ø«Ø§Ù„: 9665xxxxxxxx",
+    branch_label: "Ø§Ù„ÙØ±Ø¹",
+    all_branches: "ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹",
+    subscribe_btn: "Ø§Ø´ØªØ±Ø§Ùƒ",
+    sub_err_phone: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø±Ù‚Ù… Ø¬ÙˆØ§Ù„ ØµØ­ÙŠØ­ Ù…Ø¹ Ø±Ù…Ø² Ø§Ù„Ø¯ÙˆÙ„Ø©",
+    toast_subscribed: "ØªÙ… Ø§Ù„Ø§Ø´ØªØ±Ø§Ùƒ Ø¨Ù†Ø¬Ø§Ø­",
+    wa_fab_title: "Ø§Ø´ØªØ±Ùƒ ÙÙŠ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª ÙˆØ§ØªØ³Ø§Ø¨",
+    lang_toggle_ar: "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
     lang_toggle_en: "English",
-    quick_edit_title: "تعديل المنتج",
-    image_word: "الصورة",
-    weight_label: "الوزن",
-    save_word: "حفظ",
-    cancel_word: "إلغاء",
-    home_layout_label: "طريقة عرض المنتجات",
-    admin_back: "رجوع للوحة السريعة",
-    back_to_manager_dashboard: "رجوع للوحة المدير",
-    send_notification_btn: "إرسال تنبيه",
-    all_employees_word: "كل الموظفين",
-    specific_employees_word: "موظفون معينون",
-    toast_select_at_least_one_employee: "اختر موظفًا واحدًا على الأقل",
-    manage_icon: "الأيقونة",
-    manage_notices: "التنويهات",
-    icon_modal_title: "أيقونة الفرع",
-    icon_type_default: "افتراضي",
-    icon_type_image: "صورة",
-    icon_type_emoji: "إيموجي",
-    icon_type_color: "لون",
-    upload_image_word: "رفع صورة",
-    choose_emoji_word: "اختر إيموجي",
-    choose_color_word: "اختر لونًا",
-    toast_icon_updated: "تم تحديث أيقونة الفرع",
-    notices_modal_title: "تنويهات الفرع",
-    notices_modal_hint: "تظهر هذه التنويهات تحت اسم الفرع في الصفحة الرئيسية",
-    notice_text_placeholder: "اكتب نص التنويه هنا...",
-    notice_color_label: "اللون",
-    notice_size_label: "حجم الخط",
-    add_notice_btn: "أضف تنبيه",
-    no_notices_yet: "لا توجد تنويهات بعد لهذا الفرع.",
-    toast_enter_notice_text: "الرجاء كتابة نص التنويه",
-    toast_notice_added: "تمت إضافة التنويه",
-    toast_notice_deleted: "تم حذف التنويه",
-    layout_title_branch: "طريقة عرض منتجات هذا الفرع",
-    inventory_word: "جرد",
-    daily_word: "التواريخ",
-    monthly_word: "الجرد الشهري",
-    monthly_page_title: "الجرد الشهري",
-    carton_word: "كرتون",
-    download_word: "تنزيل",
-    monthly_empty: "لا توجد منتجات بعد في الجرد الشهري.",
-    monthly_print_title: "قائمة الجرد الشهري",
-    monthly_print_date: "التاريخ",
-    monthly_col_product: "المنتج",
-    monthly_col_weight: "الوزن",
-    monthly_col_qty: "العدد (كرتون)",
-    print_hint: "سيفتح هذا مربع طباعة المتصفح — اختر \"حفظ كـ PDF\" كوجهة الطباعة للحصول على ملف PDF.",
-    toast_enter_product_name: "الرجاء كتابة اسم المنتج",
-    responsible_name_label: "اسم المسؤول",
-    responsible_name_placeholder: "اكتب اسمك هنا",
-    my_account_title: "تغيير اسم المستخدم وكلمة المرور",
-    my_account_hint: "غيّر اسم الدخول وكلمة المرور الخاصة بحسابك الحالي",
-    my_account_btn: "تعديل بياناتي",
-    current_password_label: "كلمة المرور الحالية",
-    optional_word: "اختياري",
-    toast_current_password_wrong: "كلمة المرور الحالية غير صحيحة",
-    toast_account_updated: "تم تحديث بيانات حسابك بنجاح",
-    toast_enter_username: "الرجاء إدخال اسم المستخدم",
-    hidden_product_label: "منتج مخفي",
-    hide_product_label: "إخفاء المنتج عن الزوار",
-    toast_product_hidden: "تم إخفاء المنتج",
-    toast_product_shown: "تم إظهار المنتج",
-    expired_products_label: "منتجات منتهية",
-    expired_products_page_title: "المنتجات المنتهية",
-    no_expired_products: "لا توجد منتجات منتهية حاليًا لهذا الفرع.",
-    role_employee: "موظفين",
-    role_manager: "مدراء",
-    login_wrong_role_employee: "هذا الحساب ليس حساب موظف",
-    login_wrong_role_manager: "هذا الحساب ليس حساب مدير",
-    notifications_word: "التنبيهات",
-    message_from_manager_title: "رسالة من المدير",
-    original_text_label: "النص الأصلي",
-    mark_as_read_label: "قرأت ووافقت",
-    manager_dashboard_title: "لوحة المدير",
-    tab_accounts: "الحسابات",
-    tab_notifications: "التنبيهات",
-    view_word: "مشاهدة",
-    message_word: "رسالة",
-    compose_message_title: "إرسال رسالة",
-    message_ar_label: "الرسالة (عربي)",
-    message_en_label: "الرسالة (إنجليزي)",
-    send_message_btn: "إرسال",
-    toast_message_sent: "تم إرسال الرسالة",
-    toast_fill_one_message: "الرجاء كتابة الرسالة بلغة واحدة على الأقل",
-    no_employee_accounts: "لا يوجد موظفون بعد",
-    no_notifications_sent: "لم ترسل أي تنبيهات بعد",
-    read_status_read: "مقروءة",
-    read_status_unread: "غير مقروءة",
-    sent_to_label: "أُرسلت إلى",
-    sent_at_label: "وقت الإرسال",
-    read_at_label: "وقت القراءة",
-    role_label: "الدور",
-    role_option_employee: "موظف",
-    role_option_manager: "مدير",
-    employee_account_title: "حسابي",
-    no_messages_yet: "لا توجد رسائل بعد",
-    close_word: "إغلاق",
-    planogram_word: "بلانوجرام",
-    planogram_doc_section_label: "بلانوجرام - التوثيق",
-    new_update_label: "يوجد تحديث جديد",
-    edit_planogram_title: "تعديل البلانوجرام",
-    planogram_notes_label: "ملاحظات",
-    planogram_empty: "لم يتم إضافة بلانوجرام بعد.",
-    last_updated_label: "آخر تحديث",
-    toast_planogram_updated: "تم تحديث البلانوجرام",
-    welcome_word: "أهلاً",
-    tab_employees: "الموظفين",
-    previous_notifications_label: "تنبيهات سابقة",
-    add_planogram_image_title: "إضافة صورة بلانوجرام",
-    planogram_audience_label: "من يشاهد هذه الصورة",
-    toast_choose_image_first: "الرجاء اختيار صورة أولاً",
-    confirm_delete_planogram_image: "هل تريد حذف هذه الصورة؟",
-    employee_number_label: "رقم الموظف",
-    employee_number_placeholder: "رقم الموظف (اختياري)",
+    quick_edit_title: "ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ù…Ù†ØªØ¬",
+    image_word: "Ø§Ù„ØµÙˆØ±Ø©",
+    weight_label: "Ø§Ù„ÙˆØ²Ù†",
+    save_word: "Ø­ÙØ¸",
+    cancel_word: "Ø¥Ù„ØºØ§Ø¡",
+    home_layout_label: "Ø·Ø±ÙŠÙ‚Ø© Ø¹Ø±Ø¶ Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª",
+    admin_back: "Ø±Ø¬ÙˆØ¹ Ù„Ù„ÙˆØ­Ø© Ø§Ù„Ø³Ø±ÙŠØ¹Ø©",
+    back_to_manager_dashboard: "Ø±Ø¬ÙˆØ¹ Ù„Ù„ÙˆØ­Ø© Ø§Ù„Ù…Ø¯ÙŠØ±",
+    send_notification_btn: "Ø¥Ø±Ø³Ø§Ù„ ØªÙ†Ø¨ÙŠÙ‡",
+    all_employees_word: "ÙƒÙ„ Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†",
+    specific_employees_word: "Ù…ÙˆØ¸ÙÙˆÙ† Ù…Ø¹ÙŠÙ†ÙˆÙ†",
+    toast_select_at_least_one_employee: "Ø§Ø®ØªØ± Ù…ÙˆØ¸ÙÙ‹Ø§ ÙˆØ§Ø­Ø¯Ù‹Ø§ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„",
+    manage_icon: "Ø§Ù„Ø£ÙŠÙ‚ÙˆÙ†Ø©",
+    manage_notices: "Ø§Ù„ØªÙ†ÙˆÙŠÙ‡Ø§Øª",
+    icon_modal_title: "Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„ÙØ±Ø¹",
+    icon_type_default: "Ø§ÙØªØ±Ø§Ø¶ÙŠ",
+    icon_type_image: "ØµÙˆØ±Ø©",
+    icon_type_emoji: "Ø¥ÙŠÙ…ÙˆØ¬ÙŠ",
+    icon_type_color: "Ù„ÙˆÙ†",
+    upload_image_word: "Ø±ÙØ¹ ØµÙˆØ±Ø©",
+    choose_emoji_word: "Ø§Ø®ØªØ± Ø¥ÙŠÙ…ÙˆØ¬ÙŠ",
+    choose_color_word: "Ø§Ø®ØªØ± Ù„ÙˆÙ†Ù‹Ø§",
+    toast_icon_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø£ÙŠÙ‚ÙˆÙ†Ø© Ø§Ù„ÙØ±Ø¹",
+    notices_modal_title: "ØªÙ†ÙˆÙŠÙ‡Ø§Øª Ø§Ù„ÙØ±Ø¹",
+    notices_modal_hint: "ØªØ¸Ù‡Ø± Ù‡Ø°Ù‡ Ø§Ù„ØªÙ†ÙˆÙŠÙ‡Ø§Øª ØªØ­Øª Ø§Ø³Ù… Ø§Ù„ÙØ±Ø¹ ÙÙŠ Ø§Ù„ØµÙØ­Ø© Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©",
+    notice_text_placeholder: "Ø§ÙƒØªØ¨ Ù†Øµ Ø§Ù„ØªÙ†ÙˆÙŠÙ‡ Ù‡Ù†Ø§...",
+    notice_color_label: "Ø§Ù„Ù„ÙˆÙ†",
+    notice_size_label: "Ø­Ø¬Ù… Ø§Ù„Ø®Ø·",
+    add_notice_btn: "Ø£Ø¶Ù ØªÙ†Ø¨ÙŠÙ‡",
+    no_notices_yet: "Ù„Ø§ ØªÙˆØ¬Ø¯ ØªÙ†ÙˆÙŠÙ‡Ø§Øª Ø¨Ø¹Ø¯ Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹.",
+    toast_enter_notice_text: "Ø§Ù„Ø±Ø¬Ø§Ø¡ ÙƒØªØ§Ø¨Ø© Ù†Øµ Ø§Ù„ØªÙ†ÙˆÙŠÙ‡",
+    toast_notice_added: "ØªÙ…Øª Ø¥Ø¶Ø§ÙØ© Ø§Ù„ØªÙ†ÙˆÙŠÙ‡",
+    toast_notice_deleted: "ØªÙ… Ø­Ø°Ù Ø§Ù„ØªÙ†ÙˆÙŠÙ‡",
+    layout_title_branch: "Ø·Ø±ÙŠÙ‚Ø© Ø¹Ø±Ø¶ Ù…Ù†ØªØ¬Ø§Øª Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹",
+    inventory_word: "Ø¬Ø±Ø¯",
+    daily_word: "Ø§Ù„ØªÙˆØ§Ø±ÙŠØ®",
+    monthly_word: "Ø§Ù„Ø¬Ø±Ø¯ Ø§Ù„Ø´Ù‡Ø±ÙŠ",
+    monthly_page_title: "Ø§Ù„Ø¬Ø±Ø¯ Ø§Ù„Ø´Ù‡Ø±ÙŠ",
+    carton_word: "ÙƒØ±ØªÙˆÙ†",
+    download_word: "ØªÙ†Ø²ÙŠÙ„",
+    monthly_empty: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ø¨Ø¹Ø¯ ÙÙŠ Ø§Ù„Ø¬Ø±Ø¯ Ø§Ù„Ø´Ù‡Ø±ÙŠ.",
+    monthly_print_title: "Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø¬Ø±Ø¯ Ø§Ù„Ø´Ù‡Ø±ÙŠ",
+    monthly_print_date: "Ø§Ù„ØªØ§Ø±ÙŠØ®",
+    monthly_col_product: "Ø§Ù„Ù…Ù†ØªØ¬",
+    monthly_col_weight: "Ø§Ù„ÙˆØ²Ù†",
+    monthly_col_qty: "Ø§Ù„Ø¹Ø¯Ø¯ (ÙƒØ±ØªÙˆÙ†)",
+    print_hint: "Ø³ÙŠÙØªØ­ Ù‡Ø°Ø§ Ù…Ø±Ø¨Ø¹ Ø·Ø¨Ø§Ø¹Ø© Ø§Ù„Ù…ØªØµÙØ­ â€” Ø§Ø®ØªØ± \"Ø­ÙØ¸ ÙƒÙ€ PDF\" ÙƒÙˆØ¬Ù‡Ø© Ø§Ù„Ø·Ø¨Ø§Ø¹Ø© Ù„Ù„Ø­ØµÙˆÙ„ Ø¹Ù„Ù‰ Ù…Ù„Ù PDF.",
+    toast_enter_product_name: "Ø§Ù„Ø±Ø¬Ø§Ø¡ ÙƒØªØ§Ø¨Ø© Ø§Ø³Ù… Ø§Ù„Ù…Ù†ØªØ¬",
+    responsible_name_label: "Ø§Ø³Ù… Ø§Ù„Ù…Ø³Ø¤ÙˆÙ„",
+    responsible_name_placeholder: "Ø§ÙƒØªØ¨ Ø§Ø³Ù…Ùƒ Ù‡Ù†Ø§",
+    my_account_title: "ØªØºÙŠÙŠØ± Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… ÙˆÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ±",
+    my_account_hint: "ØºÙŠÙ‘Ø± Ø§Ø³Ù… Ø§Ù„Ø¯Ø®ÙˆÙ„ ÙˆÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø§Ù„Ø®Ø§ØµØ© Ø¨Ø­Ø³Ø§Ø¨Ùƒ Ø§Ù„Ø­Ø§Ù„ÙŠ",
+    my_account_btn: "ØªØ¹Ø¯ÙŠÙ„ Ø¨ÙŠØ§Ù†Ø§ØªÙŠ",
+    current_password_label: "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø§Ù„Ø­Ø§Ù„ÙŠØ©",
+    optional_word: "Ø§Ø®ØªÙŠØ§Ø±ÙŠ",
+    toast_current_password_wrong: "ÙƒÙ„Ù…Ø© Ø§Ù„Ù…Ø±ÙˆØ± Ø§Ù„Ø­Ø§Ù„ÙŠØ© ØºÙŠØ± ØµØ­ÙŠØ­Ø©",
+    toast_account_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø¨ÙŠØ§Ù†Ø§Øª Ø­Ø³Ø§Ø¨Ùƒ Ø¨Ù†Ø¬Ø§Ø­",
+    toast_enter_username: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…",
+    hidden_product_label: "Ù…Ù†ØªØ¬ Ù…Ø®ÙÙŠ",
+    hide_product_label: "Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ù…Ù†ØªØ¬ Ø¹Ù† Ø§Ù„Ø²ÙˆØ§Ø±",
+    toast_product_hidden: "ØªÙ… Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ù…Ù†ØªØ¬",
+    toast_product_shown: "ØªÙ… Ø¥Ø¸Ù‡Ø§Ø± Ø§Ù„Ù…Ù†ØªØ¬",
+    expired_products_label: "Ù…Ù†ØªØ¬Ø§Øª Ù…Ù†ØªÙ‡ÙŠØ©",
+    expired_products_page_title: "Ø§Ù„Ù…Ù†ØªØ¬Ø§Øª Ø§Ù„Ù…Ù†ØªÙ‡ÙŠØ©",
+    no_expired_products: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ù…Ù†ØªÙ‡ÙŠØ© Ø­Ø§Ù„ÙŠÙ‹Ø§ Ù„Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹.",
+    role_employee: "Ù…ÙˆØ¸ÙÙŠÙ†",
+    role_manager: "Ù…Ø¯Ø±Ø§Ø¡",
+    login_wrong_role_employee: "Ù‡Ø°Ø§ Ø§Ù„Ø­Ø³Ø§Ø¨ Ù„ÙŠØ³ Ø­Ø³Ø§Ø¨ Ù…ÙˆØ¸Ù",
+    login_wrong_role_manager: "Ù‡Ø°Ø§ Ø§Ù„Ø­Ø³Ø§Ø¨ Ù„ÙŠØ³ Ø­Ø³Ø§Ø¨ Ù…Ø¯ÙŠØ±",
+    notifications_word: "Ø§Ù„ØªÙ†Ø¨ÙŠÙ‡Ø§Øª",
+    message_from_manager_title: "Ø±Ø³Ø§Ù„Ø© Ù…Ù† Ø§Ù„Ù…Ø¯ÙŠØ±",
+    original_text_label: "Ø§Ù„Ù†Øµ Ø§Ù„Ø£ØµÙ„ÙŠ",
+    mark_as_read_label: "Ù‚Ø±Ø£Øª ÙˆÙˆØ§ÙÙ‚Øª",
+    manager_dashboard_title: "Ù„ÙˆØ­Ø© Ø§Ù„Ù…Ø¯ÙŠØ±",
+    tab_accounts: "Ø§Ù„Ø­Ø³Ø§Ø¨Ø§Øª",
+    tab_notifications: "Ø§Ù„ØªÙ†Ø¨ÙŠÙ‡Ø§Øª",
+    view_word: "Ù…Ø´Ø§Ù‡Ø¯Ø©",
+    message_word: "Ø±Ø³Ø§Ù„Ø©",
+    compose_message_title: "Ø¥Ø±Ø³Ø§Ù„ Ø±Ø³Ø§Ù„Ø©",
+    message_ar_label: "Ø§Ù„Ø±Ø³Ø§Ù„Ø© (Ø¹Ø±Ø¨ÙŠ)",
+    message_en_label: "Ø§Ù„Ø±Ø³Ø§Ù„Ø© (Ø¥Ù†Ø¬Ù„ÙŠØ²ÙŠ)",
+    send_message_btn: "Ø¥Ø±Ø³Ø§Ù„",
+    toast_message_sent: "ØªÙ… Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„Ø±Ø³Ø§Ù„Ø©",
+    toast_fill_one_message: "Ø§Ù„Ø±Ø¬Ø§Ø¡ ÙƒØªØ§Ø¨Ø© Ø§Ù„Ø±Ø³Ø§Ù„Ø© Ø¨Ù„ØºØ© ÙˆØ§Ø­Ø¯Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„",
+    no_employee_accounts: "Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ù…ÙˆØ¸ÙÙˆÙ† Ø¨Ø¹Ø¯",
+    no_notifications_sent: "Ù„Ù… ØªØ±Ø³Ù„ Ø£ÙŠ ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø¨Ø¹Ø¯",
+    read_status_read: "Ù…Ù‚Ø±ÙˆØ¡Ø©",
+    read_status_unread: "ØºÙŠØ± Ù…Ù‚Ø±ÙˆØ¡Ø©",
+    sent_to_label: "Ø£ÙØ±Ø³Ù„Øª Ø¥Ù„Ù‰",
+    sent_at_label: "ÙˆÙ‚Øª Ø§Ù„Ø¥Ø±Ø³Ø§Ù„",
+    read_at_label: "ÙˆÙ‚Øª Ø§Ù„Ù‚Ø±Ø§Ø¡Ø©",
+    role_label: "Ø§Ù„Ø¯ÙˆØ±",
+    role_option_employee: "Ù…ÙˆØ¸Ù",
+    role_option_manager: "Ù…Ø¯ÙŠØ±",
+    employee_account_title: "Ø­Ø³Ø§Ø¨ÙŠ",
+    no_messages_yet: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ø±Ø³Ø§Ø¦Ù„ Ø¨Ø¹Ø¯",
+    close_word: "Ø¥ØºÙ„Ø§Ù‚",
+    planogram_word: "Ø¨Ù„Ø§Ù†ÙˆØ¬Ø±Ø§Ù…",
+    planogram_doc_section_label: "Ø¨Ù„Ø§Ù†ÙˆØ¬Ø±Ø§Ù… - Ø§Ù„ØªÙˆØ«ÙŠÙ‚",
+    new_update_label: "ÙŠÙˆØ¬Ø¯ ØªØ­Ø¯ÙŠØ« Ø¬Ø¯ÙŠØ¯",
+    edit_planogram_title: "ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ø¨Ù„Ø§Ù†ÙˆØ¬Ø±Ø§Ù…",
+    planogram_notes_label: "Ù…Ù„Ø§Ø­Ø¸Ø§Øª",
+    planogram_empty: "Ù„Ù… ÙŠØªÙ… Ø¥Ø¶Ø§ÙØ© Ø¨Ù„Ø§Ù†ÙˆØ¬Ø±Ø§Ù… Ø¨Ø¹Ø¯.",
+    last_updated_label: "Ø¢Ø®Ø± ØªØ­Ø¯ÙŠØ«",
+    toast_planogram_updated: "ØªÙ… ØªØ­Ø¯ÙŠØ« Ø§Ù„Ø¨Ù„Ø§Ù†ÙˆØ¬Ø±Ø§Ù…",
+    welcome_word: "Ø£Ù‡Ù„Ø§Ù‹",
+    tab_employees: "Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†",
+    previous_notifications_label: "ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø³Ø§Ø¨Ù‚Ø©",
+    add_planogram_image_title: "Ø¥Ø¶Ø§ÙØ© ØµÙˆØ±Ø© Ø¨Ù„Ø§Ù†ÙˆØ¬Ø±Ø§Ù…",
+    planogram_audience_label: "Ù…Ù† ÙŠØ´Ø§Ù‡Ø¯ Ù‡Ø°Ù‡ Ø§Ù„ØµÙˆØ±Ø©",
+    toast_choose_image_first: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø§Ø®ØªÙŠØ§Ø± ØµÙˆØ±Ø© Ø£ÙˆÙ„Ø§Ù‹",
+    confirm_delete_planogram_image: "Ù‡Ù„ ØªØ±ÙŠØ¯ Ø­Ø°Ù Ù‡Ø°Ù‡ Ø§Ù„ØµÙˆØ±Ø©ØŸ",
+    employee_number_label: "Ø±Ù‚Ù… Ø§Ù„Ù…ÙˆØ¸Ù",
+    employee_number_placeholder: "Ø±Ù‚Ù… Ø§Ù„Ù…ÙˆØ¸Ù (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)",
     sku_label: "SKU",
-    sku_placeholder: "رقم المنتج SKU",
-    monthly_col_expiry: "تاريخ الانتهاء",
-    unit_ml: "مل",
-    unit_l: "لتر",
-    monthly_catalog_hint: "اضغط على أي مجموعة لعرضها، ثم اختر الكمية وتاريخ الانتهاء من القوائم — بدون كتابة يدوية.",
-    monthly_qty_field: "الكمية",
-    carton_unit_word: "كرتون",
-    monthly_expiry_field: "تاريخ الانتهاء",
-    monthly_no_selection: "—",
-    monthly_group_progress: "منتج مُدخل",
-    monthly_other_group_title: "منتجات أخرى",
+    sku_placeholder: "Ø±Ù‚Ù… Ø§Ù„Ù…Ù†ØªØ¬ SKU",
+    monthly_col_expiry: "ØªØ§Ø±ÙŠØ® Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡",
+    unit_ml: "Ù…Ù„",
+    unit_l: "Ù„ØªØ±",
+    monthly_catalog_hint: "Ø§Ø¶ØºØ· Ø¹Ù„Ù‰ Ø£ÙŠ Ù…Ø¬Ù…ÙˆØ¹Ø© Ù„Ø¹Ø±Ø¶Ù‡Ø§ØŒ Ø«Ù… Ø§Ø®ØªØ± Ø§Ù„ÙƒÙ…ÙŠØ© ÙˆØªØ§Ø±ÙŠØ® Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡ Ù…Ù† Ø§Ù„Ù‚ÙˆØ§Ø¦Ù… â€” Ø¨Ø¯ÙˆÙ† ÙƒØªØ§Ø¨Ø© ÙŠØ¯ÙˆÙŠØ©.",
+    monthly_qty_field: "Ø§Ù„ÙƒÙ…ÙŠØ©",
+    carton_unit_word: "ÙƒØ±ØªÙˆÙ†",
+    monthly_expiry_field: "ØªØ§Ø±ÙŠØ® Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡",
+    monthly_no_selection: "â€”",
+    monthly_group_progress: "Ù…Ù†ØªØ¬ Ù…ÙØ¯Ø®Ù„",
+    monthly_other_group_title: "Ù…Ù†ØªØ¬Ø§Øª Ø£Ø®Ø±Ù‰",
     monthly_other_group_title_en: "Other Products",
     sku_word: "SKU",
-    weight_word: "الوزن",
-    field_notes: "ملاحظات",
-    field_reason: "السبب",
-    duplicate_word: "تكرار المنتج",
-    remove_duplicate_word: "حذف التكرار",
-    branch_name_manual_label: "اسم الفرع (تسجيل يدوي)",
-    employee_label: "الموظف المسؤول",
-    hijri_label: "التاريخ الهجري",
-    gregorian_label: "التاريخ الميلادي",
-    monthly_col_shelf: "الرف",
-    monthly_col_back: "المستودع",
-    documentation_word: "التوثيق اليومي",
-    take_photo_btn: "التقط صورة",
-    take_another_photo_btn: "التقط صورة أخرى",
-    documentation_note_label: "ملاحظة (اسم الفرع الذي تزوره)",
-    documentation_note_placeholder: "مثال: فرع العثيم - النسيم",
-    display_duration_label: "مدة عرض الصورة",
-    hours_word: "ساعة",
-    save_documentation_btn: "حفظ التوثيق",
-    my_documentation_title: "توثيقاتي",
-    no_documentation_yet: "لا يوجد توثيق بعد",
-    toast_documentation_saved: "تم حفظ التوثيق",
-    toast_photo_required: "التقط صورة واحدة على الأقل",
-    documentation_viewer_title: "مشاهد التوثيق",
-    no_documentation_employees: "لا يوجد أي توثيق حتى الآن",
-    send_alert_word: "إرسال تنبيه",
-    photos_word: "صور",
-    documentation_expires_in: "يظهر لمدة",
-    documentation_alert_prefill: "بخصوص التوثيق اليومي",
-    global_edit_hint: "أي تعديل هنا ينطبق على هذا المنتج في كل مكان بالتطبيق (الفروع والجرد الشهري).",
-    move_product_btn: "نقل المنتج",
-    move_product_hint: "اختر القسم الذي تريد نقل المنتج إليه:",
-    add_category_btn: "إضافة قسم جديد",
-    category_name_ar_label: "اسم القسم (عربي)",
-    category_name_en_label: "اسم القسم (إنجليزي)",
-    toast_enter_category_name: "الرجاء إدخال اسم القسم",
-    manager_expiry_alerts_title: "تنبيهات انتهاء الصلاحية",
-    manager_alerts_branches_label: "الفروع التابعة لك",
-    manager_alerts_days_label: "تنبيه قبل الانتهاء بعدد أيام",
-    manager_alerts_save_btn: "حفظ وعرض النتائج",
-    manager_alerts_no_results: "لا توجد منتجات قريبة من الانتهاء ضمن الفروع المحددة",
-    manager_alerts_no_branches: "اختر فرعًا واحدًا على الأقل",
-    col_product: "المنتج",
-    col_sku: "الكود",
-    col_weight: "الوزن",
-    col_days_left: "الأيام المتبقية",
-    col_branch: "الفرع",
-    days_overdue_word: "متأخر",
-    call_word: "اتصال",
-    whatsapp_word: "واتساب",
-    toast_photos_expired: "انتهت مهلة الـ5 دقائق، تم حذف الصور الملتقطة",
-    doc_countdown_label: "الحذف التلقائي خلال",
-    capture_shutter_btn: "التقط",
-    doc_camera_done_btn: "تم",
-    camera_unsupported_error: "المتصفح لا يدعم الوصول للكاميرا",
-    camera_permission_error: "تعذر الوصول إلى الكاميرا، يرجى منح الإذن اللازم",
+    weight_word: "Ø§Ù„ÙˆØ²Ù†",
+    field_notes: "Ù…Ù„Ø§Ø­Ø¸Ø§Øª",
+    field_reason: "Ø§Ù„Ø³Ø¨Ø¨",
+    duplicate_word: "ØªÙƒØ±Ø§Ø± Ø§Ù„Ù…Ù†ØªØ¬",
+    remove_duplicate_word: "Ø­Ø°Ù Ø§Ù„ØªÙƒØ±Ø§Ø±",
+    branch_name_manual_label: "Ø§Ø³Ù… Ø§Ù„ÙØ±Ø¹ (ØªØ³Ø¬ÙŠÙ„ ÙŠØ¯ÙˆÙŠ)",
+    employee_label: "Ø§Ù„Ù…ÙˆØ¸Ù Ø§Ù„Ù…Ø³Ø¤ÙˆÙ„",
+    hijri_label: "Ø§Ù„ØªØ§Ø±ÙŠØ® Ø§Ù„Ù‡Ø¬Ø±ÙŠ",
+    gregorian_label: "Ø§Ù„ØªØ§Ø±ÙŠØ® Ø§Ù„Ù…ÙŠÙ„Ø§Ø¯ÙŠ",
+    monthly_col_shelf: "Ø§Ù„Ø±Ù",
+    monthly_col_back: "Ø§Ù„Ù…Ø³ØªÙˆØ¯Ø¹",
+    documentation_word: "Ø§Ù„ØªÙˆØ«ÙŠÙ‚ Ø§Ù„ÙŠÙˆÙ…ÙŠ",
+    take_photo_btn: "Ø§Ù„ØªÙ‚Ø· ØµÙˆØ±Ø©",
+    take_another_photo_btn: "Ø§Ù„ØªÙ‚Ø· ØµÙˆØ±Ø© Ø£Ø®Ø±Ù‰",
+    documentation_note_label: "Ù…Ù„Ø§Ø­Ø¸Ø© (Ø§Ø³Ù… Ø§Ù„ÙØ±Ø¹ Ø§Ù„Ø°ÙŠ ØªØ²ÙˆØ±Ù‡)",
+    documentation_note_placeholder: "Ù…Ø«Ø§Ù„: ÙØ±Ø¹ Ø§Ù„Ø¹Ø«ÙŠÙ… - Ø§Ù„Ù†Ø³ÙŠÙ…",
+    display_duration_label: "Ù…Ø¯Ø© Ø¹Ø±Ø¶ Ø§Ù„ØµÙˆØ±Ø©",
+    hours_word: "Ø³Ø§Ø¹Ø©",
+    save_documentation_btn: "Ø­ÙØ¸ Ø§Ù„ØªÙˆØ«ÙŠÙ‚",
+    my_documentation_title: "ØªÙˆØ«ÙŠÙ‚Ø§ØªÙŠ",
+    no_documentation_yet: "Ù„Ø§ ÙŠÙˆØ¬Ø¯ ØªÙˆØ«ÙŠÙ‚ Ø¨Ø¹Ø¯",
+    toast_documentation_saved: "ØªÙ… Ø­ÙØ¸ Ø§Ù„ØªÙˆØ«ÙŠÙ‚",
+    toast_photo_required: "Ø§Ù„ØªÙ‚Ø· ØµÙˆØ±Ø© ÙˆØ§Ø­Ø¯Ø© Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„",
+    documentation_viewer_title: "Ù…Ø´Ø§Ù‡Ø¯ Ø§Ù„ØªÙˆØ«ÙŠÙ‚",
+    no_documentation_employees: "Ù„Ø§ ÙŠÙˆØ¬Ø¯ Ø£ÙŠ ØªÙˆØ«ÙŠÙ‚ Ø­ØªÙ‰ Ø§Ù„Ø¢Ù†",
+    send_alert_word: "Ø¥Ø±Ø³Ø§Ù„ ØªÙ†Ø¨ÙŠÙ‡",
+    photos_word: "ØµÙˆØ±",
+    documentation_expires_in: "ÙŠØ¸Ù‡Ø± Ù„Ù…Ø¯Ø©",
+    documentation_alert_prefill: "Ø¨Ø®ØµÙˆØµ Ø§Ù„ØªÙˆØ«ÙŠÙ‚ Ø§Ù„ÙŠÙˆÙ…ÙŠ",
+    global_edit_hint: "Ø£ÙŠ ØªØ¹Ø¯ÙŠÙ„ Ù‡Ù†Ø§ ÙŠÙ†Ø·Ø¨Ù‚ Ø¹Ù„Ù‰ Ù‡Ø°Ø§ Ø§Ù„Ù…Ù†ØªØ¬ ÙÙŠ ÙƒÙ„ Ù…ÙƒØ§Ù† Ø¨Ø§Ù„ØªØ·Ø¨ÙŠÙ‚ (Ø§Ù„ÙØ±ÙˆØ¹ ÙˆØ§Ù„Ø¬Ø±Ø¯ Ø§Ù„Ø´Ù‡Ø±ÙŠ).",
+    move_product_btn: "Ù†Ù‚Ù„ Ø§Ù„Ù…Ù†ØªØ¬",
+    move_product_hint: "Ø§Ø®ØªØ± Ø§Ù„Ù‚Ø³Ù… Ø§Ù„Ø°ÙŠ ØªØ±ÙŠØ¯ Ù†Ù‚Ù„ Ø§Ù„Ù…Ù†ØªØ¬ Ø¥Ù„ÙŠÙ‡:",
+    add_category_btn: "Ø¥Ø¶Ø§ÙØ© Ù‚Ø³Ù… Ø¬Ø¯ÙŠØ¯",
+    category_name_ar_label: "Ø§Ø³Ù… Ø§Ù„Ù‚Ø³Ù… (Ø¹Ø±Ø¨ÙŠ)",
+    category_name_en_label: "Ø§Ø³Ù… Ø§Ù„Ù‚Ø³Ù… (Ø¥Ù†Ø¬Ù„ÙŠØ²ÙŠ)",
+    toast_enter_category_name: "Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ø³Ù… Ø§Ù„Ù‚Ø³Ù…",
+    manager_expiry_alerts_title: "ØªÙ†Ø¨ÙŠÙ‡Ø§Øª Ø§Ù†ØªÙ‡Ø§Ø¡ Ø§Ù„ØµÙ„Ø§Ø­ÙŠØ©",
+    manager_alerts_branches_label: "Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„ØªØ§Ø¨Ø¹Ø© Ù„Ùƒ",
+    manager_alerts_days_label: "ØªÙ†Ø¨ÙŠÙ‡ Ù‚Ø¨Ù„ Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡ Ø¨Ø¹Ø¯Ø¯ Ø£ÙŠØ§Ù…",
+    manager_alerts_save_btn: "Ø­ÙØ¸ ÙˆØ¹Ø±Ø¶ Ø§Ù„Ù†ØªØ§Ø¦Ø¬",
+    manager_alerts_no_results: "Ù„Ø§ ØªÙˆØ¬Ø¯ Ù…Ù†ØªØ¬Ø§Øª Ù‚Ø±ÙŠØ¨Ø© Ù…Ù† Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡ Ø¶Ù…Ù† Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„Ù…Ø­Ø¯Ø¯Ø©",
+    manager_alerts_no_branches: "Ø§Ø®ØªØ± ÙØ±Ø¹Ù‹Ø§ ÙˆØ§Ø­Ø¯Ù‹Ø§ Ø¹Ù„Ù‰ Ø§Ù„Ø£Ù‚Ù„",
+    col_product: "Ø§Ù„Ù…Ù†ØªØ¬",
+    col_sku: "Ø§Ù„ÙƒÙˆØ¯",
+    col_weight: "Ø§Ù„ÙˆØ²Ù†",
+    col_days_left: "Ø§Ù„Ø£ÙŠØ§Ù… Ø§Ù„Ù…ØªØ¨Ù‚ÙŠØ©",
+    col_branch: "Ø§Ù„ÙØ±Ø¹",
+    days_overdue_word: "Ù…ØªØ£Ø®Ø±",
+    call_word: "Ø§ØªØµØ§Ù„",
+    whatsapp_word: "ÙˆØ§ØªØ³Ø§Ø¨",
+    toast_photos_expired: "Ø§Ù†ØªÙ‡Øª Ù…Ù‡Ù„Ø© Ø§Ù„Ù€5 Ø¯Ù‚Ø§Ø¦Ù‚ØŒ ØªÙ… Ø­Ø°Ù Ø§Ù„ØµÙˆØ± Ø§Ù„Ù…Ù„ØªÙ‚Ø·Ø©",
+    doc_countdown_label: "Ø§Ù„Ø­Ø°Ù Ø§Ù„ØªÙ„Ù‚Ø§Ø¦ÙŠ Ø®Ù„Ø§Ù„",
+    capture_shutter_btn: "Ø§Ù„ØªÙ‚Ø·",
+    doc_camera_done_btn: "ØªÙ…",
+    camera_unsupported_error: "Ø§Ù„Ù…ØªØµÙØ­ Ù„Ø§ ÙŠØ¯Ø¹Ù… Ø§Ù„ÙˆØµÙˆÙ„ Ù„Ù„ÙƒØ§Ù…ÙŠØ±Ø§",
+    camera_permission_error: "ØªØ¹Ø°Ø± Ø§Ù„ÙˆØµÙˆÙ„ Ø¥Ù„Ù‰ Ø§Ù„ÙƒØ§Ù…ÙŠØ±Ø§ØŒ ÙŠØ±Ø¬Ù‰ Ù…Ù†Ø­ Ø§Ù„Ø¥Ø°Ù† Ø§Ù„Ù„Ø§Ø²Ù…",
   },
   en: {
     control_panel: "Control Panel",
@@ -525,7 +525,7 @@ const I18N = {
     sos_manager_home_label: "SOS",
     sos_manage_categories_title: "Products & Columns",
     sos_name_font_size_label: "Store name font size",
-    sos_pct_column_checkbox: "This is a % (ratio) column — auto-moves to the end of this product's table",
+    sos_pct_column_checkbox: "This is a % (ratio) column â€” auto-moves to the end of this product's table",
     sos_print_note_placeholder: "Type a name/date/note to show at the top when printing (optional)",
     tab_layout: "Display Layout",
     current_branches: "Current Branches",
@@ -628,7 +628,7 @@ const I18N = {
     sub_err_phone: "Please enter a valid phone number with country code",
     toast_subscribed: "Subscribed successfully",
     wa_fab_title: "Subscribe to WhatsApp alerts",
-    lang_toggle_ar: "العربية",
+    lang_toggle_ar: "Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©",
     lang_toggle_en: "English",
     quick_edit_title: "Edit Product",
     image_word: "Image",
@@ -676,7 +676,7 @@ const I18N = {
     monthly_col_product: "Product",
     monthly_col_weight: "Weight",
     monthly_col_qty: "Qty (cartons)",
-    print_hint: "This opens the browser's print dialog — choose \"Save as PDF\" as the destination to get a PDF file.",
+    print_hint: "This opens the browser's print dialog â€” choose \"Save as PDF\" as the destination to get a PDF file.",
     toast_enter_product_name: "Please write the product name",
     responsible_name_label: "Responsible person",
     responsible_name_placeholder: "Type your name here",
@@ -749,11 +749,11 @@ const I18N = {
     monthly_col_expiry: "Expiry Date",
     unit_ml: "ml",
     unit_l: "L",
-    monthly_catalog_hint: "Tap any group to open it, then pick the quantity and expiry date from the lists — no manual typing.",
+    monthly_catalog_hint: "Tap any group to open it, then pick the quantity and expiry date from the lists â€” no manual typing.",
     monthly_qty_field: "Quantity",
     carton_unit_word: "carton",
     monthly_expiry_field: "Expiry Date",
-    monthly_no_selection: "—",
+    monthly_no_selection: "â€”",
     monthly_group_progress: "entered",
     monthly_other_group_title: "Other Products",
     monthly_other_group_title_en: "Other Products",
@@ -808,7 +808,7 @@ const I18N = {
     days_overdue_word: "overdue",
     call_word: "Call",
     whatsapp_word: "WhatsApp",
-    toast_photos_expired: "5-minute limit expired — captured photos were deleted",
+    toast_photos_expired: "5-minute limit expired â€” captured photos were deleted",
     doc_countdown_label: "Auto-delete in",
     capture_shutter_btn: "Capture",
     doc_camera_done_btn: "Done",
@@ -830,9 +830,9 @@ function tEn(key){
 }
 
 function unitLabel(u){
-  if(u === "كغ" || u === "kg") return "KG";
-  if(u === "مل" || u === "ml") return "ML";
-  if(u === "لتر" || u === "l") return "L";
+  if(u === "ÙƒØº" || u === "kg") return "KG";
+  if(u === "Ù…Ù„" || u === "ml") return "ML";
+  if(u === "Ù„ØªØ±" || u === "l") return "L";
   return "G";
 }
 
@@ -856,8 +856,8 @@ function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toStr
 ========================================================= */
 function defaultBranches(){
   return [
-    { id: "panda", name: "بنده", columns: 2, notices: [], icon: { type: "daisy", value: "" } },
-    { id: "othaim", name: "العثيم", columns: 2, notices: [], icon: { type: "daisy", value: "" } },
+    { id: "panda", name: "Ø¨Ù†Ø¯Ù‡", columns: 2, notices: [], icon: { type: "daisy", value: "" } },
+    { id: "othaim", name: "Ø§Ù„Ø¹Ø«ÙŠÙ…", columns: 2, notices: [], icon: { type: "daisy", value: "" } },
   ];
 }
 function branchColumns(b){ return (b && (b.columns===1 || b.columns===2)) ? b.columns : 2; }
@@ -865,8 +865,8 @@ function branchNotices(b){ return (b && Array.isArray(b.notices)) ? b.notices : 
 function branchIcon(b){ return (b && b.icon && b.icon.type) ? b.icon : { type:"daisy", value:"" }; }
 
 /* ---------------- SOS (Share of Shelf) default seed ----------------
-   نفس أسماء المجموعات الظاهرة في الجدول المرجعي، وكل مجموعة تبدأ
-   بعمودين (الإجمالي / النسبة %) وللمدير أن يضيف أو يحذف أعمدة كما يشاء. */
+   Ù†ÙØ³ Ø£Ø³Ù…Ø§Ø¡ Ø§Ù„Ù…Ø¬Ù…ÙˆØ¹Ø§Øª Ø§Ù„Ø¸Ø§Ù‡Ø±Ø© ÙÙŠ Ø§Ù„Ø¬Ø¯ÙˆÙ„ Ø§Ù„Ù…Ø±Ø¬Ø¹ÙŠØŒ ÙˆÙƒÙ„ Ù…Ø¬Ù…ÙˆØ¹Ø© ØªØ¨Ø¯Ø£
+   Ø¨Ø¹Ù…ÙˆØ¯ÙŠÙ† (Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ / Ø§Ù„Ù†Ø³Ø¨Ø© %) ÙˆÙ„Ù„Ù…Ø¯ÙŠØ± Ø£Ù† ÙŠØ¶ÙŠÙ Ø£Ùˆ ÙŠØ­Ø°Ù Ø£Ø¹Ù…Ø¯Ø© ÙƒÙ…Ø§ ÙŠØ´Ø§Ø¡. */
 function defaultSosCategories(){
   const names = [
     "Glass jar 50%", "St.cream 35%", "Mozzrella 40%", "Kraft Tin 60%", "Lurpak 45%",
@@ -915,16 +915,16 @@ async function ensureCatalogSeededAllBranches(){
 }
 
 /* =========================================================
-   ترحيل الفروع القديمة المشتركة إلى فروع خاصة بكل موظف
+   ØªØ±Ø­ÙŠÙ„ Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„Ù‚Ø¯ÙŠÙ…Ø© Ø§Ù„Ù…Ø´ØªØ±ÙƒØ© Ø¥Ù„Ù‰ ÙØ±ÙˆØ¹ Ø®Ø§ØµØ© Ø¨ÙƒÙ„ Ù…ÙˆØ¸Ù
    -----------------------------------------------------------
-   قديمًا كانت كل الفروع (بما فيها الفروع الافتراضية وأي فرع
-   يضيفه أي موظف) مشتركة بين كل الحسابات بلا استثناء: أي تعديل
-   على صورة/منتج في فرع يظهر فورًا لكل الموظفين لأنهم جميعًا
-   يقرأون نفس السجل بنفس المعرّف. هذه الدالة تُنفَّذ مرة واحدة
-   فقط: لكل فرع لا يملك "ownerId" (فرع قديم مشترك)، تُنشأ نسخة
-   مستقلة كاملة (فرع + منتجاته) لكل موظف حالي، ثم يُحذف الفرع
-   المشترك القديم. من هذه اللحظة فصاعدًا، أي تعديل يقوم به موظف
-   في فرعه الخاص لا يؤثر إطلاقًا على فروع بقية الموظفين.
+   Ù‚Ø¯ÙŠÙ…Ù‹Ø§ ÙƒØ§Ù†Øª ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹ (Ø¨Ù…Ø§ ÙÙŠÙ‡Ø§ Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ© ÙˆØ£ÙŠ ÙØ±Ø¹
+   ÙŠØ¶ÙŠÙÙ‡ Ø£ÙŠ Ù…ÙˆØ¸Ù) Ù…Ø´ØªØ±ÙƒØ© Ø¨ÙŠÙ† ÙƒÙ„ Ø§Ù„Ø­Ø³Ø§Ø¨Ø§Øª Ø¨Ù„Ø§ Ø§Ø³ØªØ«Ù†Ø§Ø¡: Ø£ÙŠ ØªØ¹Ø¯ÙŠÙ„
+   Ø¹Ù„Ù‰ ØµÙˆØ±Ø©/Ù…Ù†ØªØ¬ ÙÙŠ ÙØ±Ø¹ ÙŠØ¸Ù‡Ø± ÙÙˆØ±Ù‹Ø§ Ù„ÙƒÙ„ Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ† Ù„Ø£Ù†Ù‡Ù… Ø¬Ù…ÙŠØ¹Ù‹Ø§
+   ÙŠÙ‚Ø±Ø£ÙˆÙ† Ù†ÙØ³ Ø§Ù„Ø³Ø¬Ù„ Ø¨Ù†ÙØ³ Ø§Ù„Ù…Ø¹Ø±Ù‘Ù. Ù‡Ø°Ù‡ Ø§Ù„Ø¯Ø§Ù„Ø© ØªÙÙ†ÙÙŽÙ‘Ø° Ù…Ø±Ø© ÙˆØ§Ø­Ø¯Ø©
+   ÙÙ‚Ø·: Ù„ÙƒÙ„ ÙØ±Ø¹ Ù„Ø§ ÙŠÙ…Ù„Ùƒ "ownerId" (ÙØ±Ø¹ Ù‚Ø¯ÙŠÙ… Ù…Ø´ØªØ±Ùƒ)ØŒ ØªÙÙ†Ø´Ø£ Ù†Ø³Ø®Ø©
+   Ù…Ø³ØªÙ‚Ù„Ø© ÙƒØ§Ù…Ù„Ø© (ÙØ±Ø¹ + Ù…Ù†ØªØ¬Ø§ØªÙ‡) Ù„ÙƒÙ„ Ù…ÙˆØ¸Ù Ø­Ø§Ù„ÙŠØŒ Ø«Ù… ÙŠÙØ­Ø°Ù Ø§Ù„ÙØ±Ø¹
+   Ø§Ù„Ù…Ø´ØªØ±Ùƒ Ø§Ù„Ù‚Ø¯ÙŠÙ…. Ù…Ù† Ù‡Ø°Ù‡ Ø§Ù„Ù„Ø­Ø¸Ø© ÙØµØ§Ø¹Ø¯Ù‹Ø§ØŒ Ø£ÙŠ ØªØ¹Ø¯ÙŠÙ„ ÙŠÙ‚ÙˆÙ… Ø¨Ù‡ Ù…ÙˆØ¸Ù
+   ÙÙŠ ÙØ±Ø¹Ù‡ Ø§Ù„Ø®Ø§Øµ Ù„Ø§ ÙŠØ¤Ø«Ø± Ø¥Ø·Ù„Ø§Ù‚Ù‹Ø§ Ø¹Ù„Ù‰ ÙØ±ÙˆØ¹ Ø¨Ù‚ÙŠØ© Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†.
 ========================================================= */
 async function migrateLegacyBranchOwnership(){
   if(state.settings && state.settings.branchOwnershipMigrated) return;
@@ -960,10 +960,10 @@ async function migrateLegacyBranchOwnership(){
 
 function defaultProducts(){
   return [
-    { id: uid(), branchId: "panda", sku: "CRM-500", name: "جبنة كريمة", image: SEED_IMG.cream500, weightValue: 500, weightUnit: "غ", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
-    { id: uid(), branchId: "panda", sku: "CRM-L200", name: "جبنة كريمة لايت", image: SEED_IMG.creamlight200, weightValue: 200, weightUnit: "غ", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
-    { id: uid(), branchId: "panda", sku: "PRC-400", name: "جبنة مطبوخة", image: SEED_IMG.processed400, weightValue: 400, weightUnit: "غ", startDay: 1, startMonth: 3, endDay: 30, endMonth: 9, alertDays: 7 },
-    { id: uid(), branchId: "othaim", sku: "WHT-250", name: "جبنة بيضاء", image: SEED_IMG.white250, weightValue: 250, weightUnit: "غ", startDay: 1, startMonth: 1, endDay: 31, endMonth: 12, alertDays: 14 },
+    { id: uid(), branchId: "panda", sku: "CRM-500", name: "Ø¬Ø¨Ù†Ø© ÙƒØ±ÙŠÙ…Ø©", image: SEED_IMG.cream500, weightValue: 500, weightUnit: "Øº", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
+    { id: uid(), branchId: "panda", sku: "CRM-L200", name: "Ø¬Ø¨Ù†Ø© ÙƒØ±ÙŠÙ…Ø© Ù„Ø§ÙŠØª", image: SEED_IMG.creamlight200, weightValue: 200, weightUnit: "Øº", startDay: 15, startMonth: 6, endDay: 15, endMonth: 12, alertDays: 10 },
+    { id: uid(), branchId: "panda", sku: "PRC-400", name: "Ø¬Ø¨Ù†Ø© Ù…Ø·Ø¨ÙˆØ®Ø©", image: SEED_IMG.processed400, weightValue: 400, weightUnit: "Øº", startDay: 1, startMonth: 3, endDay: 30, endMonth: 9, alertDays: 7 },
+    { id: uid(), branchId: "othaim", sku: "WHT-250", name: "Ø¬Ø¨Ù†Ø© Ø¨ÙŠØ¶Ø§Ø¡", image: SEED_IMG.white250, weightValue: 250, weightUnit: "Øº", startDay: 1, startMonth: 1, endDay: 31, endMonth: 12, alertDays: 14 },
   ];
 }
 function defaultUsers(){
@@ -986,23 +986,23 @@ function employeeLabel(u){
 function isManagerCreatedBranch(b){
   return !!(b && (b.createdByRole === "manager" || b.createdByRole === "bigboss"));
 }
-/* فروع مملوكة فعليًا لهذا الموظف (تظهر في حسابه فقط) */
+/* ÙØ±ÙˆØ¹ Ù…Ù…Ù„ÙˆÙƒØ© ÙØ¹Ù„ÙŠÙ‹Ø§ Ù„Ù‡Ø°Ø§ Ø§Ù„Ù…ÙˆØ¸Ù (ØªØ¸Ù‡Ø± ÙÙŠ Ø­Ø³Ø§Ø¨Ù‡ ÙÙ‚Ø·) */
 function branchesForEmployee(employeeId){
   return state.branches.filter(b=> b.ownerId === employeeId);
 }
-/* الفروع التي يجب أن يراها المستخدم الحالي في شاشاته (الرئيسية / الجرد الشهري):
-   - الموظف: فروعه الخاصة فقط (التي أنشأها هو أو التي أنشأها له مديره واختاره لها).
-   - المدير/المدير العام: كل الفروع (للإشراف). */
+/* Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„ØªÙŠ ÙŠØ¬Ø¨ Ø£Ù† ÙŠØ±Ø§Ù‡Ø§ Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… Ø§Ù„Ø­Ø§Ù„ÙŠ ÙÙŠ Ø´Ø§Ø´Ø§ØªÙ‡ (Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ© / Ø§Ù„Ø¬Ø±Ø¯ Ø§Ù„Ø´Ù‡Ø±ÙŠ):
+   - Ø§Ù„Ù…ÙˆØ¸Ù: ÙØ±ÙˆØ¹Ù‡ Ø§Ù„Ø®Ø§ØµØ© ÙÙ‚Ø· (Ø§Ù„ØªÙŠ Ø£Ù†Ø´Ø£Ù‡Ø§ Ù‡Ùˆ Ø£Ùˆ Ø§Ù„ØªÙŠ Ø£Ù†Ø´Ø£Ù‡Ø§ Ù„Ù‡ Ù…Ø¯ÙŠØ±Ù‡ ÙˆØ§Ø®ØªØ§Ø±Ù‡ Ù„Ù‡Ø§).
+   - Ø§Ù„Ù…Ø¯ÙŠØ±/Ø§Ù„Ù…Ø¯ÙŠØ± Ø§Ù„Ø¹Ø§Ù…: ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹ (Ù„Ù„Ø¥Ø´Ø±Ø§Ù). */
 function visibleBranchesForCurrentUser(){
   if(!session.user) return [];
   const role = userRole(session.user);
   if(role === "employee") return branchesForEmployee(session.user.id);
   return state.branches;
 }
-/* الفروع التي تظهر لهذا المستخدم داخل تبويب "الفروع" بلوحة التحكم (إضافة/حذف):
-   - الموظف: فروعه الخاصة فقط.
-   - المدير: الفروع التي أنشأها هو بنفسه لموظفيه (وليس فروع موظفين آخرين الخاصة).
-   - المدير العام (bigboss): كل الفروع، للإشراف الكامل. */
+/* Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„ØªÙŠ ØªØ¸Ù‡Ø± Ù„Ù‡Ø°Ø§ Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… Ø¯Ø§Ø®Ù„ ØªØ¨ÙˆÙŠØ¨ "Ø§Ù„ÙØ±ÙˆØ¹" Ø¨Ù„ÙˆØ­Ø© Ø§Ù„ØªØ­ÙƒÙ… (Ø¥Ø¶Ø§ÙØ©/Ø­Ø°Ù):
+   - Ø§Ù„Ù…ÙˆØ¸Ù: ÙØ±ÙˆØ¹Ù‡ Ø§Ù„Ø®Ø§ØµØ© ÙÙ‚Ø·.
+   - Ø§Ù„Ù…Ø¯ÙŠØ±: Ø§Ù„ÙØ±ÙˆØ¹ Ø§Ù„ØªÙŠ Ø£Ù†Ø´Ø£Ù‡Ø§ Ù‡Ùˆ Ø¨Ù†ÙØ³Ù‡ Ù„Ù…ÙˆØ¸ÙÙŠÙ‡ (ÙˆÙ„ÙŠØ³ ÙØ±ÙˆØ¹ Ù…ÙˆØ¸ÙÙŠÙ† Ø¢Ø®Ø±ÙŠÙ† Ø§Ù„Ø®Ø§ØµØ©).
+   - Ø§Ù„Ù…Ø¯ÙŠØ± Ø§Ù„Ø¹Ø§Ù… (bigboss): ÙƒÙ„ Ø§Ù„ÙØ±ÙˆØ¹ØŒ Ù„Ù„Ø¥Ø´Ø±Ø§Ù Ø§Ù„ÙƒØ§Ù…Ù„. */
 function branchesManageableInBranchesTab(){
   if(!session.user) return [];
   const role = userRole(session.user);
@@ -1054,7 +1054,7 @@ const supabaseClient = (window.SUPABASE_URL && window.SUPABASE_ANON_KEY)
   : null;
 
 async function storageGet(key, fallback){
-  if(!supabaseClient){ console.error("Supabase غير مهيأ - راجع config.js"); return fallback; }
+  if(!supabaseClient){ console.error("Supabase ØºÙŠØ± Ù…Ù‡ÙŠØ£ - Ø±Ø§Ø¬Ø¹ config.js"); return fallback; }
   try{
     const { data, error } = await supabaseClient.from("puck_kv").select("value").eq("key", key).maybeSingle();
     if(error || !data || data.value === undefined || data.value === null) return fallback;
@@ -1062,7 +1062,7 @@ async function storageGet(key, fallback){
   }catch(e){ console.error("storage get failed", key, e); return fallback; }
 }
 async function storageSet(key, value){
-  if(!supabaseClient){ console.error("Supabase غير مهيأ - راجع config.js"); return; }
+  if(!supabaseClient){ console.error("Supabase ØºÙŠØ± Ù…Ù‡ÙŠØ£ - Ø±Ø§Ø¬Ø¹ config.js"); return; }
   try{
     await supabaseClient.from("puck_kv").upsert({ key, value, updated_at: new Date().toISOString() });
   }catch(e){ console.error("storage set failed", key, e); }
@@ -1073,13 +1073,13 @@ async function loadAll(){
   document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
 
   /* ---------------------------------------------------------------
-     إصلاح الأداء (سبب تأخر فتح الصفحة ~30 ثانية):
-     كل استدعاء storageGet/storageSet هو طلب شبكة مستقل لِ Supabase.
-     سابقًا كانت 18 عملية قراءة تُنفَّذ الواحدة تلو الأخرى بـ await
-     متسلسل، فيتراكم زمن الشبكة 18 مرة. الحل: تنفيذها كلها دفعة
-     واحدة بالتوازي عبر Promise.all، وكذلك عمليات الكتابة الأولية
-     للقيم الافتراضية الناقصة. هذا يختصر وقت التحميل من نحو 30
-     ثانية إلى زمن أطول طلب واحد تقريبًا.
+     Ø¥ØµÙ„Ø§Ø­ Ø§Ù„Ø£Ø¯Ø§Ø¡ (Ø³Ø¨Ø¨ ØªØ£Ø®Ø± ÙØªØ­ Ø§Ù„ØµÙØ­Ø© ~30 Ø«Ø§Ù†ÙŠØ©):
+     ÙƒÙ„ Ø§Ø³ØªØ¯Ø¹Ø§Ø¡ storageGet/storageSet Ù‡Ùˆ Ø·Ù„Ø¨ Ø´Ø¨ÙƒØ© Ù…Ø³ØªÙ‚Ù„ Ù„Ù Supabase.
+     Ø³Ø§Ø¨Ù‚Ù‹Ø§ ÙƒØ§Ù†Øª 18 Ø¹Ù…Ù„ÙŠØ© Ù‚Ø±Ø§Ø¡Ø© ØªÙÙ†ÙÙŽÙ‘Ø° Ø§Ù„ÙˆØ§Ø­Ø¯Ø© ØªÙ„Ùˆ Ø§Ù„Ø£Ø®Ø±Ù‰ Ø¨Ù€ await
+     Ù…ØªØ³Ù„Ø³Ù„ØŒ ÙÙŠØªØ±Ø§ÙƒÙ… Ø²Ù…Ù† Ø§Ù„Ø´Ø¨ÙƒØ© 18 Ù…Ø±Ø©. Ø§Ù„Ø­Ù„: ØªÙ†ÙÙŠØ°Ù‡Ø§ ÙƒÙ„Ù‡Ø§ Ø¯ÙØ¹Ø©
+     ÙˆØ§Ø­Ø¯Ø© Ø¨Ø§Ù„ØªÙˆØ§Ø²ÙŠ Ø¹Ø¨Ø± Promise.allØŒ ÙˆÙƒØ°Ù„Ùƒ Ø¹Ù…Ù„ÙŠØ§Øª Ø§Ù„ÙƒØªØ§Ø¨Ø© Ø§Ù„Ø£ÙˆÙ„ÙŠØ©
+     Ù„Ù„Ù‚ÙŠÙ… Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ© Ø§Ù„Ù†Ø§Ù‚ØµØ©. Ù‡Ø°Ø§ ÙŠØ®ØªØµØ± ÙˆÙ‚Øª Ø§Ù„ØªØ­Ù…ÙŠÙ„ Ù…Ù† Ù†Ø­Ùˆ 30
+     Ø«Ø§Ù†ÙŠØ© Ø¥Ù„Ù‰ Ø²Ù…Ù† Ø£Ø·ÙˆÙ„ Ø·Ù„Ø¨ ÙˆØ§Ø­Ø¯ ØªÙ‚Ø±ÙŠØ¨Ù‹Ø§.
   --------------------------------------------------------------- */
   const KV_KEYS = [
     "puck:branches", "puck:products", "puck:users", "puck:settings",
@@ -1146,7 +1146,7 @@ async function loadAll(){
     await storageSet("puck:sos", state.sos);
   }else{
     let sosLabelsChanged = false;
-    const arToEnLabel = { "الإجمالي":"Total", "النسبة %":"Ratio %", "النسبة":"Ratio %", "نسبة":"Ratio %" };
+    const arToEnLabel = { "Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ":"Total", "Ø§Ù„Ù†Ø³Ø¨Ø© %":"Ratio %", "Ø§Ù„Ù†Ø³Ø¨Ø©":"Ratio %", "Ù†Ø³Ø¨Ø©":"Ratio %" };
     state.sos.categories.forEach(cat=>{
       if(arToEnLabel[cat.name]) { cat.name = arToEnLabel[cat.name]; sosLabelsChanged = true; }
       (cat.columns||[]).forEach(col=>{
@@ -1233,10 +1233,10 @@ function dailyProductCardHtml(p){
 }
 function buildWaMessage(p, branchName, info){
   if(info.status === "expired"){
-    return `تنبيه أرلا: انتهت مدة عرض "${p.name}" في فرع ${branchName}. الرجاء المتابعة والإزالة إذا لزم الأمر.`;
+    return `ØªÙ†Ø¨ÙŠÙ‡ Ø£Ø±Ù„Ø§: Ø§Ù†ØªÙ‡Øª Ù…Ø¯Ø© Ø¹Ø±Ø¶ "${p.name}" ÙÙŠ ÙØ±Ø¹ ${branchName}. Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø© ÙˆØ§Ù„Ø¥Ø²Ø§Ù„Ø© Ø¥Ø°Ø§ Ù„Ø²Ù… Ø§Ù„Ø£Ù…Ø±.`;
   }
   const dateStr = `${String(p.endDay).padStart(2,'0')} ${curMonths()[p.endMonth-1]} ${YEAR}`;
-  return `تنبيه أرلا: منتج "${p.name}" في فرع ${branchName} على وشك الانتهاء خلال ${info.days} ${info.days===1?'يوم':'أيام'} (بتاريخ ${dateStr}). الرجاء المتابعة.`;
+  return `ØªÙ†Ø¨ÙŠÙ‡ Ø£Ø±Ù„Ø§: Ù…Ù†ØªØ¬ "${p.name}" ÙÙŠ ÙØ±Ø¹ ${branchName} Ø¹Ù„Ù‰ ÙˆØ´Ùƒ Ø§Ù„Ø§Ù†ØªÙ‡Ø§Ø¡ Ø®Ù„Ø§Ù„ ${info.days} ${info.days===1?'ÙŠÙˆÙ…':'Ø£ÙŠØ§Ù…'} (Ø¨ØªØ§Ø±ÙŠØ® ${dateStr}). Ø§Ù„Ø±Ø¬Ø§Ø¡ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø©.`;
 }
 function waLink(phone, text){
   const digits = String(phone).replace(/[^0-9]/g,"");
@@ -1355,8 +1355,8 @@ function render(){
     attachLoginScreenEvents();
     return;
   }
-  /* حماية خصوصية الفروع: موظف لا يمكنه فتح فرع لا يملكه حتى لو
-     حاول الوصول إليه عبر رابط مباشر (# في شريط العنوان). */
+  /* Ø­Ù…Ø§ÙŠØ© Ø®ØµÙˆØµÙŠØ© Ø§Ù„ÙØ±ÙˆØ¹: Ù…ÙˆØ¸Ù Ù„Ø§ ÙŠÙ…ÙƒÙ†Ù‡ ÙØªØ­ ÙØ±Ø¹ Ù„Ø§ ÙŠÙ…Ù„ÙƒÙ‡ Ø­ØªÙ‰ Ù„Ùˆ
+     Ø­Ø§ÙˆÙ„ Ø§Ù„ÙˆØµÙˆÙ„ Ø¥Ù„ÙŠÙ‡ Ø¹Ø¨Ø± Ø±Ø§Ø¨Ø· Ù…Ø¨Ø§Ø´Ø± (# ÙÙŠ Ø´Ø±ÙŠØ· Ø§Ù„Ø¹Ù†ÙˆØ§Ù†). */
   if(userRole(session.user) === "employee" && (view.screen === "branch" || view.screen === "branchExpired" || view.screen === "monthlyBranch") && view.branchId){
     const allowedIds = new Set(visibleBranchesForCurrentUser().map(b=>b.id));
     if(!allowedIds.has(view.branchId)){
@@ -1428,30 +1428,30 @@ function renderLandingScreen(){
     <div class="section-label"><span class="line"></span> ${t('daily_prep_title')} <span class="line"></span></div>
     <div class="inventory-choice-row">
       <div class="inventory-opt" id="dailyPrepBox" style="position:relative;">
-        <button class="chip-mini-btn" id="dailyPrepEditBtn" title="${t('daily_prep_edit_tooltip')}" style="position:absolute; top:6px; ${lang==='ar'?'left':'right'}:6px;">✏️</button>
-        <div class="ico" style="font-size:34px;">📝</div>
+        <button class="chip-mini-btn" id="dailyPrepEditBtn" title="${t('daily_prep_edit_tooltip')}" style="position:absolute; top:6px; ${lang==='ar'?'left':'right'}:6px;">âœï¸</button>
+        <div class="ico" style="font-size:34px;">ðŸ“</div>
         <div class="lbl">${t('daily_prep_title')}</div>
       </div>
     </div>
     <div class="section-label"><span class="line"></span> ${t('planogram_word')} - ${t('documentation_word')} <span class="line"></span></div>
     <div class="inventory-choice-row">
       <div class="inventory-opt" data-goto="planogram">
-        <div class="ico" style="font-size:34px;">🗺️</div>
+        <div class="ico" style="font-size:34px;">ðŸ—ºï¸</div>
         <div class="lbl">${t('planogram_word')}</div>
         ${hasNewPlanogram ? `<div class="new-update-tag"><span class="dot"></span>${t('new_update_label')}</div>` : ''}
       </div>
       <div class="inventory-opt" data-goto="documentation">
-        <div class="ico" style="font-size:34px;">📸</div>
+        <div class="ico" style="font-size:34px;">ðŸ“¸</div>
         <div class="lbl">${t('documentation_word')}</div>
       </div>
     </div>
     <div class="inventory-choice-row">
       <div class="inventory-opt" data-goto="home">
-        <div class="ico" style="font-size:34px;">📅</div>
+        <div class="ico" style="font-size:34px;">ðŸ“…</div>
         <div class="lbl">${t('daily_word')}</div>
       </div>
       <div class="inventory-opt" data-goto="monthly">
-        <div class="ico" style="font-size:34px;">🗓️</div>
+        <div class="ico" style="font-size:34px;">ðŸ—“ï¸</div>
         <div class="lbl">${t('monthly_word')}</div>
       </div>
     </div>
@@ -1811,8 +1811,8 @@ function renderPlanogramScreen(){
       ${it.notes ? `<div class="msg-text" style="white-space:pre-wrap; margin-top:10px;">${escapeHtml(it.notes)}</div>` : ''}
       <div class="planogram-item-meta">
         ${new Date(it.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}
-        ${it.createdBy ? ' — ' + escapeHtml(it.createdBy) : ''}
-        ${(!it.targetIds || !it.targetIds.length) ? ` — ${t('all_employees_word')}` : ''}
+        ${it.createdBy ? ' â€” ' + escapeHtml(it.createdBy) : ''}
+        ${(!it.targetIds || !it.targetIds.length) ? ` â€” ${t('all_employees_word')}` : ''}
       </div>
       <div class="planogram-item-actions">
         <button class="btn btn-ghost btn-small" data-download-plano="${it.id}">${ICON.download} ${t('download_word')}</button>
@@ -1848,7 +1848,7 @@ function attachDocThumbRemoveHandlers(){
       const stripEl = document.getElementById("docThumbStrip");
       if(stripEl) stripEl.innerHTML = docThumbStripHtml();
       const takeBtn = document.getElementById("docTakePhotoBtn");
-      if(takeBtn) takeBtn.innerHTML = `📷 ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}`;
+      if(takeBtn) takeBtn.innerHTML = `ðŸ“· ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}`;
       attachDocThumbRemoveHandlers();
       tickDocCountdown();
     };
@@ -1881,7 +1881,7 @@ function tickDocCountdown(){
   const totalSec = Math.ceil(msLeft/1000);
   const mm = Math.floor(totalSec/60);
   const ss = totalSec % 60;
-  if(el) el.textContent = `⏱ ${t('doc_countdown_label')} ${mm}:${String(ss).padStart(2,'0')}`;
+  if(el) el.textContent = `â± ${t('doc_countdown_label')} ${mm}:${String(ss).padStart(2,'0')}`;
 }
 function addPendingDocPhoto(dataUrl){
   pendingDocPhotos.push(dataUrl);
@@ -1889,7 +1889,7 @@ function addPendingDocPhoto(dataUrl){
   const stripEl = document.getElementById("docThumbStrip");
   if(stripEl) stripEl.innerHTML = docThumbStripHtml();
   const takeBtn = document.getElementById("docTakePhotoBtn");
-  if(takeBtn) takeBtn.innerHTML = `📷 ${t('take_another_photo_btn')}`;
+  if(takeBtn) takeBtn.innerHTML = `ðŸ“· ${t('take_another_photo_btn')}`;
   attachDocThumbRemoveHandlers();
   tickDocCountdown();
 }
@@ -1902,12 +1902,12 @@ async function openCameraCaptureModal(){
   wrap.innerHTML = `
     <div class="modal camera-modal">
       <button class="close-x" id="closeCameraModal">&times;</button>
-      <h3>📷 ${t('take_photo_btn')}</h3>
+      <h3>ðŸ“· ${t('take_photo_btn')}</h3>
       <div class="camera-preview-wrap">
         <video id="cameraVideo" autoplay playsinline muted></video>
       </div>
       <p id="cameraError" class="hint" style="color:#c0392b; display:none;"></p>
-      <button class="btn btn-primary" id="cameraShutterBtn" style="width:100%;">📸 ${t('capture_shutter_btn')}</button>
+      <button class="btn btn-primary" id="cameraShutterBtn" style="width:100%;">ðŸ“¸ ${t('capture_shutter_btn')}</button>
       <button class="btn btn-ghost" id="cameraDoneBtn" style="width:100%; margin-top:8px;">${t('doc_camera_done_btn')}</button>
     </div>
   `;
@@ -1969,7 +1969,7 @@ function docEntryCardHtml(e, showAlertBtn){
     <div class="doc-entry-card">
       <div class="doc-entry-meta">
         <span>${new Date(e.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</span>
-        <span class="doc-entry-hours">${docHoursLeft(e)} ${t('hours_word')} — ${t('documentation_expires_in')}</span>
+        <span class="doc-entry-hours">${docHoursLeft(e)} ${t('hours_word')} â€” ${t('documentation_expires_in')}</span>
       </div>
       ${e.note ? `<div class="doc-entry-note">${escapeHtml(e.note)}</div>` : ''}
       <div class="doc-entry-photos">
@@ -1998,7 +1998,7 @@ function renderDocumentationScreen(){
     </div>
     <div class="monthly-wrap">
       <div class="doc-capture-card">
-        <button class="add-product-tile" id="docTakePhotoBtn" type="button">📷 ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}</button>
+        <button class="add-product-tile" id="docTakePhotoBtn" type="button">ðŸ“· ${pendingDocPhotos.length ? t('take_another_photo_btn') : t('take_photo_btn')}</button>
         <div id="docCountdown" class="doc-countdown"></div>
         <div id="docThumbStrip">${docThumbStripHtml()}</div>
         <div class="field" style="margin-top:14px;">
@@ -2090,7 +2090,7 @@ function attachHomeEvents(){
     btn.onclick = ()=>{
       const entry = state.documentation.find(x=>x.id===btn.getAttribute("data-send-doc-alert"));
       if(!entry) return;
-      const prefill = `${t('documentation_alert_prefill')}${entry.note ? ' — ' + entry.note : ''}`;
+      const prefill = `${t('documentation_alert_prefill')}${entry.note ? ' â€” ' + entry.note : ''}`;
       openComposeMessageModal([entry.userId], prefill);
     };
   });
@@ -2306,7 +2306,7 @@ async function patchMonthlyEntry(branchId, itemId, patch){
 function entryIsFilled(entry){ return (entry.shelfQty||0) > 0 || (entry.backQty||0) > 0; }
 function unitBilingual(weightUnit, legacy){
   if(legacy){
-    return (weightUnit === "كغ") ? "KG" : "G";
+    return (weightUnit === "ÙƒØº") ? "KG" : "G";
   }
   if(weightUnit === "kg") return "KG";
   if(weightUnit === "ml") return "ML";
@@ -2523,15 +2523,15 @@ function openEmployeeAccountModal(){
 }
 
 /* =========================================================
-   EMPLOYEE NOTIFICATIONS ("رسالة من المدير")
+   EMPLOYEE NOTIFICATIONS ("Ø±Ø³Ø§Ù„Ø© Ù…Ù† Ø§Ù„Ù…Ø¯ÙŠØ±")
 ========================================================= */
 function messageBodyHtml(m){
   let html = "";
   if(m.textAr && m.textEn){
-    html += `<div class="msg-block"><div class="msg-lang-lbl">العربية</div><div class="msg-text">${escapeHtml(m.textAr)}</div></div>`;
+    html += `<div class="msg-block"><div class="msg-lang-lbl">Ø§Ù„Ø¹Ø±Ø¨ÙŠØ©</div><div class="msg-text">${escapeHtml(m.textAr)}</div></div>`;
     html += `<div class="msg-block"><div class="msg-lang-lbl">English</div><div class="msg-text">${escapeHtml(m.textEn)}</div></div>`;
   }else if(m.textAr){
-    html += `<div class="msg-block"><div class="msg-lang-lbl">${t('original_text_label')} (عربي)</div><div class="msg-text">${escapeHtml(m.textAr)}</div></div>`;
+    html += `<div class="msg-block"><div class="msg-lang-lbl">${t('original_text_label')} (Ø¹Ø±Ø¨ÙŠ)</div><div class="msg-text">${escapeHtml(m.textAr)}</div></div>`;
   }else if(m.textEn){
     html += `<div class="msg-block"><div class="msg-lang-lbl">${t('original_text_label')} (English)</div><div class="msg-text">${escapeHtml(m.textEn)}</div></div>`;
   }
@@ -2547,7 +2547,7 @@ function openEmployeeNotificationsModal(){
   function draw(){
     const listHtml = myMessages.length ? myMessages.map(m=>`
       <div class="notice-card">
-        <div class="notice-card-meta">${escapeHtml(m.fromUsername)} — ${new Date(m.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</div>
+        <div class="notice-card-meta">${escapeHtml(m.fromUsername)} â€” ${new Date(m.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</div>
         ${messageBodyHtml(m)}
         <label class="hide-toggle-row" style="margin-top:10px;">
           <input type="checkbox" data-mark-read="${m.id}" ${m.read?'checked':''} ${m.read?'disabled':''}>
@@ -2586,7 +2586,7 @@ function openEmployeeNotificationsModal(){
 }
 
 /* =========================================================
-   MANAGER DASHBOARD ("لوحة المدير")
+   MANAGER DASHBOARD ("Ù„ÙˆØ­Ø© Ø§Ù„Ù…Ø¯ÙŠØ±")
 ========================================================= */
 /* =========================================================
    MANAGER HOME (dedicated landing for role=manager)
@@ -2604,31 +2604,31 @@ function renderManagerHomeScreen(){
     <div class="manager-greeting">${t('welcome_word')}: ${escapeHtml(session.user.username)}</div>
     <div class="manager-boxes-grid">
       <div class="inventory-opt" data-mgoto="branches">
-        <div class="ico" style="font-size:34px;">🏬</div>
+        <div class="ico" style="font-size:34px;">ðŸ¬</div>
         <div class="lbl">${t('tab_branches')}</div>
       </div>
       <div class="inventory-opt" data-mgoto="sos">
-        <div class="ico" style="font-size:34px;">📋</div>
+        <div class="ico" style="font-size:34px;">ðŸ“‹</div>
         <div class="lbl">${t('sos_manager_home_label')}</div>
       </div>
       <div class="inventory-opt" data-mgoto="planogram">
-        <div class="ico" style="font-size:34px;">🗺️</div>
+        <div class="ico" style="font-size:34px;">ðŸ—ºï¸</div>
         <div class="lbl">${t('planogram_word')}</div>
       </div>
       <div class="inventory-opt" data-mgoto="employees">
-        <div class="ico" style="font-size:34px;">👥</div>
+        <div class="ico" style="font-size:34px;">ðŸ‘¥</div>
         <div class="lbl">${t('tab_employees')}</div>
       </div>
       <div class="inventory-opt" data-mgoto="documentation">
-        <div class="ico" style="font-size:34px;">📸</div>
+        <div class="ico" style="font-size:34px;">ðŸ“¸</div>
         <div class="lbl">${t('documentation_viewer_title')}</div>
       </div>
       <div class="inventory-opt" data-mgoto="expiryAlerts">
-        <div class="ico" style="font-size:34px;">⏰</div>
+        <div class="ico" style="font-size:34px;">â°</div>
         <div class="lbl">${t('manager_expiry_alerts_title')}</div>
       </div>
       <div class="inventory-opt" data-mgoto="notifications">
-        <div class="ico" style="font-size:34px;">🔔</div>
+        <div class="ico" style="font-size:34px;">ðŸ””</div>
         <div class="lbl">${t('send_notification_btn')}</div>
       </div>
     </div>
@@ -2647,14 +2647,14 @@ function renderManagerEmployeesScreen(){
         <div class="employee-avatar">${escapeHtml((u.username||'?').charAt(0).toUpperCase())}</div>
         <div class="employee-info">
           <div class="employee-name">${escapeHtml(employeeLabel(u))}</div>
-          ${u.phone ? `<div class="employee-phone" dir="ltr">${escapeHtml(u.phone)}</div>` : `<div class="employee-phone hint" style="margin:0;">${t('phone_label')}: —</div>`}
+          ${u.phone ? `<div class="employee-phone" dir="ltr">${escapeHtml(u.phone)}</div>` : `<div class="employee-phone hint" style="margin:0;">${t('phone_label')}: â€”</div>`}
         </div>
       </div>
       <div class="employee-actions">
         ${u.phone ? `<a class="emp-action-btn wa" href="${waLink(u.phone,'')}" target="_blank" rel="noopener" title="${t('whatsapp_word')}">${ICON.whatsapp}</a>` : ''}
-        ${u.phone ? `<a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}">📞</a>` : ''}
+        ${u.phone ? `<a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}">ðŸ“ž</a>` : ''}
         <button class="emp-action-btn view" data-view-account="${u.id}" title="${t('view_word')}">${ICON.search}</button>
-        <button class="emp-action-btn msg" data-view-employee-branches="${u.id}" title="${t('view_employee_branches')}">🏬</button>
+        <button class="emp-action-btn msg" data-view-employee-branches="${u.id}" title="${t('view_employee_branches')}">ðŸ¬</button>
         <button class="emp-action-btn msg" data-message-account="${u.id}" title="${t('message_word')}">${ICON.edit}</button>
       </div>
     </div>
@@ -2759,7 +2759,7 @@ function openEmployeeBranchesModal(employeeId){
   wrap.innerHTML = `
     <div class="modal">
       <button class="close-x" id="closeEmpBranchesModal">&times;</button>
-      <h3>${t('employee_branches_title')}${emp ? ' — ' + escapeHtml(employeeLabel(emp)) : ''}</h3>
+      <h3>${t('employee_branches_title')}${emp ? ' â€” ' + escapeHtml(employeeLabel(emp)) : ''}</h3>
       ${branches.length ? `
         <div class="chip-grid">
           ${branches.map(b=>`
@@ -2806,7 +2806,7 @@ function openDocQuickViewModal(entryId){
   wrap.innerHTML = `
     <div class="modal wide">
       <button class="close-x" id="closeDocQuick">&times;</button>
-      <h3>${ICON.gallery || "📸"} ${escapeHtml(entry.username)}</h3>
+      <h3>${ICON.gallery || "ðŸ“¸"} ${escapeHtml(entry.username)}</h3>
       <p class="hint">${new Date(entry.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</p>
       ${entry.note ? `<div class="doc-entry-note">${escapeHtml(entry.note)}</div>` : ''}
       <div class="doc-entry-photos">
@@ -2836,7 +2836,7 @@ function renderManagerNotificationsScreen(){
     return `
     <div class="notice-row" style="align-items:center; cursor:pointer;" data-view-batch="${b.id}">
       <span class="swatch" style="background:${readCount===b.recipients.length?'var(--leaf)':'var(--danger)'};"></span>
-      <span class="txt">${escapeHtml((b.textAr||b.textEn||"").slice(0,40))} — ${new Date(b.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</span>
+      <span class="txt">${escapeHtml((b.textAr||b.textEn||"").slice(0,40))} â€” ${new Date(b.createdAt).toLocaleString(lang==='ar'?'ar-SA':'en-US')}</span>
       <span style="font-size:11px; font-weight:800; color:var(--navy);">${readCount}/${b.recipients.length} ${t('read_status_read')}</span>
     </div>
   `;}).join("") : `<p class="hint">${t('no_notifications_sent')}</p>`;
@@ -2876,7 +2876,7 @@ function renderManagerExpiryAlertsScreen(){
     <div class="doc-entry-card" style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
       <div>
         <div style="font-weight:800; font-family:var(--font-display); color:var(--navy-deep);">${escapeHtml(r.name)}</div>
-        <div class="hint" style="margin:2px 0 0;">${t('col_sku')}: ${escapeHtml(r.sku||'—')} · ${t('col_weight')}: ${r.weightValue} ${r.weightUnit} · ${t('col_branch')}: ${escapeHtml(r.branchName)}</div>
+        <div class="hint" style="margin:2px 0 0;">${t('col_sku')}: ${escapeHtml(r.sku||'â€”')} Â· ${t('col_weight')}: ${r.weightValue} ${r.weightUnit} Â· ${t('col_branch')}: ${escapeHtml(r.branchName)}</div>
       </div>
       <div style="font-family:var(--font-display); font-weight:800; font-size:14px; color:${r.days<0?'#c0392b':'var(--sky)'};">
         ${r.days<0 ? `${Math.abs(r.days)} ${t('days_overdue_word')}` : `${r.days} ${t('day_word')}`}
@@ -3030,7 +3030,7 @@ function openNotificationBatchDetailModal(batchId){
   const recipientsHtml = recipients.map(r=>`
     <div class="notice-row" style="align-items:center;">
       <span class="txt">${escapeHtml((state.users.find(x=>x.id===r.toUserId) ? employeeLabel(state.users.find(x=>x.id===r.toUserId)) : r.toUsername))}</span>
-      <span style="font-weight:800; color:${r.read?'var(--leaf)':'#9AB0A3'};">${r.read ? '✅ ' + t('read_status_read') : t('read_status_unread')}</span>
+      <span style="font-weight:800; color:${r.read?'var(--leaf)':'#9AB0A3'};">${r.read ? 'âœ… ' + t('read_status_read') : t('read_status_unread')}</span>
     </div>
   `).join("");
   wrap.innerHTML = `
@@ -3265,8 +3265,8 @@ function renderBranchesTab(){
     <div class="chip">
       <span class="daisy" style="width:14px;height:14px;color:var(--sky)">${renderBranchIconHtmlSmall(b)}</span>
       ${escapeHtml(b.name)}
-      <button class="chip-mini-btn" data-manage-icon="${b.id}" title="${t('manage_icon')}">🖼</button>
-      <button class="chip-mini-btn" data-manage-notices="${b.id}" title="${t('manage_notices')}">🔔</button>
+      <button class="chip-mini-btn" data-manage-icon="${b.id}" title="${t('manage_icon')}">ðŸ–¼</button>
+      <button class="chip-mini-btn" data-manage-notices="${b.id}" title="${t('manage_notices')}">ðŸ””</button>
       <button data-del-branch="${b.id}" title="${t('delete_branch_title')}">${ICON.trash}</button>
     </div>
   `).join("");
@@ -3314,9 +3314,9 @@ function attachBranchesTabEvents(){
     const isManagerRole = (role === "manager" || role === "bigboss");
 
     if(isManagerRole){
-      /* كل موظف يتم اختياره يحصل على نسخة مستقلة تمامًا من الفرع
-         (فرع + منتجاته الخاصة) بمعرّف خاص به، بحيث لا يرى هذا الفرع
-         إلا هو، ولا يؤثر أي تعديل يجريه على نسخ بقية الموظفين. */
+      /* ÙƒÙ„ Ù…ÙˆØ¸Ù ÙŠØªÙ… Ø§Ø®ØªÙŠØ§Ø±Ù‡ ÙŠØ­ØµÙ„ Ø¹Ù„Ù‰ Ù†Ø³Ø®Ø© Ù…Ø³ØªÙ‚Ù„Ø© ØªÙ…Ø§Ù…Ù‹Ø§ Ù…Ù† Ø§Ù„ÙØ±Ø¹
+         (ÙØ±Ø¹ + Ù…Ù†ØªØ¬Ø§ØªÙ‡ Ø§Ù„Ø®Ø§ØµØ©) Ø¨Ù…Ø¹Ø±Ù‘Ù Ø®Ø§Øµ Ø¨Ù‡ØŒ Ø¨Ø­ÙŠØ« Ù„Ø§ ÙŠØ±Ù‰ Ù‡Ø°Ø§ Ø§Ù„ÙØ±Ø¹
+         Ø¥Ù„Ø§ Ù‡ÙˆØŒ ÙˆÙ„Ø§ ÙŠØ¤Ø«Ø± Ø£ÙŠ ØªØ¹Ø¯ÙŠÙ„ ÙŠØ¬Ø±ÙŠÙ‡ Ø¹Ù„Ù‰ Ù†Ø³Ø® Ø¨Ù‚ÙŠØ© Ø§Ù„Ù…ÙˆØ¸ÙÙŠÙ†. */
       const selectedIds = Array.from(document.querySelectorAll(".assign-employee-check:checked")).map(cb=>cb.value);
       if(!selectedIds.length){ toast(t('toast_select_at_least_one_employee')); return; }
       selectedIds.forEach(empId=>{
@@ -3331,7 +3331,7 @@ function attachBranchesTabEvents(){
         ensureCatalogSeededForBranch(newBranch.id);
       });
     }else{
-      /* فرع الموظف يخصه هو فقط */
+      /* ÙØ±Ø¹ Ø§Ù„Ù…ÙˆØ¸Ù ÙŠØ®ØµÙ‡ Ù‡Ùˆ ÙÙ‚Ø· */
       const newBranch = {
         id: uid(), name, columns: 2, notices: [], icon: { type:"daisy", value:"" },
         ownerId: session.user ? session.user.id : null,
@@ -3369,16 +3369,16 @@ function attachBranchesTabEvents(){
 }
 
 /* ---------- SOS TAB (Share of Shelf spreadsheet) ----------
-   صفحة كاملة شبيهة بجدول إكسل: أعمدة ثابتة (Merch / SAP / اسم العميل)
-   ثم مجموعات أعمدة لكل "منتج/قسم" (مثال: Glass jar 50%) وتحت كل مجموعة
-   أعمدة فرعية بعدد حر (الإجمالي، النسبة، أو أي عمود آخر يضيفه المدير).
-   كل خلية قابلة للتعديل مباشرة وتُحفظ فور الخروج منها، وتُطبع/تُنزّل
-   بنفس شكل الجدول تمامًا لإرسالها للموظف. ---------------------------- */
+   ØµÙØ­Ø© ÙƒØ§Ù…Ù„Ø© Ø´Ø¨ÙŠÙ‡Ø© Ø¨Ø¬Ø¯ÙˆÙ„ Ø¥ÙƒØ³Ù„: Ø£Ø¹Ù…Ø¯Ø© Ø«Ø§Ø¨ØªØ© (Merch / SAP / Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„)
+   Ø«Ù… Ù…Ø¬Ù…ÙˆØ¹Ø§Øª Ø£Ø¹Ù…Ø¯Ø© Ù„ÙƒÙ„ "Ù…Ù†ØªØ¬/Ù‚Ø³Ù…" (Ù…Ø«Ø§Ù„: Glass jar 50%) ÙˆØªØ­Øª ÙƒÙ„ Ù…Ø¬Ù…ÙˆØ¹Ø©
+   Ø£Ø¹Ù…Ø¯Ø© ÙØ±Ø¹ÙŠØ© Ø¨Ø¹Ø¯Ø¯ Ø­Ø± (Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠØŒ Ø§Ù„Ù†Ø³Ø¨Ø©ØŒ Ø£Ùˆ Ø£ÙŠ Ø¹Ù…ÙˆØ¯ Ø¢Ø®Ø± ÙŠØ¶ÙŠÙÙ‡ Ø§Ù„Ù…Ø¯ÙŠØ±).
+   ÙƒÙ„ Ø®Ù„ÙŠØ© Ù‚Ø§Ø¨Ù„Ø© Ù„Ù„ØªØ¹Ø¯ÙŠÙ„ Ù…Ø¨Ø§Ø´Ø±Ø© ÙˆØªÙØ­ÙØ¸ ÙÙˆØ± Ø§Ù„Ø®Ø±ÙˆØ¬ Ù…Ù†Ù‡Ø§ØŒ ÙˆØªÙØ·Ø¨Ø¹/ØªÙÙ†Ø²Ù‘Ù„
+   Ø¨Ù†ÙØ³ Ø´ÙƒÙ„ Ø§Ù„Ø¬Ø¯ÙˆÙ„ ØªÙ…Ø§Ù…Ù‹Ø§ Ù„Ø¥Ø±Ø³Ø§Ù„Ù‡Ø§ Ù„Ù„Ù…ÙˆØ¸Ù. ---------------------------- */
 const SOS_NAME_FONT_MIN = 6;
 const SOS_NAME_FONT_MAX = 16;
 const SOS_NAME_FONT_DEFAULT = 10;
 /* One global font size for every store/customer name, so shrinking it
-   (e.g. to 8px) shrinks all branches at once — needed to fit a large
+   (e.g. to 8px) shrinks all branches at once â€” needed to fit a large
    table on a single A4 sheet. Kept as a function (ignores its old
    per-branch argument, if any caller still passes one) so every place
    that already calls sosNameFontSize(b) keeps working unchanged. */
@@ -3388,24 +3388,24 @@ function sosNameFontSize(){
 }
 
 const SOS_LABEL_EN_MAP = {
-  "الإجمالي": "Total",
-  "الاجمالي": "Total",
-  "إجمالي": "Total",
-  "اجمالي": "Total",
-  "النسبة %": "Ratio %",
-  "النسبة%": "Ratio %",
-  "النسبه %": "Ratio %",
-  "النسبه": "Ratio %",
-  "النسبة": "Ratio %",
-  "اسم العميل": "Customer Name",
+  "Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ": "Total",
+  "Ø§Ù„Ø§Ø¬Ù…Ø§Ù„ÙŠ": "Total",
+  "Ø¥Ø¬Ù…Ø§Ù„ÙŠ": "Total",
+  "Ø§Ø¬Ù…Ø§Ù„ÙŠ": "Total",
+  "Ø§Ù„Ù†Ø³Ø¨Ø© %": "Ratio %",
+  "Ø§Ù„Ù†Ø³Ø¨Ø©%": "Ratio %",
+  "Ø§Ù„Ù†Ø³Ø¨Ù‡ %": "Ratio %",
+  "Ø§Ù„Ù†Ø³Ø¨Ù‡": "Ratio %",
+  "Ø§Ù„Ù†Ø³Ø¨Ø©": "Ratio %",
+  "Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„": "Customer Name",
 };
 function sosMigrateLabel(label){
   if(typeof label !== "string") return label;
   const trimmed = label.trim();
   return (SOS_LABEL_EN_MAP[trimmed] !== undefined) ? SOS_LABEL_EN_MAP[trimmed] : label;
 }
-/* Older saved SOS sheets may still have Arabic column labels (e.g. "الإجمالي" /
-   "النسبة %") typed in before this became an English-only sheet. Normalize
+/* Older saved SOS sheets may still have Arabic column labels (e.g. "Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ" /
+   "Ø§Ù„Ù†Ø³Ø¨Ø© %") typed in before this became an English-only sheet. Normalize
    them to English every time the data is read, without touching anything else. */
 function sosNormalizeData(data){
   if(data && Array.isArray(data.categories)){
@@ -3431,10 +3431,10 @@ function sosNormalizeData(data){
 function toWesternDigits(str){
   if(typeof str !== "string") return str;
   const map = {
-    "٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9",
-    "۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9",
+    "Ù ":"0","Ù¡":"1","Ù¢":"2","Ù£":"3","Ù¤":"4","Ù¥":"5","Ù¦":"6","Ù§":"7","Ù¨":"8","Ù©":"9",
+    "Û°":"0","Û±":"1","Û²":"2","Û³":"3","Û´":"4","Ûµ":"5","Û¶":"6","Û·":"7","Û¸":"8","Û¹":"9",
   };
-  return str.replace(/[٠-٩۰-۹]/g, ch=> map[ch] !== undefined ? map[ch] : ch);
+  return str.replace(/[Ù -Ù©Û°-Û¹]/g, ch=> map[ch] !== undefined ? map[ch] : ch);
 }
 
 function sosCellKey(colId){ return colId; }
@@ -3443,7 +3443,7 @@ function sosCellValue(branch, colId){
   return (v===undefined || v===null) ? "" : v;
 }
 
-function isSosPercentColumn(col){ return !!col.isPercent || /%|٪/.test(col.label||""); }
+function isSosPercentColumn(col){ return !!col.isPercent || /%|Ùª/.test(col.label||""); }
 function renderSosTab(){
   const data = sosNormalizeData(state.sos && Array.isArray(state.sos.categories) ? state.sos : defaultSosData());
   const categories = data.categories || [];
@@ -3544,7 +3544,7 @@ function renderSosTab(){
         <summary>
           <div class="sos-branch-summary-title">
             <div class="ar">${escapeHtml(b.name || tEn('sos_col_customer'))}</div>
-            <div class="en">${tEn('sos_col_merch')}: ${escapeHtml(b.merch||'—')} · ${tEn('sos_col_sap')}: ${escapeHtml(b.sap||'—')}</div>
+            <div class="en">${tEn('sos_col_merch')}: ${escapeHtml(b.merch||'â€”')} Â· ${tEn('sos_col_sap')}: ${escapeHtml(b.sap||'â€”')}</div>
           </div>
           <div class="sos-branch-summary-actions">
             <button class="sos-mini-btn" data-sos-download-branch="${b.id}" title="${tEn('sos_download_branch_title')}">${ICON.download}</button>
@@ -3571,6 +3571,8 @@ function renderSosTab(){
     <div class="panel-card sos-panel" dir="ltr">
       <div class="sos-toolbar">
         <button class="btn btn-primary btn-small" id="addSosRowBtn">${ICON.plus} ${tEn('add_sos_row_btn')}</button>
+        <button class="btn btn-primary btn-small" id="sosScanBtn">${ICON.plus} Ù…Ø³Ø­ Ø¬Ø¯ÙˆÙ„ Ø¨Ø§Ù„Ø°ÙƒØ§Ø¡ Ø§Ù„Ø§ØµØ·Ù†Ø§Ø¹ÙŠ</button>
+        <input type="file" id="sosScanFileInput" accept="image/*" capture="environment" style="display:none;">
         <button class="btn-download btn-small" id="sosDownloadBtn">${ICON.download} ${tEn('sos_download_all_btn')}</button>
         <button class="btn-download btn-small" id="sosDownloadA4Btn">${ICON.download} ${tEn('sos_download_all_a4_btn')}</button>
       </div>
@@ -3618,6 +3620,65 @@ async function saveSosData(){ await storageSet("puck:sos", state.sos); }
 function attachSosTabEvents(){
   if(!state.sos || !Array.isArray(state.sos.categories)) state.sos = defaultSosData();
   sosNormalizeData(state.sos);
+
+  const scanBtn = document.getElementById("sosScanBtn");
+  const scanInput = document.getElementById("sosScanFileInput");
+  if(scanBtn && scanInput){
+    scanBtn.onclick = ()=> scanInput.click();
+    scanInput.onchange = async ()=>{
+      const file = scanInput.files[0];
+      if(!file) return;
+      scanBtn.disabled = true;
+      const origText = scanBtn.textContent;
+      scanBtn.textContent = "Ø¬Ø§Ø±Ù Ø§Ù„Ù‚Ø±Ø§Ø¡Ø© ÙˆØ§Ù„ØªØ¹Ø¨Ø¦Ø©...";
+      try{
+        const base64 = await new Promise((resolve, reject)=>{
+          const reader = new FileReader();
+          reader.onload = ()=> resolve(reader.result.split(",")[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+        const resp = await fetch("/api/scan-sheet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageBase64: base64,
+            mediaType: file.type || "image/jpeg",
+            categories: state.sos.categories
+          })
+        });
+        const result = await resp.json();
+        if(!resp.ok || result.error){
+          throw new Error(result.error ? JSON.stringify(result.error) : "ÙØ´Ù„ Ø§Ù„Ø§Ø³ØªØ®Ø±Ø§Ø¬");
+        }
+        const scannedBranches = Array.isArray(result.branches) ? result.branches : [];
+        scannedBranches.forEach(sb=>{
+          // Ù…Ø·Ø§Ø¨Ù‚Ø© Ø¨Ø§Ù„Ø§Ø³Ù… Ø¥Ù† ÙˆØ¬Ø¯ ÙØ±Ø¹ Ù…Ø´Ø§Ø¨Ù‡ØŒ ÙˆØ¥Ù„Ø§ Ø¥Ø¶Ø§ÙØ© ØµÙ Ø¬Ø¯ÙŠØ¯
+          let target = state.sos.branches.find(b=>
+            (b.name||"").trim() && (b.name||"").trim() === (sb.name||"").trim()
+          );
+          if(!target){
+            target = { id: uid(), merch:"", sap:"", name:"", values:{} };
+            state.sos.branches.push(target);
+          }
+          target.merch = sb.merch || target.merch;
+          target.sap = sb.sap || target.sap;
+          target.name = sb.name || target.name;
+          target.values = { ...target.values, ...(sb.values || {}) };
+        });
+        await saveSosData();
+        render();
+        toast("ØªÙ… Ø§Ø³ØªØ®Ø±Ø§Ø¬ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª ÙˆØªØ¹Ø¨Ø¦Ø© Ø§Ù„Ø¬Ø¯ÙˆÙ„ Ø¨Ù†Ø¬Ø§Ø­");
+      }catch(err){
+        console.error(err);
+        toast("ØªØ¹Ø°Ù‘Ø± Ù‚Ø±Ø§Ø¡Ø© Ø§Ù„Ø¬Ø¯ÙˆÙ„ Ù…Ù† Ø§Ù„ØµÙˆØ±Ø©ØŒ Ø­Ø§ÙˆÙ„ Ø¨ØµÙˆØ±Ø© Ø£ÙˆØ¶Ø­");
+      }finally{
+        scanBtn.disabled = false;
+        scanBtn.textContent = origText;
+        scanInput.value = "";
+      }
+    };
+  }
 
   const addRowBtn = document.getElementById("addSosRowBtn");
   if(addRowBtn) addRowBtn.onclick = async ()=>{
@@ -3786,7 +3847,7 @@ function openAddSosColumnModal(catId){
     <div class="modal">
       <button class="close-x" id="closeAddSosColModal">&times;</button>
       <h3>${ICON.plus} ${tEn('add_column_btn')}</h3>
-      <p class="hint" style="margin:0 0 12px;">${escapeHtml(cat.name)} — ${tEn('sos_add_column_modal_hint')}</p>
+      <p class="hint" style="margin:0 0 12px;">${escapeHtml(cat.name)} â€” ${tEn('sos_add_column_modal_hint')}</p>
       <div class="field"><label>${tEn('sos_column_name_label')}</label><input id="newSosColName" type="text" placeholder="${tEn('sos_column_name_label')}"></div>
       <label class="sos-pct-check-row">
         <input type="checkbox" id="newSosColIsPct">
@@ -4204,7 +4265,7 @@ async function downloadSosExcel(branchId){
 }
 
 /* ---------- BRANCH ICON MODAL ---------- */
-const EMOJI_CHOICES = ["🏬","🛒","🏪","🏢","🧀","🥛","🍞","🥩","🍫","🥫","🍎","🧊","📍","⭐","🔥","🎯","🐼","🌿","💎","🛍"];
+const EMOJI_CHOICES = ["ðŸ¬","ðŸ›’","ðŸª","ðŸ¢","ðŸ§€","ðŸ¥›","ðŸž","ðŸ¥©","ðŸ«","ðŸ¥«","ðŸŽ","ðŸ§Š","ðŸ“","â­","ðŸ”¥","ðŸŽ¯","ðŸ¼","ðŸŒ¿","ðŸ’Ž","ðŸ›"];
 const COLOR_CHOICES = ["#2FA88F","#1B6B3D","#F6A623","#6FBE44","#D64545","#8E5CE0","#E05C9C","#2FB6A8"];
 
 function openBranchIconModal(branchId){
@@ -4385,8 +4446,8 @@ function adminProductRowHtml(p){
           <div class="weight-inputs">
             <input type="number" min="0" value="${p.weightValue}" data-field="weightValue" data-id="${p.id}">
             <select data-field="weightUnit" data-id="${p.id}">
-              <option value="غ" ${p.weightUnit==='غ'?'selected':''}>${t('unit_g')}</option>
-              <option value="كغ" ${p.weightUnit==='كغ'?'selected':''}>${t('unit_kg')}</option>
+              <option value="Øº" ${p.weightUnit==='Øº'?'selected':''}>${t('unit_g')}</option>
+              <option value="ÙƒØº" ${p.weightUnit==='ÙƒØº'?'selected':''}>${t('unit_kg')}</option>
             </select>
           </div>
         </div>
@@ -4408,7 +4469,7 @@ function adminProductRowHtml(p){
             <input type="checkbox" data-field="hidden" data-id="${p.id}" ${p.hidden ? 'checked' : ''}>
             <span>${t('hide_product_label')}</span>
           </label>
-          ${p.catalogItemId ? `<button class="btn btn-ghost btn-small" data-admin-move-product="${p.catalogItemId}">${ICON.move || '↔️'} ${t('move_product_btn')}</button>` : ''}
+          ${p.catalogItemId ? `<button class="btn btn-ghost btn-small" data-admin-move-product="${p.catalogItemId}">${ICON.move || 'â†”ï¸'} ${t('move_product_btn')}</button>` : ''}
           <button class="btn btn-danger btn-small" data-del-product="${p.id}">${ICON.trash} ${t('delete_product')}</button>
         </div>
       </div>
@@ -4494,7 +4555,7 @@ function attachProductsTabEvents(){
       p[field] = val;
       await storageSet("puck:products", state.products);
       if(p.catalogItemId && ["name","nameEn","sku","weightValue","weightUnit"].includes(field)){
-        const unitMap = { "غ":"g", "كغ":"kg" };
+        const unitMap = { "Øº":"g", "ÙƒØº":"kg" };
         await saveGlobalCatalogOverride(p.catalogItemId, {
           ar: p.name, en: p.nameEn, sku: p.sku,
           weightValue: p.weightValue, weightUnit: unitMap[p.weightUnit] || p.weightUnit
@@ -4526,7 +4587,7 @@ function attachProductsTabEvents(){
   });
 }
 
-/* ---------- ADD PRODUCT: choice modal (جديد / سابق) ---------- */
+/* ---------- ADD PRODUCT: choice modal (Ø¬Ø¯ÙŠØ¯ / Ø³Ø§Ø¨Ù‚) ---------- */
 function openAddProductChoiceModal(){
   const wrap = document.createElement("div");
   wrap.className = "overlay";
@@ -4556,7 +4617,7 @@ function openAddProductChoiceModal(){
     wrap.remove();
     state.products.push({
       id: uid(), branchId: adminUI.selectedBranchForProducts, name: t('default_new_product_name'),
-      image: "", weightValue: 0, weightUnit: "غ",
+      image: "", weightValue: 0, weightUnit: "Øº",
       startDay: 1, startMonth: 1, endDay: 28, endMonth: 12, alertDays: 7
     });
     await storageSet("puck:products", state.products);
@@ -4571,7 +4632,7 @@ function openAddProductChoiceModal(){
 
 /* ---------- ADD PRODUCT: pick from previously added products ---------- */
 function getUniquePreviousProducts(){
-  // آخر نسخة مضافة لكل اسم منتج (بدون تكرار الاسم)
+  // Ø¢Ø®Ø± Ù†Ø³Ø®Ø© Ù…Ø¶Ø§ÙØ© Ù„ÙƒÙ„ Ø§Ø³Ù… Ù…Ù†ØªØ¬ (Ø¨Ø¯ÙˆÙ† ØªÙƒØ±Ø§Ø± Ø§Ù„Ø§Ø³Ù…)
   const map = new Map();
   state.products.forEach(p=>{
     if(!p.name || !p.name.trim()) return;
@@ -4637,7 +4698,7 @@ function openPreviousProductsModal(){
       state.products.push({
         id: uid(), branchId: adminUI.selectedBranchForProducts,
         name: src.name, sku: src.sku||"", image: src.image||"",
-        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"غ",
+        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"Øº",
         startDay: src.startDay||1, startMonth: src.startMonth||1,
         endDay: src.endDay||28, endMonth: src.endMonth||12,
         alertDays: src.alertDays||7
@@ -4679,14 +4740,14 @@ function renderUsersTab(){
   const rows = state.users.map(u=>`
     <tr>
       <td>${escapeHtml(u.username)}${u.isDefault?` <span style="color:#7C9A8B;font-size:11px;">${t('primary_admin_tag')}</span>`:''}</td>
-      <td>${u.employeeNumber ? escapeHtml(u.employeeNumber) : '—'}</td>
+      <td>${u.employeeNumber ? escapeHtml(u.employeeNumber) : 'â€”'}</td>
       <td>${u.isDefault ? 'BIGBOSS' : roleLabel(u)}</td>
       <td><span class="status-pill ${u.mustChange?'pending':'active'}">${u.mustChange?t('status_pending'):t('status_active')}</span></td>
       <td>
         ${u.phone ? `
           <a class="emp-action-btn wa" href="${waLink(u.phone,'')}" target="_blank" rel="noopener" title="${t('whatsapp_word')}" style="width:28px; height:28px; display:inline-flex;">${ICON.whatsapp}</a>
-          <a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}" style="width:28px; height:28px; display:inline-flex;">📞</a>
-        ` : '—'}
+          <a class="emp-action-btn call" href="tel:${escapeHtml(u.phone)}" title="${t('call_word')}" style="width:28px; height:28px; display:inline-flex;">ðŸ“ž</a>
+        ` : 'â€”'}
       </td>
       <td>
         ${u.isDefault ? '' : `<button class="btn btn-ghost btn-small" data-edit-user="${u.id}">${ICON.edit} ${t('edit_word')}</button> <button class="btn btn-danger btn-small" data-del-user="${u.id}">${ICON.trash} ${t('delete_word')}</button>`}
@@ -4894,7 +4955,7 @@ function attachAppearanceTabEvents(){
     const reader = new FileReader();
     reader.onload = async (ev)=>{
       const dataUrl = ev.target.result;
-      const name = file.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9أ-ي_\-]/g,"_");
+      const name = file.name.replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9Ø£-ÙŠ_\-]/g,"_");
       state.settings.customFonts = state.settings.customFonts || [];
       state.settings.customFonts = state.settings.customFonts.filter(f=>f.name!==name);
       state.settings.customFonts.push({ name, dataUrl });
@@ -4974,8 +5035,8 @@ function openQuickEditProductModal(productId){
         <div class="weight-inputs">
           <input type="number" min="0" id="qeWeightValue" value="${p.weightValue}">
           <select id="qeWeightUnit">
-            <option value="غ" ${p.weightUnit==='غ'?'selected':''}>${t('unit_g')}</option>
-            <option value="كغ" ${p.weightUnit==='كغ'?'selected':''}>${t('unit_kg')}</option>
+            <option value="Øº" ${p.weightUnit==='Øº'?'selected':''}>${t('unit_g')}</option>
+            <option value="ÙƒØº" ${p.weightUnit==='ÙƒØº'?'selected':''}>${t('unit_kg')}</option>
           </select>
         </div>
       </div>
@@ -4994,7 +5055,7 @@ function openQuickEditProductModal(productId){
         <input type="checkbox" id="qeHiddenToggle" ${p.hidden ? 'checked' : ''}>
         <span>${t('hide_product_label')}</span>
       </label>
-      ${p.catalogItemId ? `<button class="btn btn-ghost" id="qeMoveBtn" style="width:100%; margin-bottom:10px;">${ICON.move || '↔️'} ${t('move_product_btn')}</button>` : ''}
+      ${p.catalogItemId ? `<button class="btn btn-ghost" id="qeMoveBtn" style="width:100%; margin-bottom:10px;">${ICON.move || 'â†”ï¸'} ${t('move_product_btn')}</button>` : ''}
       <button class="btn btn-primary" id="qeSaveBtn">${t('save_word')}</button>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button class="btn btn-ghost" id="qeCancelBtn" style="flex:1;">${t('cancel_word')}</button>
@@ -5043,7 +5104,7 @@ function openQuickEditProductModal(productId){
     p.hidden = document.getElementById("qeHiddenToggle").checked;
     await storageSet("puck:products", state.products);
     if(p.catalogItemId){
-      const unitMap = { "غ":"g", "كغ":"kg" };
+      const unitMap = { "Øº":"g", "ÙƒØº":"kg" };
       await saveGlobalCatalogOverride(p.catalogItemId, {
         ar: p.name, en: p.nameEn, sku: p.sku,
         weightValue: p.weightValue, weightUnit: unitMap[p.weightUnit] || p.weightUnit
@@ -5079,8 +5140,8 @@ function openQuickAddProductModal(branchId){
         <div class="weight-inputs">
           <input type="number" min="0" id="qaWeightValue" value="0">
           <select id="qaWeightUnit">
-            <option value="غ">${t('unit_g')}</option>
-            <option value="كغ">${t('unit_kg')}</option>
+            <option value="Øº">${t('unit_g')}</option>
+            <option value="ÙƒØº">${t('unit_kg')}</option>
           </select>
         </div>
       </div>
@@ -5192,8 +5253,8 @@ function openMonthlyNewProductModal(branchId){
         <div class="weight-inputs">
           <input type="number" min="0" id="mnWeightValue" value="0">
           <select id="mnWeightUnit">
-            <option value="غ">${t('unit_g')}</option>
-            <option value="كغ">${t('unit_kg')}</option>
+            <option value="Øº">${t('unit_g')}</option>
+            <option value="ÙƒØº">${t('unit_kg')}</option>
           </select>
         </div>
       </div>
@@ -5275,7 +5336,7 @@ function openMonthlyPreviousProductsModal(branchId){
       if(!src) return;
       state.monthlyProducts.push({
         id: uid(), branchId, name: src.name, nameEn: src.nameEn||"", sku: src.sku||"",
-        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"غ"
+        weightValue: src.weightValue||0, weightUnit: src.weightUnit||"Øº"
       });
     });
     await storageSet("puck:monthlyProducts", state.monthlyProducts);
@@ -5302,8 +5363,8 @@ function openMonthlyEditProductModal(id){
         <div class="weight-inputs">
           <input type="number" min="0" id="meWeightValue" value="${p.weightValue||0}">
           <select id="meWeightUnit">
-            <option value="غ" ${p.weightUnit==='غ'?'selected':''}>${t('unit_g')}</option>
-            <option value="كغ" ${p.weightUnit==='كغ'?'selected':''}>${t('unit_kg')}</option>
+            <option value="Øº" ${p.weightUnit==='Øº'?'selected':''}>${t('unit_g')}</option>
+            <option value="ÙƒØº" ${p.weightUnit==='ÙƒØº'?'selected':''}>${t('unit_kg')}</option>
           </select>
         </div>
       </div>
@@ -5377,11 +5438,11 @@ function openMonthlyCatalogEditModal(rowId, rowKind){
           </select>
         </div>
       </div>
-      ${rowKind==='catalog' ? `<button class="btn btn-ghost" id="mceMoveBtn" style="width:100%; margin-bottom:10px;">${ICON.move || '↔️'} ${t('move_product_btn')}</button>` : ''}
+      ${rowKind==='catalog' ? `<button class="btn btn-ghost" id="mceMoveBtn" style="width:100%; margin-bottom:10px;">${ICON.move || 'â†”ï¸'} ${t('move_product_btn')}</button>` : ''}
       <button class="btn btn-primary" id="mceSaveBtn">${t('save_word')}</button>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button class="btn btn-ghost" id="mceCancelBtn" style="flex:1;">${t('cancel_word')}</button>
-        ${rowKind==='catalog' ? `<button class="btn btn-ghost" id="mceResetBtn" style="flex:1;">↺</button>` : ''}
+        ${rowKind==='catalog' ? `<button class="btn btn-ghost" id="mceResetBtn" style="flex:1;">â†º</button>` : ''}
       </div>
     </div>
   `;
@@ -5474,7 +5535,7 @@ function openCatalogMoveModal(itemId){
   wrap.innerHTML = `
     <div class="modal">
       <button class="close-x" id="closeMoveModal">&times;</button>
-      <h3>${ICON.move || '↔️'} ${t('move_product_btn')}</h3>
+      <h3>${ICON.move || 'â†”ï¸'} ${t('move_product_btn')}</h3>
       <p class="hint">${t('move_product_hint')}</p>
       <div class="move-group-list">
         ${groups.map(g=>`
