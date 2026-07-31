@@ -3967,8 +3967,18 @@ function buildSosA4ContentHtml(){
   const blocks = categories.map(cat=>{
     const cols = cat.columns && cat.columns.length ? cat.columns : [{id:"_", label:""}];
     const headCells = cols.map(col=>`<th class="sos-col-th-print">${escapeHtml(col.label)}</th>`).join("");
-    const valColWidth = (60 / cols.length).toFixed(2);
-    const colgroup = `<colgroup><col style="width:7%"><col style="width:8%"><col style="width:25%">${cols.map(()=>`<col style="width:${valColWidth}%">`).join("")}</colgroup>`;
+    // Merch & SAP get fixed, generous widths so their codes never wrap onto a second line.
+    // Value columns (numbers/%) are capped so their boxes stay tight around the number + label,
+    // and any width freed up goes to the Customer Name column.
+    const MERCH_W = 9, SAP_W = 12, MAX_VAL_W = 14, MIN_CUSTOMER_W = 22;
+    let valColWidth = Math.min(MAX_VAL_W, 50 / cols.length);
+    let customerWidth = 100 - MERCH_W - SAP_W - (valColWidth * cols.length);
+    if(customerWidth < MIN_CUSTOMER_W){
+      customerWidth = MIN_CUSTOMER_W;
+      valColWidth = (100 - MERCH_W - SAP_W - customerWidth) / cols.length;
+    }
+    valColWidth = valColWidth.toFixed(2);
+    const colgroup = `<colgroup><col style="width:${MERCH_W}%"><col style="width:${SAP_W}%"><col style="width:${customerWidth.toFixed(2)}%">${cols.map(()=>`<col style="width:${valColWidth}%">`).join("")}</colgroup>`;
     const rows = branches.map(b=>{
       const idCells = `<td>${escapeHtml(b.merch||'')}</td><td>${escapeHtml(b.sap||'')}</td><td class="sos-branch-name-cell" style="font-size:${sosNameFontSize(b)}px;">${escapeHtml(b.name||'')}</td>`;
       const valCells = cols.map(col=>{
@@ -4038,7 +4048,7 @@ async function downloadSosAllBranchesA4Image(cols){
   }
   exportArea.style.setProperty("--sos-font-size", sosNameFontSize()+"px");
   exportArea.style.setProperty("--sos-a4-cols", colCount);
-  exportArea.style.width = (colCount === 1 ? 720 : colCount === 2 ? 980 : 1240) + "px";
+  exportArea.style.width = (colCount === 1 ? 780 : colCount === 2 ? 1040 : 1320) + "px";
   exportArea.innerHTML = buildSosA4ContentHtml();
 
   toast(tEn('sos_image_generating'));

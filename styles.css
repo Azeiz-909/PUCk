@@ -467,6 +467,8 @@
     }
     table.sos-a4-table{ width:100%; margin-top:0; table-layout:fixed; }
     table.sos-a4-table th, table.sos-a4-table td{ font-size:var(--sos-font-size, 9px); padding:1px 2px; white-space:normal !important; word-break:break-word; }
+    table.sos-a4-table th:nth-child(1), table.sos-a4-table th:nth-child(2),
+    table.sos-a4-table td:nth-child(1), table.sos-a4-table td:nth-child(2){ white-space:nowrap !important; }
     table.sos-a4-table td.sos-branch-name-cell{ max-width:none; -webkit-line-clamp:2; }
   }
 
@@ -682,8 +684,15 @@
   }
   .sos-image-export table{ width:100%; border-collapse:collapse; table-layout:fixed; }
   .sos-image-export th, .sos-image-export td{
-    border:1.5px solid #8CA79A; padding:4px 6px; text-align:center;
-    font-size:var(--sos-font-size, 12px); white-space:normal; word-break:break-word;
+    border:1.5px solid #8CA79A; padding:7px 8px; text-align:center;
+    font-size:calc(var(--sos-font-size, 12px) + 3px); white-space:normal; word-break:break-word;
+  }
+  /* Merch & SAP columns (1st & 2nd) keep their code on a single line instead of wrapping mid-number */
+  .sos-image-export table.sos-a4-table th:nth-child(1),
+  .sos-image-export table.sos-a4-table th:nth-child(2),
+  .sos-image-export table.sos-a4-table td:nth-child(1),
+  .sos-image-export table.sos-a4-table td:nth-child(2){
+    white-space:nowrap;
   }
   .sos-image-export th.sos-id-th-print{ background:var(--navy-deep); color:#fff; font-family:var(--font-display); }
   .sos-image-export th.sos-col-th-print{ background:var(--sky-light); color:var(--navy-deep); }
