@@ -3571,7 +3571,7 @@ function renderSosTab(){
     <div class="panel-card sos-panel" dir="ltr">
       <div class="sos-toolbar">
         <button class="btn btn-primary btn-small" id="addSosRowBtn">${ICON.plus} ${tEn('add_sos_row_btn')}</button>
-        <button class="btn btn-primary btn-small" id="sosScanBtn">${ICON.plus} مسح جدول بالذكاء الاصطناعي</button>
+        <button class="btn btn-primary btn-small" id="sosScanBtn">${ICON.plus} Scan Table with AI</button>
         <input type="file" id="sosScanFileInput" accept="image/*" capture="environment" style="display:none;">
         <button class="btn-download btn-small" id="sosDownloadBtn">${ICON.download} ${tEn('sos_download_all_btn')}</button>
         <button class="btn-download btn-small" id="sosDownloadA4Btn">${ICON.download} ${tEn('sos_download_all_a4_btn')}</button>
@@ -3630,7 +3630,7 @@ function attachSosTabEvents(){
       if(!file) return;
       scanBtn.disabled = true;
       const origText = scanBtn.textContent;
-      scanBtn.textContent = "جارٍ القراءة والتعبئة...";
+      scanBtn.textContent = "Reading & filling...";
       try{
         const base64 = await new Promise((resolve, reject)=>{
           const reader = new FileReader();
@@ -3668,10 +3668,10 @@ function attachSosTabEvents(){
         });
         await saveSosData();
         render();
-        toast("تم استخراج البيانات وتعبئة الجدول بنجاح");
+        toast("Table extracted and filled successfully");
       }catch(err){
         console.error(err);
-        toast("تعذّر قراءة الجدول من الصورة، حاول بصورة أوضح");
+        toast("Couldn't read the table from the image, try a clearer photo");
       }finally{
         scanBtn.disabled = false;
         scanBtn.textContent = origText;
