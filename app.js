@@ -154,6 +154,11 @@ const I18N = {
     sos_download_choice_title: "اختر صيغة التنزيل",
     sos_download_pdf_option: "PDF / طباعة",
     sos_download_excel_option: "ملف إكسل (Excel)",
+    sos_download_image_option: "صورة (PNG)",
+    sos_a4_columns_label: "عدد الجداول في كل صف",
+    sos_a4_columns_hint: "لو الجداول قليلة الأعمدة، اختر 2 أو 3 لتقليل الفراغ عند الطباعة.",
+    sos_image_generating: "جارٍ تجهيز الصورة...",
+    sos_image_error: "تعذّر إنشاء الصورة، حاول مجددًا.",
     sos_excel_generating: "جارٍ تجهيز ملف الإكسل...",
     sos_excel_error: "تعذّر إنشاء ملف الإكسل، تحقق من الاتصال بالإنترنت وحاول مجددًا.",
     sos_print_title: "تقرير SOS - توزيع المنتجات حسب الفروع",
@@ -516,6 +521,11 @@ const I18N = {
     sos_download_choice_title: "Choose download format",
     sos_download_pdf_option: "PDF / Print",
     sos_download_excel_option: "Excel file",
+    sos_download_image_option: "Image (PNG)",
+    sos_a4_columns_label: "Tables per row",
+    sos_a4_columns_hint: "If tables have few columns, pick 2 or 3 to reduce empty space when printing.",
+    sos_image_generating: "Generating image...",
+    sos_image_error: "Couldn't generate the image, please try again.",
     sos_excel_generating: "Preparing the Excel file...",
     sos_excel_error: "Couldn't create the Excel file, check your internet connection and try again.",
     sos_print_title: "SOS Report - Product Distribution by Branch",
@@ -3947,17 +3957,9 @@ function downloadSosReport(branchId){
   setTimeout(()=> window.print(), 300);
 }
 
-function downloadSosAllBranchesA4(){
-  let printArea = document.getElementById("sosPrintArea");
-  if(!printArea){
-    printArea = document.createElement("div");
-    printArea.id = "sosPrintArea";
-    printArea.className = "print-only";
-    document.body.appendChild(printArea);
-  }
-  printArea.className = "print-only sos-a4-mode";
-  printArea.style.setProperty("--sos-font-size", sosNameFontSize()+"px");
-
+/* Builds the shared "note + grid of per-product tables" HTML used by both
+   the browser print flow and the off-screen PNG image export. */
+function buildSosA4ContentHtml(){
   const data = sosNormalizeData(state.sos && Array.isArray(state.sos.categories) ? state.sos : defaultSosData());
   const categories = data.categories || [];
   const branches = data.branches || [];
@@ -3997,29 +3999,111 @@ function downloadSosAllBranchesA4(){
   }).join("");
 
   const noteHtml = data.printNote ? `<div class="sos-print-note">${escapeHtml(data.printNote)}</div>` : "";
-  printArea.innerHTML = `
+  return `
     ${noteHtml}
-    ${blocks || `<p>${tEn('sos_empty_rows_hint')}</p>`}
+    <div id="sosA4Blocks" class="sos-a4-blocks-grid">${blocks || `<p>${tEn('sos_empty_rows_hint')}</p>`}</div>
   `;
+}
+
+function downloadSosAllBranchesA4(cols){
+  const colCount = [1,2,3].includes(Number(cols)) ? Number(cols) : 1;
+  let printArea = document.getElementById("sosPrintArea");
+  if(!printArea){
+    printArea = document.createElement("div");
+    printArea.id = "sosPrintArea";
+    printArea.className = "print-only";
+    document.body.appendChild(printArea);
+  }
+  printArea.className = "print-only sos-a4-mode";
+  printArea.style.setProperty("--sos-font-size", sosNameFontSize()+"px");
+  printArea.style.setProperty("--sos-a4-cols", colCount);
+  printArea.innerHTML = buildSosA4ContentHtml();
   toast(tEn('print_hint'));
   setTimeout(()=> window.print(), 300);
 }
 
+/* Renders the same report off-screen (not via window.print) and rasterizes it
+   with html2canvas, so the user gets a clean PNG with no browser print
+   margins, headers, or footers — useful on iOS where print options are limited. */
+async function downloadSosAllBranchesA4Image(cols){
+  if(typeof html2canvas === "undefined"){ toast(tEn('sos_image_error')); return; }
+  const colCount = [1,2,3].includes(Number(cols)) ? Number(cols) : 1;
+
+  let exportArea = document.getElementById("sosImageExportArea");
+  if(!exportArea){
+    exportArea = document.createElement("div");
+    exportArea.id = "sosImageExportArea";
+    exportArea.className = "sos-image-export";
+    document.body.appendChild(exportArea);
+  }
+  exportArea.style.setProperty("--sos-font-size", sosNameFontSize()+"px");
+  exportArea.style.setProperty("--sos-a4-cols", colCount);
+  exportArea.style.width = (colCount === 1 ? 720 : colCount === 2 ? 980 : 1240) + "px";
+  exportArea.innerHTML = buildSosA4ContentHtml();
+
+  toast(tEn('sos_image_generating'));
+  try{
+    // give the browser a tick to lay out fonts/tables before capture
+    await new Promise(r=> setTimeout(r, 60));
+    const canvas = await html2canvas(exportArea, { scale:2, backgroundColor:"#ffffff", useCORS:true });
+    canvas.toBlob(blob=>{
+      if(!blob){ toast(tEn('sos_image_error')); return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `SOS-Report-All.png`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=> URL.revokeObjectURL(url), 2000);
+    }, "image/png");
+  }catch(err){
+    toast(tEn('sos_image_error'));
+  }finally{
+    exportArea.innerHTML = "";
+  }
+}
+
 function openSosDownloadAllA4ChoiceModal(){
+  const savedCols = (state.sos && state.sos.a4Columns) || 1;
   const wrap = document.createElement("div");
   wrap.className = "overlay";
   wrap.innerHTML = `
     <div class="modal">
       <button class="close-x" id="closeSosA4ChoiceModal">&times;</button>
       <h3>${ICON.download} ${tEn('sos_download_choice_title')}</h3>
+      <div class="sos-a4-cols-picker">
+        <div class="sos-a4-cols-label">${tEn('sos_a4_columns_label')}</div>
+        <div class="sos-a4-cols-options" id="sosA4ColsOptions">
+          ${[1,2,3].map(n=>`<button type="button" class="sos-a4-col-btn${n===savedCols?' active':''}" data-cols="${n}">${n}</button>`).join("")}
+        </div>
+        <div class="sos-a4-cols-hint">${tEn('sos_a4_columns_hint')}</div>
+      </div>
       <button class="btn btn-primary" id="sosA4PdfBtn" style="width:100%; margin-bottom:10px;">${tEn('sos_download_pdf_option')}</button>
+      <button class="btn btn-primary" id="sosA4ImageBtn" style="width:100%; margin-bottom:10px;">${tEn('sos_download_image_option')}</button>
       <button class="btn btn-ghost" id="sosA4ExcelBtn" style="width:100%;">${tEn('sos_download_excel_option')}</button>
     </div>
   `;
   document.body.appendChild(wrap);
+  let chosenCols = savedCols;
+  wrap.querySelectorAll(".sos-a4-col-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+      chosenCols = Number(btn.dataset.cols)||1;
+      wrap.querySelectorAll(".sos-a4-col-btn").forEach(b=> b.classList.toggle("active", b===btn));
+    };
+  });
   wrap.querySelector("#closeSosA4ChoiceModal").onclick = ()=> wrap.remove();
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
-  wrap.querySelector("#sosA4PdfBtn").onclick = ()=>{ wrap.remove(); downloadSosAllBranchesA4(); };
+  wrap.querySelector("#sosA4PdfBtn").onclick = ()=>{
+    wrap.remove();
+    if(state.sos) state.sos.a4Columns = chosenCols;
+    downloadSosAllBranchesA4(chosenCols);
+  };
+  wrap.querySelector("#sosA4ImageBtn").onclick = ()=>{
+    wrap.remove();
+    if(state.sos) state.sos.a4Columns = chosenCols;
+    downloadSosAllBranchesA4Image(chosenCols);
+  };
   wrap.querySelector("#sosA4ExcelBtn").onclick = ()=>{ wrap.remove(); downloadSosAllBranchesA4Excel(); };
 }
 
