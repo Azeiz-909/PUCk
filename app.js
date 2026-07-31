@@ -3572,7 +3572,7 @@ function renderSosTab(){
       <div class="sos-toolbar">
         <button class="btn btn-primary btn-small" id="addSosRowBtn">${ICON.plus} ${tEn('add_sos_row_btn')}</button>
         <button class="btn btn-primary btn-small" id="sosScanBtn">${ICON.plus} Scan Table with AI</button>
-        <input type="file" id="sosScanFileInput" accept="image/*" capture="environment" style="display:none;">
+        <input type="file" id="sosScanFileInput" accept="image/*" style="display:none;">
         <button class="btn-download btn-small" id="sosDownloadBtn">${ICON.download} ${tEn('sos_download_all_btn')}</button>
         <button class="btn-download btn-small" id="sosDownloadA4Btn">${ICON.download} ${tEn('sos_download_all_a4_btn')}</button>
       </div>
