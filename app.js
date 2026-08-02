@@ -196,9 +196,14 @@ const I18N = {
     visit_prep_hint: "بطاقة لكل فرع تزوره، بجميع بياناته وعدد زياراته الأسبوعي.",
     visit_no_accounts_day: "لا توجد فروع مضافة بعد.",
     visit_target_label: "الهدف الأسبوعي للزيارات",
-    visit_done_btn: "تمت الزيارة اليوم",
+    visit_done_btn: "زيارة",
     visit_undone_btn: "إلغاء زيارة اليوم",
+    visit_remove_btn: "إزالة زيارة",
     visit_remaining_label: "متبقٍ هذا الأسبوع",
+    visit_count_hint: "عدد الزيارات",
+    visit_last_visit_label: "أخر زياره",
+    visit_last_visit_none: "لا توجد زيارات بعد",
+    visit_admin_count_suffix: "زيارة",
     visit_location_btn: "الموقع",
     visit_location_missing: "لم يتم تحديد موقع بعد",
     visit_location_modal_title: "رابط موقع الفرع",
@@ -600,9 +605,14 @@ const I18N = {
     visit_prep_hint: "One card per branch you visit, with all its details and weekly visit count.",
     visit_no_accounts_day: "No branches added yet.",
     visit_target_label: "Weekly visit target",
-    visit_done_btn: "Visited today",
+    visit_done_btn: "Visit",
     visit_undone_btn: "Undo today's visit",
+    visit_remove_btn: "Remove visit",
     visit_remaining_label: "Remaining this week",
+    visit_count_hint: "Number of visits",
+    visit_last_visit_label: "Last visit",
+    visit_last_visit_none: "No visits yet",
+    visit_admin_count_suffix: "visits",
     visit_location_btn: "Location",
     visit_location_missing: "No location set yet",
     visit_location_modal_title: "Branch location link",
@@ -1020,6 +1030,19 @@ function visitsDoneThisWeek(acc){
 function isVisitedToday(acc){
   const today = isoDateStr(new Date());
   return (acc.visitLog||[]).includes(today);
+}
+/* آخر زيارة: آخر تاريخ أُضيف لسجل الزيارات (لا يتغير إلا عند الإضافة/الإزالة من نفس الطرف) */
+function lastVisitDate(acc){
+  const log = acc.visitLog || [];
+  return log.length ? log[log.length-1] : null;
+}
+function formatVisitDate(ds){
+  if(!ds) return "";
+  const d = new Date(ds + "T00:00:00");
+  if(isNaN(d.getTime())) return ds;
+  const dd = String(d.getDate()).padStart(2,"0");
+  const mm = String(d.getMonth()+1).padStart(2,"0");
+  return `${dd}/${mm}/${d.getFullYear()}`;
 }
 function accountsForEmployee(employeeId){
   return visitAccounts().filter(a=>a.employeeId===employeeId).sort((a,b)=>(a.order||0)-(b.order||0));
@@ -1569,13 +1592,20 @@ window.addEventListener("popstate", (e)=>{
 ========================================================= */
 function visitCardFieldGridHtml(acc, fields){
   const rest = fields.filter(f=>!f.prominent);
-  if(!rest.length) return "";
-  return `<div class="visit-field-grid">
-    ${rest.map(f=>{
-      const val = (acc.values && acc.values[f.id]) ? escapeHtml(acc.values[f.id]) : "—";
-      return `<div class="visit-field-box"><div class="lbl">${escapeHtml(f.label)}</div><div class="val">${val}</div></div>`;
-    }).join("")}
-  </div>`;
+  const lastVisitBoxHtml = ()=>{
+    const lv = lastVisitDate(acc);
+    const val = lv ? escapeHtml(formatVisitDate(lv)) : escapeHtml(t('visit_last_visit_none'));
+    return `<div class="visit-field-box"><div class="lbl">${escapeHtml(t('visit_last_visit_label'))}</div><div class="val">${val}</div></div>`;
+  };
+  if(!rest.length) return `<div class="visit-field-grid">${lastVisitBoxHtml()}</div>`;
+  const boxesHtml = rest.map(f=>{
+    const val = (acc.values && acc.values[f.id]) ? escapeHtml(acc.values[f.id]) : "—";
+    const box = `<div class="visit-field-box"><div class="lbl">${escapeHtml(f.label)}</div><div class="val">${val}</div></div>`;
+    return f.id === "classification" ? box + lastVisitBoxHtml() : box;
+  });
+  const hasClassification = rest.some(f=>f.id === "classification");
+  if(!hasClassification) boxesHtml.push(lastVisitBoxHtml());
+  return `<div class="visit-field-grid">${boxesHtml.join("")}</div>`;
 }
 function visitCardHtml(acc, fields, showManageControls){
   const prominentField = fields.find(f=>f.prominent) || fields[0];
@@ -1584,27 +1614,37 @@ function visitCardHtml(acc, fields, showManageControls){
   const done = visitsDoneThisWeek(acc);
   const remaining = Math.max(target - done, 0);
   const visitedToday = isVisitedToday(acc);
+  const totalVisits = (acc.visitLog||[]).length;
   return `
-  <div class="visit-card" data-visit-id="${acc.id}">
-    <div class="card-badges-row" style="position:static; margin-bottom:8px;">
-      ${target ? `<span class="visit-target-badge" title="${escapeHtml(t('visit_remaining_label'))}: ${remaining}">${target}/${done}</span>` : ""}
-      ${showManageControls ? `
-        <span style="margin-inline-start:auto; display:flex; gap:6px;">
-          <button class="chip-mini-btn" data-visit-self-edit="${acc.id}" title="${escapeHtml(t('edit_word'))}">${ICON.edit}</button>
-          <button class="chip-mini-btn" data-visit-self-delete="${acc.id}" title="${escapeHtml(t('delete_word'))}">${ICON.trash}</button>
+  <details class="visit-card" data-visit-id="${acc.id}">
+    <summary class="visit-card-summary">
+      <span class="visit-card-summary-name">${escapeHtml(String(title))}</span>
+      <span class="visit-admin-row-count">${totalVisits} ${escapeHtml(t('visit_admin_count_suffix'))}</span>
+    </summary>
+    <div class="visit-card-body">
+      <div class="card-badges-row" style="position:static; margin-bottom:8px;">
+        ${target ? `<span class="visit-target-wrap">
+          <span class="visit-target-badge" title="${escapeHtml(t('visit_remaining_label'))}: ${remaining}">${target}/${done}</span>
+          <span class="visit-target-hint">${escapeHtml(t('visit_count_hint'))}</span>
         </span>` : ""}
+        ${showManageControls ? `
+          <span style="margin-inline-start:auto; display:flex; gap:6px;">
+            <button class="chip-mini-btn" data-visit-self-edit="${acc.id}" title="${escapeHtml(t('edit_word'))}">${ICON.edit}</button>
+            <button class="chip-mini-btn" data-visit-self-delete="${acc.id}" title="${escapeHtml(t('delete_word'))}">${ICON.trash}</button>
+          </span>` : ""}
+      </div>
+      ${visitCardFieldGridHtml(acc, fields)}
+      <div class="visit-card-photo">
+        ${acc.photo ? `<img src="${acc.photo}" class="visit-photo-img" data-visit-photo="${acc.id}">` : `<button class="visit-photo-upload-btn" data-visit-photo="${acc.id}">${ICON.camera} ${escapeHtml(t('visit_photo_upload'))}</button>`}
+        <input type="file" accept="image/*" capture="environment" style="display:none;" data-visit-photo-input="${acc.id}">
+      </div>
+      <div class="visit-card-actions">
+        <button class="visit-loc-btn" data-visit-loc="${acc.id}" title="${acc.locationUrl ? '' : escapeHtml(t('visit_location_missing'))}">${ICON.location} ${escapeHtml(t('visit_location_btn'))}</button>
+        <button class="visit-done-btn ${visitedToday?'done':''}" data-visit-add="${acc.id}">${ICON.check} ${escapeHtml(t('visit_done_btn'))}</button>
+        <button class="visit-remove-btn" data-visit-remove="${acc.id}" ${(acc.visitLog||[]).length ? '' : 'disabled'}>${ICON.trash} ${escapeHtml(t('visit_remove_btn'))}</button>
+      </div>
     </div>
-    <div class="visit-card-title">${escapeHtml(String(title))}</div>
-    ${visitCardFieldGridHtml(acc, fields)}
-    <div class="visit-card-photo">
-      ${acc.photo ? `<img src="${acc.photo}" class="visit-photo-img" data-visit-photo="${acc.id}">` : `<button class="visit-photo-upload-btn" data-visit-photo="${acc.id}">${ICON.camera} ${escapeHtml(t('visit_photo_upload'))}</button>`}
-      <input type="file" accept="image/*" capture="environment" style="display:none;" data-visit-photo-input="${acc.id}">
-    </div>
-    <div class="visit-card-actions">
-      <button class="visit-loc-btn" data-visit-loc="${acc.id}" title="${acc.locationUrl ? '' : escapeHtml(t('visit_location_missing'))}">${ICON.location} ${escapeHtml(t('visit_location_btn'))}</button>
-      <button class="visit-done-btn ${visitedToday?'done':''}" data-visit-toggle="${acc.id}">${ICON.check} ${visitedToday ? escapeHtml(t('visit_undone_btn')) : escapeHtml(t('visit_done_btn'))}</button>
-    </div>
-  </div>`;
+  </details>`;
 }
 function renderVisitPrepScreen(){
   const fields = visitFields();
@@ -1660,15 +1700,24 @@ function attachVisitPrepScreenEvents(){
       render();
     };
   });
-  document.querySelectorAll("[data-visit-toggle]").forEach(btn=>{
+  document.querySelectorAll("[data-visit-add]").forEach(btn=>{
     btn.onclick = async ()=>{
-      const id = btn.getAttribute("data-visit-toggle");
+      const id = btn.getAttribute("data-visit-add");
       const acc = visitAccounts().find(a=>a.id===id);
       if(!acc) return;
       const today = isoDateStr(new Date());
       acc.visitLog = acc.visitLog || [];
-      const idx = acc.visitLog.indexOf(today);
-      if(idx >= 0) acc.visitLog.splice(idx,1); else acc.visitLog.push(today);
+      acc.visitLog.push(today);
+      await saveVisitsData();
+      render();
+    };
+  });
+  document.querySelectorAll("[data-visit-remove]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const id = btn.getAttribute("data-visit-remove");
+      const acc = visitAccounts().find(a=>a.id===id);
+      if(!acc || !(acc.visitLog||[]).length) return;
+      acc.visitLog.pop();
       await saveVisitsData();
       render();
     };
@@ -6151,14 +6200,18 @@ function renderVisitsTab(){
   const rowsHtml = accs.map(acc=>{
     const prominentField = fields.find(f=>f.prominent) || fields[0];
     const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
+    const visitCount = (acc.visitLog||[]).length;
     return `
-      <div class="visit-admin-row" data-visit-row="${acc.id}">
-        <div class="visit-admin-row-name">${escapeHtml(String(title))}</div>
+      <details class="visit-admin-row" data-visit-row="${acc.id}">
+        <summary class="visit-admin-row-summary">
+          <span class="visit-admin-row-name">${escapeHtml(String(title))}</span>
+          <span class="visit-admin-row-count">${visitCount} ${escapeHtml(t('visit_admin_count_suffix'))}</span>
+        </summary>
         <div class="visit-admin-row-actions">
           <button class="chip-mini-btn" data-visit-edit="${acc.id}">${ICON.edit}</button>
           <button class="chip-mini-btn" data-visit-delete="${acc.id}">${ICON.trash}</button>
         </div>
-      </div>`;
+      </details>`;
   }).join("");
 
   return `

@@ -601,6 +601,7 @@
     display:flex; align-items:center; gap:6px; border:1.5px dashed var(--sky); color:var(--sky);
     border-radius:12px; padding:9px 14px; font-size:13.5px; font-weight:700; cursor:pointer; background:transparent;
   }
+  .plus-tile:disabled{ opacity:0.45; cursor:not-allowed; }
   .inline-add-row{ display:flex; gap:8px; margin-top:12px; }
 
   /* ---------- SOS tab (editable spreadsheet) ---------- */
@@ -966,33 +967,40 @@
   ::-webkit-scrollbar{ width:8px; }
   ::-webkit-scrollbar-thumb{ background:var(--line); border-radius:8px; }
 
-  /* ---------- VISIT PREP (daily branch-visit tracker) ---------- */
-  .day-tabs{
-    display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:16px;
-    -webkit-overflow-scrolling:touch;
+  /* ---------- VISIT PREP (branch-visit tracker) ---------- */
+  .visit-cards-list{
+    display:grid; gap:16px; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    max-width:900px; margin:0 auto;
   }
-  .day-tab{
-    flex:0 0 auto; border:1.5px solid var(--line); background:var(--white); color:var(--navy);
-    font-family:var(--font-display); font-weight:700; font-size:12.5px; padding:9px 14px;
-    border-radius:11px; cursor:pointer; white-space:nowrap; transition:all .15s ease;
-  }
-  .day-tab.active{ background:var(--navy); border-color:var(--navy); color:#fff; }
-  .day-tab:hover{ border-color:var(--sky); }
-
-  .visit-cards-list{ display:grid; gap:16px; max-width:520px; margin:0 auto; }
 
   .visit-card{
     background:var(--white); border-radius:var(--radius-lg);
     box-shadow:var(--shadow-soft); overflow:hidden; position:relative;
-    border:1px solid var(--line); padding:16px 18px 18px;
+    border:1px solid var(--line);
   }
+  .visit-card-summary{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:14px 18px; cursor:pointer; list-style:none;
+  }
+  .visit-card-summary::-webkit-details-marker{ display:none; }
+  .visit-card-summary::before{
+    content:"›"; display:inline-block; margin-inline-end:8px; font-size:18px; font-weight:900;
+    color:var(--sky); transform:rotate(90deg); transition:transform .15s ease; flex-shrink:0;
+  }
+  .visit-card[open] > .visit-card-summary::before{ transform:rotate(270deg); }
+  .visit-card-summary-name{
+    font-family:var(--font-display); font-weight:900; font-size:16px; color:var(--navy-deep);
+    line-height:1.3; word-break:break-word; flex:1;
+  }
+  .visit-card-body{ padding:0 18px 18px; }
+  .visit-target-wrap{ display:inline-flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .visit-target-badge{
     background:var(--sky-light); color:var(--navy-deep); font-family:var(--font-display);
-    font-weight:800; font-size:13px; padding:5px 12px; border-radius:20px; display:inline-block;
+    font-weight:800; font-size:15px; padding:6px 14px; border-radius:20px; display:inline-block;
   }
-  .visit-card-title{
-    font-family:var(--font-display); font-weight:900; font-size:19px; color:var(--navy-deep);
-    text-align:center; margin:2px 0 14px; line-height:1.3; word-break:break-word;
+  .visit-target-hint{
+    font-family:var(--font-body); font-weight:400; font-size:10.5px; color:var(--navy);
+    opacity:.45; letter-spacing:.2px;
   }
   .visit-field-grid{
     display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-bottom:14px;
@@ -1015,32 +1023,45 @@
     font-weight:700; font-size:12.5px; cursor:pointer; width:100%; justify-content:center;
   }
 
-  .visit-card-actions{ display:flex; gap:8px; }
-  .visit-loc-btn, .visit-done-btn{
+  .visit-card-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .visit-loc-btn, .visit-done-btn, .visit-remove-btn{
     flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px;
     border-radius:11px; padding:10px 12px; font-family:var(--font-display); font-weight:700;
     font-size:12.5px; cursor:pointer; border:1.5px solid var(--line); background:var(--white); color:var(--navy);
+    min-width:110px;
   }
   .visit-loc-btn:hover{ border-color:var(--sky); color:var(--sky); }
   .visit-done-btn{ background:var(--navy); border-color:var(--navy); color:#fff; }
   .visit-done-btn.done{ background:var(--sky-light); border-color:var(--sky); color:var(--navy-deep); }
+  .visit-remove-btn{ background:var(--white); border-color:#e2b8b8; color:#b23b3b; }
+  .visit-remove-btn:hover{ border-color:#b23b3b; }
+  .visit-remove-btn:disabled{ opacity:.4; cursor:not-allowed; }
 
   /* ---------- VISITS ADMIN TAB ---------- */
-  .visit-admin-days-grid{ display:grid; gap:14px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
   .visit-admin-day-block{
     background:var(--white); border:1px solid var(--line); border-radius:14px; padding:12px 14px;
-  }
-  .visit-admin-day-title{
-    font-family:var(--font-display); font-weight:800; font-size:13.5px; color:var(--navy-deep);
-    margin-bottom:8px; display:flex; align-items:center; gap:6px;
+    max-width:640px; margin:0 auto;
   }
   .visit-admin-row{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    padding:7px 0; border-bottom:1px solid var(--line);
+    padding:2px 0; border-bottom:1px solid var(--line);
   }
   .visit-admin-row:last-of-type{ border-bottom:none; }
-  .visit-admin-row-name{ font-size:13px; font-weight:700; color:var(--navy-deep); }
-  .visit-admin-row-actions{ display:flex; gap:6px; flex-shrink:0; }
+  .visit-admin-row-summary{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:9px 2px; cursor:pointer; list-style:none;
+  }
+  .visit-admin-row-summary::-webkit-details-marker{ display:none; }
+  .visit-admin-row-summary::before{
+    content:"›"; display:inline-block; margin-inline-end:6px; font-size:16px; font-weight:900;
+    color:var(--sky); transform:rotate(90deg); transition:transform .15s ease; flex-shrink:0;
+  }
+  .visit-admin-row[open] > .visit-admin-row-summary::before{ transform:rotate(270deg); }
+  .visit-admin-row-name{ font-size:13px; font-weight:700; color:var(--navy-deep); flex:1; }
+  .visit-admin-row-count{
+    font-size:11.5px; font-weight:700; color:var(--navy-deep); background:var(--sky-light);
+    padding:3px 10px; border-radius:14px; flex-shrink:0;
+  }
+  .visit-admin-row-actions{ display:flex; gap:6px; flex-shrink:0; padding:0 2px 10px 22px; }
   .visit-field-rename-input{
     flex:1; padding:8px 10px; border-radius:9px; border:1.5px solid var(--line);
     font-family:var(--font-body); font-size:13px; background:var(--paper); color:var(--ink);
@@ -1049,5 +1070,5 @@
 
   @media (max-width:520px){
     .visit-field-grid{ grid-template-columns:1fr 1fr; }
-    .visit-card-title{ font-size:17px; }
+    .visit-card-summary-name{ font-size:15px; }
   }
