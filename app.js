@@ -71,13 +71,19 @@ let state = {
   planogramSeen: {},
   documentation: [],
   sos: { categories: [], branches: [] },
+  visits: { fields: [], accounts: [] },
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
 let session = { user: null, viewOnly: false };
 let managerUI = { tab: "accounts" };
 function canEdit(){ return !!(session.user && !session.viewOnly); }
-let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null, sosBranchId: null };
+let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null, sosBranchId: null, visitsEmployeeId: null };
+function todayVisitDayKey(){
+  const map = ["sun","mon","tue","wed","thu","fri","sat"];
+  return map[new Date().getDay()];
+}
+let visitUI = { day: null };
 let pendingDocPhotos = [];
 let pendingDocDeadline = null;
 let pendingDocCountdownInterval = null;
@@ -189,6 +195,41 @@ const I18N = {
     daily_prep_link_placeholder: "الصق رابط الاستبيان هنا",
     toast_daily_prep_link_saved: "تم حفظ الرابط",
     toast_daily_prep_enter_link: "الرجاء إدخال رابط صحيح",
+    visit_prep_title: "جدول الزيارات اليومي",
+    tab_visits: "زيارات الفروع",
+    visit_prep_hint: "بطاقة لكل فرع تزوره، مرتبة حسب أيام الأسبوع. حد أقصى 6 فروع في اليوم الواحد.",
+    visit_no_accounts_day: "لا توجد فروع مضافة لهذا اليوم بعد.",
+    visit_target_label: "الهدف الأسبوعي للزيارات",
+    visit_done_btn: "تمت الزيارة اليوم",
+    visit_undone_btn: "إلغاء زيارة اليوم",
+    visit_remaining_label: "متبقٍ هذا الأسبوع",
+    visit_location_btn: "الموقع",
+    visit_location_missing: "لم يتم تحديد موقع بعد",
+    visit_location_modal_title: "رابط موقع الفرع",
+    visit_location_modal_hint: "الصق رابط موقع الفرع من خرائط قوقل (مشاركة الموقع)",
+    visit_location_placeholder: "https://maps.app.goo.gl/...",
+    toast_visit_location_saved: "تم حفظ الموقع",
+    toast_visit_enter_location: "الرجاء لصق رابط صحيح",
+    visit_photo_upload: "رفع صورة",
+    visit_photo_replace: "تغيير الصورة",
+    visit_manage_accounts_title: "إدارة فروع/حسابات الزيارة",
+    visit_choose_employee: "اختر الموظف",
+    visit_no_employees: "لا يوجد موظفون بعد",
+    visit_add_account_btn: "إضافة فرع لهذا اليوم",
+    visit_day_full_toast: "هذا اليوم يحتوي بالفعل على 6 فروع (الحد الأقصى)",
+    visit_edit_account_title: "بيانات الفرع",
+    visit_delete_account_confirm: "هل تريد حذف هذا الفرع من الجدول؟",
+    toast_visit_account_saved: "تم الحفظ",
+    toast_visit_account_deleted: "تم الحذف",
+    visit_manage_fields_btn: "إدارة الخانات",
+    visit_manage_fields_title: "خانات بطاقة الزيارة",
+    visit_manage_fields_hint: "أضف خانة جديدة أو عدّل/احذف الخانات الحالية. هذه الخانات تظهر في كل بطاقات الزيارة.",
+    visit_add_field_placeholder: "اسم الخانة الجديدة",
+    visit_add_field_btn: "إضافة خانة",
+    toast_enter_field_name: "الرجاء إدخال اسم الخانة",
+    confirm_delete_field: "حذف هذه الخانة من جميع البطاقات؟",
+    visit_day_col_label: "اليوم",
+    visit_move_day_label: "نقل إلى يوم آخر",
     branch_created_by_manager_note: "تم إنشاء هذا الفرع بواسطة المدير",
     view_employee_branches: "فروع الموظف",
     employee_branches_title: "فروع الموظف",
@@ -554,6 +595,41 @@ const I18N = {
     daily_prep_link_placeholder: "Paste the survey link here",
     toast_daily_prep_link_saved: "Link saved",
     toast_daily_prep_enter_link: "Please enter a valid link",
+    visit_prep_title: "Daily Visit Schedule",
+    tab_visits: "Branch Visits",
+    visit_prep_hint: "One card per branch you visit, arranged by weekday. Maximum 6 branches per day.",
+    visit_no_accounts_day: "No branches added for this day yet.",
+    visit_target_label: "Weekly visit target",
+    visit_done_btn: "Visited today",
+    visit_undone_btn: "Undo today's visit",
+    visit_remaining_label: "Remaining this week",
+    visit_location_btn: "Location",
+    visit_location_missing: "No location set yet",
+    visit_location_modal_title: "Branch location link",
+    visit_location_modal_hint: "Paste the branch's Google Maps location (share link)",
+    visit_location_placeholder: "https://maps.app.goo.gl/...",
+    toast_visit_location_saved: "Location saved",
+    toast_visit_enter_location: "Please paste a valid link",
+    visit_photo_upload: "Upload photo",
+    visit_photo_replace: "Replace photo",
+    visit_manage_accounts_title: "Manage visit branches/accounts",
+    visit_choose_employee: "Choose employee",
+    visit_no_employees: "No employees yet",
+    visit_add_account_btn: "Add branch to this day",
+    visit_day_full_toast: "This day already has 6 branches (maximum)",
+    visit_edit_account_title: "Branch details",
+    visit_delete_account_confirm: "Delete this branch from the schedule?",
+    toast_visit_account_saved: "Saved",
+    toast_visit_account_deleted: "Deleted",
+    visit_manage_fields_btn: "Manage fields",
+    visit_manage_fields_title: "Visit card fields",
+    visit_manage_fields_hint: "Add a new field or edit/delete existing ones. These fields appear on every visit card.",
+    visit_add_field_placeholder: "New field name",
+    visit_add_field_btn: "Add field",
+    toast_enter_field_name: "Please enter a field name",
+    confirm_delete_field: "Delete this field from all cards?",
+    visit_day_col_label: "Day",
+    visit_move_day_label: "Move to another day",
     branch_created_by_manager_note: "This branch was created by the manager",
     view_employee_branches: "Employee branches",
     employee_branches_title: "Employee's Branches",
@@ -891,6 +967,69 @@ function defaultSosData(){
   return { categories: defaultSosCategories(), branches: [] };
 }
 
+/* ---------------- VISIT PREP (daily branch-visit tracker) ----------------
+   حقول قابلة للتعديل/الإضافة بالكامل من لوحة التحكم، تمامًا مثل أعمدة SOS.
+   customerName مُعلَّم prominent:true ليظهر بارزًا وواضحًا في البطاقة. */
+const VISIT_DAY_KEYS = ["sat","sun","mon","tue","wed","thu","fri"];
+const VISIT_MAX_PER_DAY = 6;
+function visitDayLabel(key){
+  const map = {
+    ar: { sat:"السبت", sun:"الأحد", mon:"الاثنين", tue:"الثلاثاء", wed:"الأربعاء", thu:"الخميس", fri:"الجمعة" },
+    en: { sat:"Saturday", sun:"Sunday", mon:"Monday", tue:"Tuesday", wed:"Wednesday", thu:"Thursday", fri:"Friday" },
+  };
+  return (map[lang] && map[lang][key]) || key;
+}
+function defaultVisitFields(){
+  return [
+    { id: "merchId", label: tEn2("Merch Id","Merch Id"), prominent:false },
+    { id: "depotName", label: tEn2("Deport Name","اسم المستودع"), prominent:false },
+    { id: "account", label: tEn2("Account","الحساب"), prominent:false },
+    { id: "routeCode", label: tEn2("Merch Route Code","كود خط السير"), prominent:false },
+    { id: "customerCode", label: tEn2("Customer Code","كود العميل"), prominent:false },
+    { id: "customerName", label: tEn2("Customer Name","اسم العميل"), prominent:true },
+    { id: "channel", label: tEn2("Channel","القناة"), prominent:false },
+    { id: "classification", label: tEn2("Classification","التصنيف"), prominent:false },
+  ];
+}
+/* دالة مساعدة صغيرة: نص افتراضي حسب اللغة الحالية دون الاعتماد على قاموس I18N */
+function tEn2(en, ar){ return lang === "ar" ? ar : en; }
+function defaultVisitsData(){
+  return { fields: defaultVisitFields(), accounts: [] };
+}
+function visitFields(){
+  return (state.visits && Array.isArray(state.visits.fields) && state.visits.fields.length) ? state.visits.fields : defaultVisitFields();
+}
+function visitAccounts(){ return (state.visits && Array.isArray(state.visits.accounts)) ? state.visits.accounts : []; }
+/* بداية الأسبوع الحالي (السبت) بصيغة YYYY-MM-DD ليُستخدم كمرساة لحساب زيارات هذا الأسبوع */
+function currentWeekAnchor(d){
+  const date = d ? new Date(d) : new Date();
+  const day = date.getDay(); // 0=Sun...6=Sat
+  const diffToSat = (day + 1) % 7; // كم يوم مضى منذ آخر سبت
+  const anchor = new Date(date.getFullYear(), date.getMonth(), date.getDate() - diffToSat);
+  return isoDateStr(anchor);
+}
+function isoDateStr(d){
+  const yy = d.getFullYear(), mm = String(d.getMonth()+1).padStart(2,"0"), dd = String(d.getDate()).padStart(2,"0");
+  return `${yy}-${mm}-${dd}`;
+}
+function visitsDoneThisWeek(acc){
+  const anchor = currentWeekAnchor();
+  const anchorDate = new Date(anchor + "T00:00:00");
+  const weekEnd = new Date(anchorDate); weekEnd.setDate(weekEnd.getDate()+7);
+  return (acc.visitLog||[]).filter(ds=>{
+    const d = new Date(ds + "T00:00:00");
+    return d >= anchorDate && d < weekEnd;
+  }).length;
+}
+function isVisitedToday(acc){
+  const today = isoDateStr(new Date());
+  return (acc.visitLog||[]).includes(today);
+}
+function accountsForEmployeeAndDay(employeeId, dayKey){
+  return visitAccounts().filter(a=>a.employeeId===employeeId && a.day===dayKey).sort((a,b)=>(a.order||0)-(b.order||0));
+}
+async function saveVisitsData(){ await storageSet("puck:visits", state.visits); }
+
 /* ---------------- DAILY INVENTORY: seed catalog products per branch ---------------- */
 function ensureCatalogSeededForBranch(branchId){
   const existingSkus = new Set(state.products.filter(p=>p.branchId===branchId).map(p=>p.sku).filter(Boolean));
@@ -1097,7 +1236,7 @@ async function loadAll(){
     "puck:monthlyEntries", "puck:monthlyDuplicates", "puck:monthlyOverrides",
     "puck:catalogOverrides", "puck:catalogGroupOverrides", "puck:customCatalogGroups",
     "puck:managerAlertSettings", "puck:messages", "puck:planogramItems",
-    "puck:planogramSeen", "puck:documentation", "puck:sos",
+    "puck:planogramSeen", "puck:documentation", "puck:sos", "puck:visits",
   ];
   const results = await Promise.all(KV_KEYS.map(k => storageGet(k, null)));
   const kv = {};
@@ -1123,6 +1262,7 @@ async function loadAll(){
     "puck:planogramSeen": ()=> ({}),
     "puck:documentation": ()=> [],
     "puck:sos": defaultSosData,
+    "puck:visits": defaultVisitsData,
   };
   const stateKeyByKvKey = {
     "puck:branches": "branches", "puck:products": "products", "puck:users": "users",
@@ -1133,7 +1273,7 @@ async function loadAll(){
     "puck:catalogGroupOverrides": "catalogGroupOverrides", "puck:customCatalogGroups": "customCatalogGroups",
     "puck:managerAlertSettings": "managerAlertSettings", "puck:messages": "messages",
     "puck:planogramItems": "planogramItems", "puck:planogramSeen": "planogramSeen",
-    "puck:documentation": "documentation", "puck:sos": "sos",
+    "puck:documentation": "documentation", "puck:sos": "sos", "puck:visits": "visits",
   };
 
   const writesNeeded = [];
@@ -1164,6 +1304,11 @@ async function loadAll(){
       });
     });
     if(sosLabelsChanged) await storageSet("puck:sos", state.sos);
+  }
+
+  if(!state.visits || Array.isArray(state.visits) || !Array.isArray(state.visits.fields) || !Array.isArray(state.visits.accounts)){
+    state.visits = defaultVisitsData();
+    await storageSet("puck:visits", state.visits);
   }
 
   {
@@ -1299,6 +1444,8 @@ const ICON = {
   bell: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   chevron: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   whatsapp: `<svg viewBox="0 0 32 32" width="20" height="20"><circle cx="16" cy="16" r="16" fill="#25D366"/><path fill="#fff" d="M23.47 8.52A10.7 10.7 0 0 0 16.02 5.3c-5.9 0-10.7 4.8-10.7 10.7 0 1.89.5 3.73 1.44 5.35L5.24 26.7l5.5-1.44a10.66 10.66 0 0 0 5.27 1.34h.01c5.9 0 10.7-4.8 10.7-10.7 0-2.86-1.11-5.55-3.25-7.38zm-7.45 16.47h-.01a8.87 8.87 0 0 1-4.52-1.24l-.32-.19-3.36.88.9-3.28-.21-.34a8.85 8.85 0 0 1-1.36-4.72c0-4.9 3.99-8.89 8.9-8.89a8.83 8.83 0 0 1 6.28 2.61 8.83 8.83 0 0 1 2.6 6.29c0 4.9-3.99 8.88-8.9 8.88zm4.87-6.65c-.27-.13-1.58-.78-1.82-.87-.24-.09-.42-.13-.6.13-.18.27-.69.87-.85 1.05-.16.18-.31.2-.58.07-.27-.13-1.13-.42-2.15-1.33-.8-.71-1.33-1.59-1.49-1.86-.16-.27-.02-.42.12-.55.12-.12.27-.31.4-.47.13-.16.18-.27.27-.45.09-.18.04-.34-.02-.47-.07-.13-.6-1.45-.82-1.98-.22-.52-.44-.45-.6-.46h-.51c-.18 0-.47.07-.71.34-.24.27-.94.92-.94 2.24s.96 2.6 1.1 2.78c.13.18 1.9 2.9 4.6 4.07.64.28 1.15.44 1.54.57.65.21 1.24.18 1.71.11.52-.08 1.58-.65 1.81-1.27.22-.63.22-1.16.16-1.27-.07-.12-.24-.19-.51-.32z"/></svg>`,
+  location: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0116 0z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="2.6"/></svg>`,
+  camera: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8a2 2 0 012-2h1.2l1-1.6A1.5 1.5 0 019.5 3.6h5a1.5 1.5 0 011.3.8l1 1.6H18a2 2 0 012 2v10a2 2 0 01-2 2H6a2 2 0 01-2-2V8z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.4"/></svg>`,
 };
 
 function renderBgDaisies(){
@@ -1386,8 +1533,10 @@ function render(){
   else if(view.screen === "managerEmployeeDocs") app.innerHTML = renderManagerEmployeeDocsScreen(view.branchId);
   else if(view.screen === "managerEmployees") app.innerHTML = renderManagerEmployeesScreen();
   else if(view.screen === "managerNotifications") app.innerHTML = renderManagerNotificationsScreen();
+  else if(view.screen === "visitPrep") app.innerHTML = renderVisitPrepScreen();
   attachHomeEvents();
   attachManagerScreenEvents();
+  if(view.screen === "visitPrep") attachVisitPrepScreenEvents();
 }
 
 function navigate(newView){
@@ -1410,6 +1559,7 @@ function goHome(){ navigate({ screen:"home", branchId:null }); }
 function goBranch(id){ navigate({ screen:"branch", branchId:id }); }
 function goMonthly(){ navigate({ screen:"monthly", branchId:null }); }
 function goMonthlyBranch(id){ navigate({ screen:"monthlyBranch", branchId:id }); }
+function goVisitPrep(){ navigate({ screen:"visitPrep", branchId:null }); }
 
 window.addEventListener("popstate", (e)=>{
   if(!session.user) return;
@@ -1417,6 +1567,144 @@ window.addEventListener("popstate", (e)=>{
   else{ view = { screen:"landing", branchId:null }; }
   render();
 });
+
+/* =========================================================
+   VISIT PREP (daily branch-visit tracker for employees)
+========================================================= */
+function visitCardFieldGridHtml(acc, fields){
+  const rest = fields.filter(f=>!f.prominent);
+  if(!rest.length) return "";
+  return `<div class="visit-field-grid">
+    ${rest.map(f=>{
+      const val = (acc.values && acc.values[f.id]) ? escapeHtml(acc.values[f.id]) : "—";
+      return `<div class="visit-field-box"><div class="lbl">${escapeHtml(f.label)}</div><div class="val">${val}</div></div>`;
+    }).join("")}
+  </div>`;
+}
+function visitCardHtml(acc, fields, canEditLocationPhoto){
+  const prominentField = fields.find(f=>f.prominent) || fields[0];
+  const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
+  const target = acc.weeklyTarget || 0;
+  const done = visitsDoneThisWeek(acc);
+  const remaining = Math.max(target - done, 0);
+  const visitedToday = isVisitedToday(acc);
+  return `
+  <div class="visit-card" data-visit-id="${acc.id}">
+    <div class="card-badges-row" style="position:static; margin-bottom:8px;">
+      ${target ? `<span class="visit-target-badge" title="${escapeHtml(t('visit_remaining_label'))}: ${remaining}">${target}/${done}</span>` : ""}
+    </div>
+    <div class="visit-card-title">${escapeHtml(String(title))}</div>
+    ${visitCardFieldGridHtml(acc, fields)}
+    <div class="visit-card-photo">
+      ${acc.photo ? `<img src="${acc.photo}" class="visit-photo-img" data-visit-photo="${acc.id}">` : `<button class="visit-photo-upload-btn" data-visit-photo="${acc.id}">${ICON.camera} ${escapeHtml(t('visit_photo_upload'))}</button>`}
+      <input type="file" accept="image/*" capture="environment" style="display:none;" data-visit-photo-input="${acc.id}">
+    </div>
+    <div class="visit-card-actions">
+      <button class="visit-loc-btn" data-visit-loc="${acc.id}" title="${acc.locationUrl ? '' : escapeHtml(t('visit_location_missing'))}">${ICON.location} ${escapeHtml(t('visit_location_btn'))}</button>
+      <button class="visit-done-btn ${visitedToday?'done':''}" data-visit-toggle="${acc.id}">${ICON.check} ${visitedToday ? escapeHtml(t('visit_undone_btn')) : escapeHtml(t('visit_done_btn'))}</button>
+    </div>
+  </div>`;
+}
+function renderVisitPrepScreen(){
+  if(!visitUI.day) visitUI.day = todayVisitDayKey();
+  const fields = visitFields();
+  const employeeId = session.user ? session.user.id : null;
+  const dayAccounts = employeeId ? accountsForEmployeeAndDay(employeeId, visitUI.day) : [];
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}${bellButtonHtml()}
+      </div>
+    </div>
+    <div class="section-label" style="margin-top:26px;"><span class="line"></span> ${t('visit_prep_title')} <span class="line"></span></div>
+    <p class="hint" style="text-align:center; margin:-8px 0 16px;">${t('visit_prep_hint')}</p>
+    <div class="day-tabs">
+      ${VISIT_DAY_KEYS.map(dk=>`<button class="day-tab ${visitUI.day===dk?'active':''}" data-visit-day="${dk}">${visitDayLabel(dk)}</button>`).join("")}
+    </div>
+    <div class="visit-cards-list">
+      ${dayAccounts.length ? dayAccounts.map(acc=>visitCardHtml(acc, fields, true)).join("") : `<div class="branch-empty">${t('visit_no_accounts_day')}</div>`}
+    </div>
+  `;
+}
+function attachVisitPrepScreenEvents(){
+  document.getElementById("landingBackBtn").onclick = ()=> goLanding();
+  document.querySelectorAll("[data-visit-day]").forEach(btn=>{
+    btn.onclick = ()=>{ visitUI.day = btn.getAttribute("data-visit-day"); render(); };
+  });
+  document.querySelectorAll("[data-visit-toggle]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const id = btn.getAttribute("data-visit-toggle");
+      const acc = visitAccounts().find(a=>a.id===id);
+      if(!acc) return;
+      const today = isoDateStr(new Date());
+      acc.visitLog = acc.visitLog || [];
+      const idx = acc.visitLog.indexOf(today);
+      if(idx >= 0) acc.visitLog.splice(idx,1); else acc.visitLog.push(today);
+      await saveVisitsData();
+      render();
+    };
+  });
+  document.querySelectorAll("[data-visit-loc]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const id = btn.getAttribute("data-visit-loc");
+      const acc = visitAccounts().find(a=>a.id===id);
+      if(!acc) return;
+      if(acc.locationUrl){ window.open(acc.locationUrl, "_blank", "noopener"); }
+      else{ openVisitLocationModal(id); }
+    };
+  });
+  document.querySelectorAll("[data-visit-photo]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const id = btn.getAttribute("data-visit-photo");
+      const input = document.querySelector(`[data-visit-photo-input="${id}"]`);
+      if(input) input.click();
+    };
+  });
+  document.querySelectorAll("[data-visit-photo-input]").forEach(input=>{
+    input.onchange = (e)=>{
+      const id = input.getAttribute("data-visit-photo-input");
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = async (ev)=>{
+        const acc = visitAccounts().find(a=>a.id===id);
+        if(!acc) return;
+        acc.photo = ev.target.result;
+        await saveVisitsData();
+        render();
+      };
+      reader.readAsDataURL(file);
+    };
+  });
+}
+function openVisitLocationModal(accountId){
+  const acc = visitAccounts().find(a=>a.id===accountId);
+  if(!acc) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <h3>${t('visit_location_modal_title')}</h3>
+      <p class="hint">${t('visit_location_modal_hint')}</p>
+      <div class="field">
+        <input id="visitLocationInput" type="url" placeholder="${t('visit_location_placeholder')}" value="${escapeHtml(acc.locationUrl||'')}" style="width:100%;">
+      </div>
+      <button class="btn btn-primary" id="visitLocationSaveBtn" style="width:100%;">${t('save_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("visitLocationSaveBtn").onclick = async ()=>{
+    const val = document.getElementById("visitLocationInput").value.trim();
+    if(!val){ toast(t('toast_visit_enter_location')); return; }
+    acc.locationUrl = val;
+    await saveVisitsData();
+    toast(t('toast_visit_location_saved'));
+    wrap.remove();
+    render();
+  };
+}
 
 /* ---------------- LANDING (choose Daily / Monthly) ---------------- */
 function renderLandingScreen(){
@@ -1435,8 +1723,12 @@ function renderLandingScreen(){
       <div class="logo-wrap"><img class="logo-main" src="${LOGO_SRC}" alt="Arla"><img class="logo-brands" src="${BRANDS_SRC}" alt="Arla Brands"></div>
       <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
     </div>
-    <div class="section-label"><span class="line"></span> ${t('daily_prep_title')} <span class="line"></span></div>
+    <div class="section-label"><span class="line"></span> ${t('visit_prep_title')} <span class="line"></span></div>
     <div class="inventory-choice-row">
+      <div class="inventory-opt" data-goto="visitPrep">
+        <div class="ico" style="font-size:34px;">🧭</div>
+        <div class="lbl">${t('visit_prep_title')}</div>
+      </div>
       <div class="inventory-opt" id="dailyPrepBox" style="position:relative;">
         <button class="chip-mini-btn" id="dailyPrepEditBtn" title="${t('daily_prep_edit_tooltip')}" style="position:absolute; top:6px; ${lang==='ar'?'left':'right'}:6px;">✏️</button>
         <div class="ico" style="font-size:34px;">📝</div>
@@ -2127,6 +2419,7 @@ function attachHomeEvents(){
       else if(dest === "monthly") goMonthly();
       else if(dest === "planogram") goPlanogram();
       else if(dest === "documentation") goDocumentation();
+      else if(dest === "visitPrep") goVisitPrep();
     };
   });
   document.querySelectorAll(".branch-card[data-branch]").forEach(el=>{
@@ -3228,6 +3521,7 @@ function renderAdminOverlay(){
     {id:"branches", label:t('tab_branches')},
     {id:"products", label:t('tab_products')},
     {id:"sos", label:t('tab_sos')},
+    {id:"visits", label:t('tab_visits')},
     {id:"users", label:t('tab_users')},
     {id:"appearance", label:t('tab_appearance')},
   ];
@@ -3261,6 +3555,7 @@ function renderAdminTab(tab){
   if(tab==="branches") return renderBranchesTab();
   if(tab==="products") return renderProductsTab();
   if(tab==="sos") return renderSosTab();
+  if(tab==="visits") return renderVisitsTab();
   if(tab==="users") return renderUsersTab();
   if(tab==="appearance") return renderAppearanceTab();
   return "";
@@ -5808,8 +6103,203 @@ function attachAdminTabEvents(tab){
   if(tab==="branches") attachBranchesTabEvents();
   if(tab==="products") attachProductsTabEvents();
   if(tab==="sos") attachSosTabEvents();
+  if(tab==="visits") attachVisitsTabEvents();
   if(tab==="users") attachUsersTabEvents();
   if(tab==="appearance") attachAppearanceTabEvents();
+}
+
+/* =========================================================
+   VISITS ADMIN TAB (manage per-employee daily visit schedule)
+========================================================= */
+function renderVisitsTab(){
+  const employees = state.users.filter(u=>userRole(u)==="employee");
+  if(!adminUI.visitsEmployeeId || !employees.some(e=>e.id===adminUI.visitsEmployeeId)){
+    adminUI.visitsEmployeeId = employees[0] ? employees[0].id : null;
+  }
+  const fields = visitFields();
+  const empId = adminUI.visitsEmployeeId;
+
+  const daySections = VISIT_DAY_KEYS.map(dk=>{
+    const accs = empId ? accountsForEmployeeAndDay(empId, dk) : [];
+    const rowsHtml = accs.map(acc=>{
+      const prominentField = fields.find(f=>f.prominent) || fields[0];
+      const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
+      return `
+        <div class="visit-admin-row" data-visit-row="${acc.id}">
+          <div class="visit-admin-row-name">${escapeHtml(String(title))}</div>
+          <div class="visit-admin-row-actions">
+            <button class="chip-mini-btn" data-visit-edit="${acc.id}">${ICON.edit}</button>
+            <button class="chip-mini-btn" data-visit-delete="${acc.id}">${ICON.trash}</button>
+          </div>
+        </div>`;
+    }).join("");
+    return `
+      <div class="visit-admin-day-block">
+        <div class="visit-admin-day-title">${visitDayLabel(dk)} <span class="hint">(${accs.length}/${VISIT_MAX_PER_DAY})</span></div>
+        ${rowsHtml || `<div class="hint" style="padding:6px 0;">${t('visit_no_accounts_day')}</div>`}
+        <button class="plus-tile" data-visit-add-day="${dk}" ${accs.length>=VISIT_MAX_PER_DAY?'disabled':''}>${ICON.plus} ${t('visit_add_account_btn')}</button>
+      </div>`;
+  }).join("");
+
+  return `
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+      <div class="field" style="margin:0; min-width:220px;">
+        <label>${t('visit_choose_employee')}</label>
+        <select id="visitsEmployeeSelect">
+          ${employees.length ? employees.map(e=>`<option value="${e.id}" ${e.id===empId?'selected':''}>${escapeHtml(employeeLabel(e))}</option>`).join("") : `<option value="">${t('visit_no_employees')}</option>`}
+        </select>
+      </div>
+      <button class="btn btn-ghost" id="visitManageFieldsBtn">${t('visit_manage_fields_btn')}</button>
+    </div>
+    <p class="hint">${t('visit_prep_hint')}</p>
+    <div class="visit-admin-days-grid">${daySections}</div>
+  `;
+}
+function attachVisitsTabEvents(){
+  const sel = document.getElementById("visitsEmployeeSelect");
+  if(sel) sel.onchange = ()=>{ adminUI.visitsEmployeeId = sel.value; renderAdminOverlay(); };
+  const mfBtn = document.getElementById("visitManageFieldsBtn");
+  if(mfBtn) mfBtn.onclick = ()=> openVisitManageFieldsModal();
+  document.querySelectorAll("[data-visit-add-day]").forEach(btn=>{
+    btn.onclick = ()=>{
+      const day = btn.getAttribute("data-visit-add-day");
+      if(!adminUI.visitsEmployeeId) return;
+      if(accountsForEmployeeAndDay(adminUI.visitsEmployeeId, day).length >= VISIT_MAX_PER_DAY){ toast(t('visit_day_full_toast')); return; }
+      openVisitAccountModal(null, day);
+    };
+  });
+  document.querySelectorAll("[data-visit-edit]").forEach(btn=>{
+    btn.onclick = ()=> openVisitAccountModal(btn.getAttribute("data-visit-edit"), null);
+  });
+  document.querySelectorAll("[data-visit-delete]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const id = btn.getAttribute("data-visit-delete");
+      if(!confirm(t('visit_delete_account_confirm'))) return;
+      state.visits.accounts = state.visits.accounts.filter(a=>a.id!==id);
+      await saveVisitsData();
+      toast(t('toast_visit_account_deleted'));
+      renderAdminOverlay();
+    };
+  });
+}
+function openVisitAccountModal(accountId, dayForNew){
+  const isNew = !accountId;
+  const acc = isNew
+    ? { id: uid(), employeeId: adminUI.visitsEmployeeId, day: dayForNew, order: accountsForEmployeeAndDay(adminUI.visitsEmployeeId, dayForNew).length, values:{}, weeklyTarget:1, visitLog:[], photo:null, locationUrl:"" }
+    : state.visits.accounts.find(a=>a.id===accountId);
+  if(!acc) return;
+  const fields = visitFields();
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal" style="max-width:460px;">
+      <h3>${t('visit_edit_account_title')}</h3>
+      <div class="field">
+        <label>${t('visit_day_col_label')} / ${t('visit_move_day_label')}</label>
+        <select id="visitAccDay">
+          ${VISIT_DAY_KEYS.map(dk=>`<option value="${dk}" ${acc.day===dk?'selected':''}>${visitDayLabel(dk)}</option>`).join("")}
+        </select>
+      </div>
+      ${fields.map(f=>`
+        <div class="field">
+          <label>${escapeHtml(f.label)}${f.prominent?' *':''}</label>
+          <input type="text" data-visit-field="${f.id}" value="${escapeHtml((acc.values && acc.values[f.id]) || '')}">
+        </div>
+      `).join("")}
+      <div class="field">
+        <label>${t('visit_target_label')}</label>
+        <input type="number" min="0" id="visitAccTarget" value="${acc.weeklyTarget||0}">
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn btn-ghost" id="visitAccCancelBtn" style="flex:1;">${t('cancel_word')}</button>
+        <button class="btn btn-primary" id="visitAccSaveBtn" style="flex:1;">${t('save_word')}</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("visitAccCancelBtn").onclick = ()=> wrap.remove();
+  document.getElementById("visitAccSaveBtn").onclick = async ()=>{
+    const newDay = document.getElementById("visitAccDay").value;
+    if(newDay !== acc.day){
+      const destCount = accountsForEmployeeAndDay(acc.employeeId, newDay).length;
+      if(destCount >= VISIT_MAX_PER_DAY){ toast(t('visit_day_full_toast')); return; }
+      acc.day = newDay;
+    }
+    acc.values = acc.values || {};
+    fields.forEach(f=>{
+      const input = wrap.querySelector(`[data-visit-field="${f.id}"]`);
+      if(input) acc.values[f.id] = input.value.trim();
+    });
+    acc.weeklyTarget = parseInt(document.getElementById("visitAccTarget").value, 10) || 0;
+    if(isNew) state.visits.accounts.push(acc);
+    await saveVisitsData();
+    toast(t('toast_visit_account_saved'));
+    wrap.remove();
+    renderAdminOverlay();
+  };
+}
+function openVisitManageFieldsModal(){
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  function bodyHtml(){
+    const fields = visitFields();
+    return fields.map(f=>`
+      <div class="visit-admin-row" data-field-row="${f.id}">
+        <input type="text" class="visit-field-rename-input" data-field-rename="${f.id}" value="${escapeHtml(f.label)}">
+        <button class="chip-mini-btn" data-field-delete="${f.id}">${ICON.trash}</button>
+      </div>
+    `).join("");
+  }
+  wrap.innerHTML = `
+    <div class="modal" style="max-width:420px;">
+      <h3>${t('visit_manage_fields_title')}</h3>
+      <p class="hint">${t('visit_manage_fields_hint')}</p>
+      <div id="visitFieldsList">${bodyHtml()}</div>
+      <div class="field" style="display:flex; gap:8px; margin-top:12px;">
+        <input type="text" id="visitNewFieldInput" placeholder="${t('visit_add_field_placeholder')}" style="flex:1;">
+        <button class="btn btn-primary" id="visitAddFieldBtn">${ICON.plus}</button>
+      </div>
+      <button class="btn btn-ghost" id="visitFieldsCloseBtn" style="width:100%; margin-top:14px;">${t('close_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  function attachRowEvents(){
+    wrap.querySelectorAll("[data-field-rename]").forEach(inp=>{
+      inp.onchange = async ()=>{
+        const id = inp.getAttribute("data-field-rename");
+        const f = visitFields().find(x=>x.id===id);
+        if(f){ f.label = inp.value.trim() || f.label; await saveVisitsData(); }
+      };
+    });
+    wrap.querySelectorAll("[data-field-delete]").forEach(btn=>{
+      btn.onclick = async ()=>{
+        if(!confirm(t('confirm_delete_field'))) return;
+        const id = btn.getAttribute("data-field-delete");
+        state.visits.fields = visitFields().filter(f=>f.id!==id);
+        state.visits.accounts.forEach(a=>{ if(a.values) delete a.values[id]; });
+        await saveVisitsData();
+        document.getElementById("visitFieldsList").innerHTML = bodyHtml();
+        attachRowEvents();
+        renderAdminOverlay();
+      };
+    });
+  }
+  attachRowEvents();
+  document.getElementById("visitAddFieldBtn").onclick = async ()=>{
+    const input = document.getElementById("visitNewFieldInput");
+    const label = input.value.trim();
+    if(!label){ toast(t('toast_enter_field_name')); return; }
+    state.visits.fields = visitFields();
+    state.visits.fields.push({ id: uid(), label, prominent:false });
+    await saveVisitsData();
+    input.value = "";
+    document.getElementById("visitFieldsList").innerHTML = bodyHtml();
+    attachRowEvents();
+    renderAdminOverlay();
+  };
+  document.getElementById("visitFieldsCloseBtn").onclick = ()=>{ wrap.remove(); renderAdminOverlay(); };
 }
 
 /* =========================================================
