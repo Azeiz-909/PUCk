@@ -80,6 +80,7 @@ let managerUI = { tab: "accounts" };
 function canEdit(){ return !!(session.user && !session.viewOnly); }
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null, sosBranchId: null, visitsEmployeeId: null };
 let visitUI = {};
+let expandedVisitRowIds = new Set(); /* يحافظ على حالة الفتح/الطي عبر عمليات إعادة الرسم */
 let pendingDocPhotos = [];
 let pendingDocDeadline = null;
 let pendingDocCountdownInterval = null;
@@ -191,6 +192,17 @@ const I18N = {
     daily_prep_link_placeholder: "الصق رابط الاستبيان هنا",
     toast_daily_prep_link_saved: "تم حفظ الرابط",
     toast_daily_prep_enter_link: "الرجاء إدخال رابط صحيح",
+    secondary_title: "سكندري",
+    secondary_edit_tooltip: "تعديل الرابط",
+    secondary_modal_title: "رابط سكندري",
+    secondary_modal_hint: "ضع الرابط الذي تريد فتحه عند الضغط على هذه الخانة.",
+    secondary_link_placeholder: "الصق الرابط هنا",
+    home_layout_edit_tooltip: "تعديل وترتيب الخانات",
+    home_layout_modal_title: "تعديل وترتيب الخانات",
+    home_layout_modal_hint: "فعّل الخانات التي تريد إظهارها، واستخدم الأسهم لترتيبها كما تحب.",
+    home_layout_move_up: "▲",
+    home_layout_move_down: "▼",
+    toast_home_layout_saved: "تم حفظ الترتيب",
     visit_prep_title: "جدول الزيارات اليومي",
     tab_visits: "زيارات الفروع",
     visit_prep_hint: "بطاقة لكل فرع تزوره، بجميع بياناته وعدد زياراته الأسبوعي.",
@@ -600,6 +612,17 @@ const I18N = {
     daily_prep_link_placeholder: "Paste the survey link here",
     toast_daily_prep_link_saved: "Link saved",
     toast_daily_prep_enter_link: "Please enter a valid link",
+    secondary_title: "SECONDARY",
+    secondary_edit_tooltip: "Edit link",
+    secondary_modal_title: "SECONDARY Link",
+    secondary_modal_hint: "Set the link you want to open when you tap this box.",
+    secondary_link_placeholder: "Paste the link here",
+    home_layout_edit_tooltip: "Edit & reorder boxes",
+    home_layout_modal_title: "Edit & reorder boxes",
+    home_layout_modal_hint: "Turn on the boxes you want to show, and use the arrows to reorder them.",
+    home_layout_move_up: "▲",
+    home_layout_move_down: "▼",
+    toast_home_layout_saved: "Layout saved",
     visit_prep_title: "Daily Visit Schedule",
     tab_visits: "Branch Visits",
     visit_prep_hint: "One card per branch you visit, with all its details and weekly visit count.",
@@ -1614,12 +1637,12 @@ function visitCardHtml(acc, fields, showManageControls){
   const done = visitsDoneThisWeek(acc);
   const remaining = Math.max(target - done, 0);
   const visitedToday = isVisitedToday(acc);
-  const totalVisits = (acc.visitLog||[]).length;
+  const totalOpen = expandedVisitRowIds.has(acc.id);
   return `
-  <details class="visit-card" data-visit-id="${acc.id}">
+  <details class="visit-card" data-visit-id="${acc.id}" ${totalOpen ? 'open' : ''}>
     <summary class="visit-card-summary">
       <span class="visit-card-summary-name">${escapeHtml(String(title))}</span>
-      <span class="visit-admin-row-count">${totalVisits} ${escapeHtml(t('visit_admin_count_suffix'))}</span>
+      <span class="visit-admin-row-count" title="${escapeHtml(t('visit_remaining_label'))}: ${remaining}">${target}/${done} ${escapeHtml(t('visit_admin_count_suffix'))}</span>
     </summary>
     <div class="visit-card-body">
       <div class="card-badges-row" style="position:static; margin-bottom:8px;">
@@ -1673,6 +1696,12 @@ function renderVisitPrepScreen(){
   `;
 }
 function attachVisitPrepScreenEvents(){
+  document.querySelectorAll(".visit-card[data-visit-id]").forEach(el=>{
+    el.addEventListener("toggle", ()=>{
+      const id = el.getAttribute("data-visit-id");
+      if(el.open) expandedVisitRowIds.add(id); else expandedVisitRowIds.delete(id);
+    });
+  });
   document.getElementById("landingBackBtn").onclick = ()=> goLanding();
   const addBtn = document.getElementById("visitSelfAddBtn");
   if(addBtn) addBtn.onclick = ()=>{
@@ -1783,6 +1812,74 @@ function openVisitLocationModal(accountId){
   };
 }
 
+/* ---------------- HOME BOXES (configurable order/visibility per role) ---------------- */
+function defaultHomeBoxOrder(role){
+  return role === "manager"
+    ? ["branches","sos","planogram","employees","documentation","expiryAlerts","notifications"]
+    : ["visitPrep","dailyPrep","secondary","planogram","documentation","home","monthly"];
+}
+function homeBoxCatalog(role, ctx){
+  ctx = ctx || {};
+  if(role === "manager"){
+    return [
+      { id:"branches", icon:"🏬", label:t('tab_branches') },
+      { id:"sos", icon:"📋", label:t('sos_manager_home_label') },
+      { id:"planogram", icon:"🗺️", label:t('planogram_word') },
+      { id:"employees", icon:"👥", label:t('tab_employees') },
+      { id:"documentation", icon:"📸", label:t('documentation_viewer_title') },
+      { id:"expiryAlerts", icon:"⏰", label:t('manager_expiry_alerts_title') },
+      { id:"notifications", icon:"🔔", label:t('send_notification_btn') },
+    ];
+  }
+  return [
+    { id:"visitPrep", icon:"🧭", label:t('visit_prep_title') },
+    { id:"dailyPrep", icon:"📝", label:t('daily_prep_title') },
+    { id:"secondary", icon:"🔗", label:t('secondary_title') },
+    { id:"planogram", icon:"🗺️", label:t('planogram_word'), badge: !!ctx.hasNewPlanogram },
+    { id:"documentation", icon:"📸", label:t('documentation_word') },
+    { id:"home", icon:"📅", label:t('daily_word') },
+    { id:"monthly", icon:"🗓️", label:t('monthly_word') },
+  ];
+}
+function getHomeBoxLayout(role){
+  const defaults = defaultHomeBoxOrder(role);
+  const store = (session.user && session.user.homeBoxLayout) || {};
+  const saved = store[role] || {};
+  const savedOrder = Array.isArray(saved.order) ? saved.order.filter(id=>defaults.includes(id)) : [];
+  const order = savedOrder.concat(defaults.filter(id=>!savedOrder.includes(id)));
+  const hidden = Array.isArray(saved.hidden) ? saved.hidden.filter(id=>defaults.includes(id)) : [];
+  return { order, hidden };
+}
+async function saveHomeBoxLayout(role, layout){
+  if(!session.user) return;
+  session.user.homeBoxLayout = session.user.homeBoxLayout || {};
+  session.user.homeBoxLayout[role] = layout;
+  await storageSet("puck:users", state.users);
+}
+function homeBoxHtml(box, role){
+  const isDailyPrep = box.id === "dailyPrep";
+  const isSecondary = box.id === "secondary";
+  const idAttr = isDailyPrep ? `id="dailyPrepBox"` : isSecondary ? `id="secondaryBox"` : "";
+  const gotoAttr = (isDailyPrep || isSecondary) ? "" : (role === "manager" ? `data-mgoto="${box.id}"` : `data-goto="${box.id}"`);
+  const editBtn = isDailyPrep
+    ? `<button class="chip-mini-btn" id="dailyPrepEditBtn" title="${escapeHtml(t('daily_prep_edit_tooltip'))}" style="position:absolute; top:6px; ${lang==='ar'?'left':'right'}:6px;">✏️</button>`
+    : isSecondary
+    ? `<button class="chip-mini-btn" id="secondaryEditBtn" title="${escapeHtml(t('secondary_edit_tooltip'))}" style="position:absolute; top:6px; ${lang==='ar'?'left':'right'}:6px;">✏️</button>`
+    : "";
+  return `<div class="inventory-opt" ${idAttr} ${gotoAttr} style="position:relative;">
+    ${editBtn}
+    <div class="ico" style="font-size:34px;">${box.icon}</div>
+    <div class="lbl">${escapeHtml(box.label)}</div>
+    ${box.badge ? `<div class="new-update-tag"><span class="dot"></span>${t('new_update_label')}</div>` : ''}
+  </div>`;
+}
+function visibleHomeBoxes(role, ctx){
+  const catalog = homeBoxCatalog(role, ctx);
+  const byId = {}; catalog.forEach(b=> byId[b.id]=b);
+  const layout = getHomeBoxLayout(role);
+  return layout.order.filter(id=> byId[id] && !layout.hidden.includes(id)).map(id=>byId[id]);
+}
+
 /* ---------------- LANDING (choose Daily / Monthly) ---------------- */
 function renderLandingScreen(){
   if(session.user && userRole(session.user)==="manager" && !session.viewOnly){
@@ -1790,7 +1887,7 @@ function renderLandingScreen(){
   }
   const hasNewPlanogram = session.user && userRole(session.user)==="employee" &&
     visiblePlanogramItems().some(it => it.createdAt > (state.planogramSeen[session.user.id] || 0));
-  const dailyPrepLink = session.user ? (session.user.dailyPrepLink || "") : "";
+  const boxes = visibleHomeBoxes("employee", { hasNewPlanogram });
   return `
     <div class="topbar">
       ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
@@ -1800,39 +1897,11 @@ function renderLandingScreen(){
       <div class="logo-wrap"><img class="logo-main" src="${LOGO_SRC}" alt="Arla"><img class="logo-brands" src="${BRANDS_SRC}" alt="Arla Brands"></div>
       <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
     </div>
-    <div class="section-label"><span class="line"></span> ${t('visit_prep_title')} <span class="line"></span></div>
-    <div class="inventory-choice-row">
-      <div class="inventory-opt" data-goto="visitPrep">
-        <div class="ico" style="font-size:34px;">🧭</div>
-        <div class="lbl">${t('visit_prep_title')}</div>
-      </div>
-      <div class="inventory-opt" id="dailyPrepBox" style="position:relative;">
-        <button class="chip-mini-btn" id="dailyPrepEditBtn" title="${t('daily_prep_edit_tooltip')}" style="position:absolute; top:6px; ${lang==='ar'?'left':'right'}:6px;">✏️</button>
-        <div class="ico" style="font-size:34px;">📝</div>
-        <div class="lbl">${t('daily_prep_title')}</div>
-      </div>
+    <div style="display:flex; justify-content:center; margin:6px 0 16px;">
+      <button class="btn btn-ghost" id="homeLayoutEditBtn" style="font-size:12.5px; padding:8px 14px;">✏️ ${t('home_layout_edit_tooltip')}</button>
     </div>
-    <div class="section-label"><span class="line"></span> ${t('planogram_word')} - ${t('documentation_word')} <span class="line"></span></div>
-    <div class="inventory-choice-row">
-      <div class="inventory-opt" data-goto="planogram">
-        <div class="ico" style="font-size:34px;">🗺️</div>
-        <div class="lbl">${t('planogram_word')}</div>
-        ${hasNewPlanogram ? `<div class="new-update-tag"><span class="dot"></span>${t('new_update_label')}</div>` : ''}
-      </div>
-      <div class="inventory-opt" data-goto="documentation">
-        <div class="ico" style="font-size:34px;">📸</div>
-        <div class="lbl">${t('documentation_word')}</div>
-      </div>
-    </div>
-    <div class="inventory-choice-row">
-      <div class="inventory-opt" data-goto="home">
-        <div class="ico" style="font-size:34px;">📅</div>
-        <div class="lbl">${t('daily_word')}</div>
-      </div>
-      <div class="inventory-opt" data-goto="monthly">
-        <div class="ico" style="font-size:34px;">🗓️</div>
-        <div class="lbl">${t('monthly_word')}</div>
-      </div>
+    <div class="home-boxes-grid">
+      ${boxes.map(b=>homeBoxHtml(b, "employee")).join("")}
     </div>
   `;
 }
@@ -2422,6 +2491,17 @@ function attachHomeEvents(){
   };
   const dailyPrepEditBtn = document.getElementById("dailyPrepEditBtn");
   if(dailyPrepEditBtn) dailyPrepEditBtn.onclick = (e)=>{ e.stopPropagation(); openDailyPrepLinkModal(); };
+  const secondaryBox = document.getElementById("secondaryBox");
+  if(secondaryBox) secondaryBox.onclick = (e)=>{
+    if(e.target && e.target.id === "secondaryEditBtn") return;
+    const link = session.user ? (session.user.secondaryLink || "") : "";
+    if(link) window.open(link, "_blank", "noopener");
+    else openSecondaryLinkModal();
+  };
+  const secondaryEditBtn = document.getElementById("secondaryEditBtn");
+  if(secondaryEditBtn) secondaryEditBtn.onclick = (e)=>{ e.stopPropagation(); openSecondaryLinkModal(); };
+  const homeLayoutEditBtn = document.getElementById("homeLayoutEditBtn");
+  if(homeLayoutEditBtn) homeLayoutEditBtn.onclick = ()=> openHomeLayoutModal("employee");
   const addPlanogramImageBtn = document.getElementById("addPlanogramImageBtn");
   if(addPlanogramImageBtn) addPlanogramImageBtn.onclick = ()=> openPlanogramAddImageModal();
   document.querySelectorAll("[data-download-plano]").forEach(btn=>{
@@ -2982,35 +3062,11 @@ function renderManagerHomeScreen(){
       <div class="hero-eyebrow">${t('hero_eyebrow')}</div>
     </div>
     <div class="manager-greeting">${t('welcome_word')}: ${escapeHtml(session.user.username)}</div>
-    <div class="manager-boxes-grid">
-      <div class="inventory-opt" data-mgoto="branches">
-        <div class="ico" style="font-size:34px;">🏬</div>
-        <div class="lbl">${t('tab_branches')}</div>
-      </div>
-      <div class="inventory-opt" data-mgoto="sos">
-        <div class="ico" style="font-size:34px;">📋</div>
-        <div class="lbl">${t('sos_manager_home_label')}</div>
-      </div>
-      <div class="inventory-opt" data-mgoto="planogram">
-        <div class="ico" style="font-size:34px;">🗺️</div>
-        <div class="lbl">${t('planogram_word')}</div>
-      </div>
-      <div class="inventory-opt" data-mgoto="employees">
-        <div class="ico" style="font-size:34px;">👥</div>
-        <div class="lbl">${t('tab_employees')}</div>
-      </div>
-      <div class="inventory-opt" data-mgoto="documentation">
-        <div class="ico" style="font-size:34px;">📸</div>
-        <div class="lbl">${t('documentation_viewer_title')}</div>
-      </div>
-      <div class="inventory-opt" data-mgoto="expiryAlerts">
-        <div class="ico" style="font-size:34px;">⏰</div>
-        <div class="lbl">${t('manager_expiry_alerts_title')}</div>
-      </div>
-      <div class="inventory-opt" data-mgoto="notifications">
-        <div class="ico" style="font-size:34px;">🔔</div>
-        <div class="lbl">${t('send_notification_btn')}</div>
-      </div>
+    <div style="display:flex; justify-content:center; margin:0 0 14px;">
+      <button class="btn btn-ghost" id="homeLayoutEditBtn" style="font-size:12.5px; padding:8px 14px;">✏️ ${t('home_layout_edit_tooltip')}</button>
+    </div>
+    <div class="home-boxes-grid">
+      ${visibleHomeBoxes("manager").map(b=>homeBoxHtml(b, "manager")).join("")}
     </div>
     <div style="display:flex; justify-content:center; margin-top:18px;">
       <button class="logout-btn" id="managerLogoutBtn2">${ICON.logout} ${t('logout')}</button>
@@ -3126,6 +3182,110 @@ function openDailyPrepLinkModal(){
     session.user.dailyPrepLink = val;
     await storageSet("puck:users", state.users);
     toast(t('toast_daily_prep_link_saved'));
+    wrap.remove();
+    render();
+  };
+}
+
+function openSecondaryLinkModal(){
+  if(!session.user) return;
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeSecondaryModal">&times;</button>
+      <h3>${t('secondary_modal_title')}</h3>
+      <p class="hint">${t('secondary_modal_hint')}</p>
+      <div class="field">
+        <input id="secondaryLinkInput" type="url" placeholder="${t('secondary_link_placeholder')}" value="${escapeHtml(session.user.secondaryLink || '')}" style="width:100%;">
+      </div>
+      <button class="btn btn-primary btn-small" id="saveSecondaryLinkBtn">${t('save_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeSecondaryModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("saveSecondaryLinkBtn").onclick = async ()=>{
+    const val = document.getElementById("secondaryLinkInput").value.trim();
+    if(!val){ toast(t('toast_daily_prep_enter_link')); return; }
+    session.user.secondaryLink = val;
+    await storageSet("puck:users", state.users);
+    toast(t('toast_daily_prep_link_saved'));
+    wrap.remove();
+    render();
+  };
+}
+
+/* نافذة تعديل/ترتيب خانات الصفحة الرئيسية (موظف أو مدير) */
+function openHomeLayoutModal(role){
+  if(!session.user) return;
+  const catalog = homeBoxCatalog(role);
+  const byId = {}; catalog.forEach(b=> byId[b.id]=b);
+  const layout = getHomeBoxLayout(role);
+  let workingOrder = layout.order.slice();
+  let workingHidden = new Set(layout.hidden);
+
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeHomeLayoutModal">&times;</button>
+      <h3>${t('home_layout_modal_title')}</h3>
+      <p class="hint">${t('home_layout_modal_hint')}</p>
+      <div id="homeLayoutRows" class="home-layout-rows"></div>
+      <button class="btn btn-primary btn-small" id="saveHomeLayoutBtn">${t('save_word')}</button>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+
+  function renderRows(){
+    const rowsEl = document.getElementById("homeLayoutRows");
+    if(!rowsEl) return;
+    rowsEl.innerHTML = workingOrder.map((id, idx)=>{
+      const box = byId[id];
+      if(!box) return "";
+      const checked = !workingHidden.has(id);
+      return `
+        <div class="home-layout-row">
+          <label class="home-layout-row-label">
+            <input type="checkbox" data-hl-toggle="${id}" ${checked ? 'checked' : ''}>
+            <span class="ico" style="font-size:18px;">${box.icon}</span>
+            <span>${escapeHtml(box.label)}</span>
+          </label>
+          <div class="home-layout-row-moves">
+            <button type="button" class="chip-mini-btn" data-hl-up="${id}" ${idx===0 ? 'disabled' : ''}>${t('home_layout_move_up')}</button>
+            <button type="button" class="chip-mini-btn" data-hl-down="${id}" ${idx===workingOrder.length-1 ? 'disabled' : ''}>${t('home_layout_move_down')}</button>
+          </div>
+        </div>`;
+    }).join("");
+    rowsEl.querySelectorAll("[data-hl-toggle]").forEach(cb=>{
+      cb.onchange = ()=>{
+        const id = cb.getAttribute("data-hl-toggle");
+        if(cb.checked) workingHidden.delete(id); else workingHidden.add(id);
+      };
+    });
+    rowsEl.querySelectorAll("[data-hl-up]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.getAttribute("data-hl-up");
+        const i = workingOrder.indexOf(id);
+        if(i > 0){ [workingOrder[i-1], workingOrder[i]] = [workingOrder[i], workingOrder[i-1]]; renderRows(); }
+      };
+    });
+    rowsEl.querySelectorAll("[data-hl-down]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const id = btn.getAttribute("data-hl-down");
+        const i = workingOrder.indexOf(id);
+        if(i >= 0 && i < workingOrder.length-1){ [workingOrder[i+1], workingOrder[i]] = [workingOrder[i], workingOrder[i+1]]; renderRows(); }
+      };
+    });
+  }
+  renderRows();
+
+  document.getElementById("closeHomeLayoutModal").onclick = ()=> wrap.remove();
+  wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
+  document.getElementById("saveHomeLayoutBtn").onclick = async ()=>{
+    await saveHomeBoxLayout(role, { order: workingOrder, hidden: Array.from(workingHidden) });
+    toast(t('toast_home_layout_saved'));
     wrap.remove();
     render();
   };
@@ -3303,6 +3463,8 @@ function attachManagerScreenEvents(){
       else if(dest === "notifications") goManagerNotifications();
     };
   });
+  const homeLayoutEditBtnMgr = document.getElementById("homeLayoutEditBtn");
+  if(homeLayoutEditBtnMgr) homeLayoutEditBtnMgr.onclick = ()=> openHomeLayoutModal("manager");
   const managerLogoutBtn2 = document.getElementById("managerLogoutBtn2");
   if(managerLogoutBtn2) managerLogoutBtn2.onclick = ()=>{
     session.user = null; session.viewOnly = false;
@@ -6200,12 +6362,15 @@ function renderVisitsTab(){
   const rowsHtml = accs.map(acc=>{
     const prominentField = fields.find(f=>f.prominent) || fields[0];
     const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
-    const visitCount = (acc.visitLog||[]).length;
+    const target = acc.weeklyTarget || 0;
+    const done = visitsDoneThisWeek(acc);
+    const remaining = Math.max(target - done, 0);
+    const rowOpen = expandedVisitRowIds.has(acc.id);
     return `
-      <details class="visit-admin-row" data-visit-row="${acc.id}">
+      <details class="visit-admin-row" data-visit-row="${acc.id}" ${rowOpen ? 'open' : ''}>
         <summary class="visit-admin-row-summary">
           <span class="visit-admin-row-name">${escapeHtml(String(title))}</span>
-          <span class="visit-admin-row-count">${visitCount} ${escapeHtml(t('visit_admin_count_suffix'))}</span>
+          <span class="visit-admin-row-count" title="${escapeHtml(t('visit_remaining_label'))}: ${remaining}">${target}/${done} ${escapeHtml(t('visit_admin_count_suffix'))}</span>
         </summary>
         <div class="visit-admin-row-actions">
           <button class="chip-mini-btn" data-visit-edit="${acc.id}">${ICON.edit}</button>
@@ -6234,6 +6399,12 @@ function renderVisitsTab(){
   `;
 }
 function attachVisitsTabEvents(){
+  document.querySelectorAll(".visit-admin-row[data-visit-row]").forEach(el=>{
+    el.addEventListener("toggle", ()=>{
+      const id = el.getAttribute("data-visit-row");
+      if(el.open) expandedVisitRowIds.add(id); else expandedVisitRowIds.delete(id);
+    });
+  });
   const sel = document.getElementById("visitsEmployeeSelect");
   if(sel) sel.onchange = ()=>{ adminUI.visitsEmployeeId = sel.value; renderAdminOverlay(); };
   const mfBtn = document.getElementById("visitManageFieldsBtn");

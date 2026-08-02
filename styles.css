@@ -192,6 +192,10 @@
   .inventory-choice-row{
     display:flex; gap:18px; max-width:520px; margin:0 auto 40px; padding:0 20px;
   }
+  .home-boxes-grid{
+    display:flex; flex-wrap:wrap; gap:16px; max-width:620px; margin:0 auto 30px; padding:0 20px; justify-content:center;
+  }
+  .home-boxes-grid .inventory-opt{ flex:1; min-width:150px; }
   .inventory-opt{
     flex:1; background:var(--white); border:2px solid var(--line); border-radius:var(--radius-md);
     padding:30px 16px; text-align:center; cursor:pointer; box-shadow:var(--shadow-card);
@@ -1067,6 +1071,24 @@
     font-family:var(--font-body); font-size:13px; background:var(--paper); color:var(--ink);
   }
   .visit-field-rename-input:focus{ outline:none; border-color:var(--sky); }
+
+  /* ---------- HOME LAYOUT EDIT MODAL (reorder/show-hide home boxes) ---------- */
+  .home-layout-rows{
+    display:flex; flex-direction:column; gap:6px; margin:6px 0 18px;
+    max-height:60vh; overflow-y:auto;
+  }
+  .home-layout-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:9px 10px; border:1px solid var(--line); border-radius:10px; background:var(--paper);
+  }
+  .home-layout-row-label{
+    display:flex; align-items:center; gap:8px; flex:1; min-width:0; cursor:pointer;
+    font-size:13.5px; font-weight:700; color:var(--navy-deep);
+  }
+  .home-layout-row-label input[type="checkbox"]{ width:17px; height:17px; flex-shrink:0; accent-color:var(--navy); cursor:pointer; }
+  .home-layout-row-label span:last-child{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .home-layout-row-moves{ display:flex; gap:4px; flex-shrink:0; }
+  .home-layout-row-moves .chip-mini-btn:disabled{ opacity:.35; cursor:not-allowed; }
 
   @media (max-width:520px){
     .visit-field-grid{ grid-template-columns:1fr 1fr; }
