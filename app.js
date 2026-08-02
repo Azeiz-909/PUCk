@@ -79,11 +79,7 @@ let session = { user: null, viewOnly: false };
 let managerUI = { tab: "accounts" };
 function canEdit(){ return !!(session.user && !session.viewOnly); }
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null, sosBranchId: null, visitsEmployeeId: null };
-function todayVisitDayKey(){
-  const map = ["sun","mon","tue","wed","thu","fri","sat"];
-  return map[new Date().getDay()];
-}
-let visitUI = { day: null };
+let visitUI = {};
 let pendingDocPhotos = [];
 let pendingDocDeadline = null;
 let pendingDocCountdownInterval = null;
@@ -197,8 +193,8 @@ const I18N = {
     toast_daily_prep_enter_link: "الرجاء إدخال رابط صحيح",
     visit_prep_title: "جدول الزيارات اليومي",
     tab_visits: "زيارات الفروع",
-    visit_prep_hint: "بطاقة لكل فرع تزوره، مرتبة حسب أيام الأسبوع. حد أقصى 6 فروع في اليوم الواحد.",
-    visit_no_accounts_day: "لا توجد فروع مضافة لهذا اليوم بعد.",
+    visit_prep_hint: "بطاقة لكل فرع تزوره، بجميع بياناته وعدد زياراته الأسبوعي.",
+    visit_no_accounts_day: "لا توجد فروع مضافة بعد.",
     visit_target_label: "الهدف الأسبوعي للزيارات",
     visit_done_btn: "تمت الزيارة اليوم",
     visit_undone_btn: "إلغاء زيارة اليوم",
@@ -215,21 +211,25 @@ const I18N = {
     visit_manage_accounts_title: "إدارة فروع/حسابات الزيارة",
     visit_choose_employee: "اختر الموظف",
     visit_no_employees: "لا يوجد موظفون بعد",
-    visit_add_account_btn: "إضافة فرع لهذا اليوم",
-    visit_day_full_toast: "هذا اليوم يحتوي بالفعل على 6 فروع (الحد الأقصى)",
+    visit_add_account_btn: "إضافة فرع",
+    visit_day_full_toast: "",
     visit_edit_account_title: "بيانات الفرع",
     visit_delete_account_confirm: "هل تريد حذف هذا الفرع من الجدول؟",
     toast_visit_account_saved: "تم الحفظ",
     toast_visit_account_deleted: "تم الحذف",
     visit_manage_fields_btn: "إدارة الخانات",
+    visit_scan_btn: "قراءة الجدول بالذكاء الاصطناعي",
+    visit_scan_loading: "جارٍ القراءة والتعبئة...",
+    toast_visit_scan_done: "تم استخراج الجدول وتعبئته بنجاح",
+    toast_visit_scan_error: "تعذرت قراءة الصورة",
     visit_manage_fields_title: "خانات بطاقة الزيارة",
     visit_manage_fields_hint: "أضف خانة جديدة أو عدّل/احذف الخانات الحالية. هذه الخانات تظهر في كل بطاقات الزيارة.",
     visit_add_field_placeholder: "اسم الخانة الجديدة",
     visit_add_field_btn: "إضافة خانة",
     toast_enter_field_name: "الرجاء إدخال اسم الخانة",
     confirm_delete_field: "حذف هذه الخانة من جميع البطاقات؟",
-    visit_day_col_label: "اليوم",
-    visit_move_day_label: "نقل إلى يوم آخر",
+    visit_day_col_label: "",
+    visit_move_day_label: "",
     branch_created_by_manager_note: "تم إنشاء هذا الفرع بواسطة المدير",
     view_employee_branches: "فروع الموظف",
     employee_branches_title: "فروع الموظف",
@@ -597,8 +597,8 @@ const I18N = {
     toast_daily_prep_enter_link: "Please enter a valid link",
     visit_prep_title: "Daily Visit Schedule",
     tab_visits: "Branch Visits",
-    visit_prep_hint: "One card per branch you visit, arranged by weekday. Maximum 6 branches per day.",
-    visit_no_accounts_day: "No branches added for this day yet.",
+    visit_prep_hint: "One card per branch you visit, with all its details and weekly visit count.",
+    visit_no_accounts_day: "No branches added yet.",
     visit_target_label: "Weekly visit target",
     visit_done_btn: "Visited today",
     visit_undone_btn: "Undo today's visit",
@@ -615,21 +615,25 @@ const I18N = {
     visit_manage_accounts_title: "Manage visit branches/accounts",
     visit_choose_employee: "Choose employee",
     visit_no_employees: "No employees yet",
-    visit_add_account_btn: "Add branch to this day",
-    visit_day_full_toast: "This day already has 6 branches (maximum)",
+    visit_add_account_btn: "Add branch",
+    visit_day_full_toast: "",
     visit_edit_account_title: "Branch details",
     visit_delete_account_confirm: "Delete this branch from the schedule?",
     toast_visit_account_saved: "Saved",
     toast_visit_account_deleted: "Deleted",
     visit_manage_fields_btn: "Manage fields",
+    visit_scan_btn: "Scan Table with AI",
+    visit_scan_loading: "Reading & filling...",
+    toast_visit_scan_done: "Table extracted and filled successfully",
+    toast_visit_scan_error: "Couldn't read the image",
     visit_manage_fields_title: "Visit card fields",
     visit_manage_fields_hint: "Add a new field or edit/delete existing ones. These fields appear on every visit card.",
     visit_add_field_placeholder: "New field name",
     visit_add_field_btn: "Add field",
     toast_enter_field_name: "Please enter a field name",
     confirm_delete_field: "Delete this field from all cards?",
-    visit_day_col_label: "Day",
-    visit_move_day_label: "Move to another day",
+    visit_day_col_label: "",
+    visit_move_day_label: "",
     branch_created_by_manager_note: "This branch was created by the manager",
     view_employee_branches: "Employee branches",
     employee_branches_title: "Employee's Branches",
@@ -967,18 +971,10 @@ function defaultSosData(){
   return { categories: defaultSosCategories(), branches: [] };
 }
 
-/* ---------------- VISIT PREP (daily branch-visit tracker) ----------------
+/* ---------------- VISIT PREP (branch-visit tracker) ----------------
    حقول قابلة للتعديل/الإضافة بالكامل من لوحة التحكم، تمامًا مثل أعمدة SOS.
-   customerName مُعلَّم prominent:true ليظهر بارزًا وواضحًا في البطاقة. */
-const VISIT_DAY_KEYS = ["sat","sun","mon","tue","wed","thu","fri"];
-const VISIT_MAX_PER_DAY = 6;
-function visitDayLabel(key){
-  const map = {
-    ar: { sat:"السبت", sun:"الأحد", mon:"الاثنين", tue:"الثلاثاء", wed:"الأربعاء", thu:"الخميس", fri:"الجمعة" },
-    en: { sat:"Saturday", sun:"Sunday", mon:"Monday", tue:"Tuesday", wed:"Wednesday", thu:"Thursday", fri:"Friday" },
-  };
-  return (map[lang] && map[lang][key]) || key;
-}
+   customerName مُعلَّم prominent:true ليظهر بارزًا وواضحًا في البطاقة.
+   الفروع تُعرض كقائمة واحدة على شكل بطاقات منتج (بدون تقسيم حسب أيام الأسبوع). */
 function defaultVisitFields(){
   return [
     { id: "merchId", label: tEn2("Merch Id","Merch Id"), prominent:false },
@@ -1025,8 +1021,8 @@ function isVisitedToday(acc){
   const today = isoDateStr(new Date());
   return (acc.visitLog||[]).includes(today);
 }
-function accountsForEmployeeAndDay(employeeId, dayKey){
-  return visitAccounts().filter(a=>a.employeeId===employeeId && a.day===dayKey).sort((a,b)=>(a.order||0)-(b.order||0));
+function accountsForEmployee(employeeId){
+  return visitAccounts().filter(a=>a.employeeId===employeeId).sort((a,b)=>(a.order||0)-(b.order||0));
 }
 async function saveVisitsData(){ await storageSet("puck:visits", state.visits); }
 
@@ -1581,7 +1577,7 @@ function visitCardFieldGridHtml(acc, fields){
     }).join("")}
   </div>`;
 }
-function visitCardHtml(acc, fields, canEditLocationPhoto){
+function visitCardHtml(acc, fields, showManageControls){
   const prominentField = fields.find(f=>f.prominent) || fields[0];
   const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
   const target = acc.weeklyTarget || 0;
@@ -1592,6 +1588,11 @@ function visitCardHtml(acc, fields, canEditLocationPhoto){
   <div class="visit-card" data-visit-id="${acc.id}">
     <div class="card-badges-row" style="position:static; margin-bottom:8px;">
       ${target ? `<span class="visit-target-badge" title="${escapeHtml(t('visit_remaining_label'))}: ${remaining}">${target}/${done}</span>` : ""}
+      ${showManageControls ? `
+        <span style="margin-inline-start:auto; display:flex; gap:6px;">
+          <button class="chip-mini-btn" data-visit-self-edit="${acc.id}" title="${escapeHtml(t('edit_word'))}">${ICON.edit}</button>
+          <button class="chip-mini-btn" data-visit-self-delete="${acc.id}" title="${escapeHtml(t('delete_word'))}">${ICON.trash}</button>
+        </span>` : ""}
     </div>
     <div class="visit-card-title">${escapeHtml(String(title))}</div>
     ${visitCardFieldGridHtml(acc, fields)}
@@ -1606,10 +1607,10 @@ function visitCardHtml(acc, fields, canEditLocationPhoto){
   </div>`;
 }
 function renderVisitPrepScreen(){
-  if(!visitUI.day) visitUI.day = todayVisitDayKey();
   const fields = visitFields();
   const employeeId = session.user ? session.user.id : null;
-  const dayAccounts = employeeId ? accountsForEmployeeAndDay(employeeId, visitUI.day) : [];
+  const accounts = employeeId ? accountsForEmployee(employeeId) : [];
+  const editable = canEdit();
   return `
     <div class="topbar">
       <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
@@ -1619,18 +1620,45 @@ function renderVisitPrepScreen(){
     </div>
     <div class="section-label" style="margin-top:26px;"><span class="line"></span> ${t('visit_prep_title')} <span class="line"></span></div>
     <p class="hint" style="text-align:center; margin:-8px 0 16px;">${t('visit_prep_hint')}</p>
-    <div class="day-tabs">
-      ${VISIT_DAY_KEYS.map(dk=>`<button class="day-tab ${visitUI.day===dk?'active':''}" data-visit-day="${dk}">${visitDayLabel(dk)}</button>`).join("")}
-    </div>
+    ${editable ? `
+      <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:0 0 18px;">
+        <button class="btn btn-primary" id="visitSelfAddBtn">${ICON.plus} ${t('visit_add_account_btn')}</button>
+        <button class="btn btn-ghost" id="visitSelfManageFieldsBtn">${t('visit_manage_fields_btn')}</button>
+        <button class="btn btn-primary" id="visitSelfScanBtn">${ICON.plus} ${t('visit_scan_btn')}</button>
+        <input type="file" id="visitSelfScanFileInput" accept="image/*" style="display:none;">
+      </div>` : ""}
     <div class="visit-cards-list">
-      ${dayAccounts.length ? dayAccounts.map(acc=>visitCardHtml(acc, fields, true)).join("") : `<div class="branch-empty">${t('visit_no_accounts_day')}</div>`}
+      ${accounts.length ? accounts.map(acc=>visitCardHtml(acc, fields, editable)).join("") : `<div class="branch-empty">${t('visit_no_accounts_day')}</div>`}
     </div>
   `;
 }
 function attachVisitPrepScreenEvents(){
   document.getElementById("landingBackBtn").onclick = ()=> goLanding();
-  document.querySelectorAll("[data-visit-day]").forEach(btn=>{
-    btn.onclick = ()=>{ visitUI.day = btn.getAttribute("data-visit-day"); render(); };
+  const addBtn = document.getElementById("visitSelfAddBtn");
+  if(addBtn) addBtn.onclick = ()=>{
+    if(!session.user) return;
+    openVisitAccountModal(null, session.user.id);
+  };
+  const mfBtn = document.getElementById("visitSelfManageFieldsBtn");
+  if(mfBtn) mfBtn.onclick = ()=> openVisitManageFieldsModal();
+  attachVisitScanControl(
+    document.getElementById("visitSelfScanBtn"),
+    document.getElementById("visitSelfScanFileInput"),
+    ()=> session.user ? session.user.id : null,
+    ()=> render()
+  );
+  document.querySelectorAll("[data-visit-self-edit]").forEach(btn=>{
+    btn.onclick = ()=> openVisitAccountModal(btn.getAttribute("data-visit-self-edit"));
+  });
+  document.querySelectorAll("[data-visit-self-delete]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const id = btn.getAttribute("data-visit-self-delete");
+      if(!confirm(t('visit_delete_account_confirm'))) return;
+      state.visits.accounts = state.visits.accounts.filter(a=>a.id!==id);
+      await saveVisitsData();
+      toast(t('toast_visit_account_deleted'));
+      render();
+    };
   });
   document.querySelectorAll("[data-visit-toggle]").forEach(btn=>{
     btn.onclick = async ()=>{
@@ -6119,25 +6147,17 @@ function renderVisitsTab(){
   const fields = visitFields();
   const empId = adminUI.visitsEmployeeId;
 
-  const daySections = VISIT_DAY_KEYS.map(dk=>{
-    const accs = empId ? accountsForEmployeeAndDay(empId, dk) : [];
-    const rowsHtml = accs.map(acc=>{
-      const prominentField = fields.find(f=>f.prominent) || fields[0];
-      const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
-      return `
-        <div class="visit-admin-row" data-visit-row="${acc.id}">
-          <div class="visit-admin-row-name">${escapeHtml(String(title))}</div>
-          <div class="visit-admin-row-actions">
-            <button class="chip-mini-btn" data-visit-edit="${acc.id}">${ICON.edit}</button>
-            <button class="chip-mini-btn" data-visit-delete="${acc.id}">${ICON.trash}</button>
-          </div>
-        </div>`;
-    }).join("");
+  const accs = empId ? accountsForEmployee(empId) : [];
+  const rowsHtml = accs.map(acc=>{
+    const prominentField = fields.find(f=>f.prominent) || fields[0];
+    const title = prominentField ? ((acc.values && acc.values[prominentField.id]) || "—") : "—";
     return `
-      <div class="visit-admin-day-block">
-        <div class="visit-admin-day-title">${visitDayLabel(dk)} <span class="hint">(${accs.length}/${VISIT_MAX_PER_DAY})</span></div>
-        ${rowsHtml || `<div class="hint" style="padding:6px 0;">${t('visit_no_accounts_day')}</div>`}
-        <button class="plus-tile" data-visit-add-day="${dk}" ${accs.length>=VISIT_MAX_PER_DAY?'disabled':''}>${ICON.plus} ${t('visit_add_account_btn')}</button>
+      <div class="visit-admin-row" data-visit-row="${acc.id}">
+        <div class="visit-admin-row-name">${escapeHtml(String(title))}</div>
+        <div class="visit-admin-row-actions">
+          <button class="chip-mini-btn" data-visit-edit="${acc.id}">${ICON.edit}</button>
+          <button class="chip-mini-btn" data-visit-delete="${acc.id}">${ICON.trash}</button>
+        </div>
       </div>`;
   }).join("");
 
@@ -6150,9 +6170,14 @@ function renderVisitsTab(){
         </select>
       </div>
       <button class="btn btn-ghost" id="visitManageFieldsBtn">${t('visit_manage_fields_btn')}</button>
+      <button class="btn btn-primary" id="visitScanBtn">${ICON.plus} ${t('visit_scan_btn')}</button>
+      <input type="file" id="visitScanFileInput" accept="image/*" style="display:none;">
     </div>
     <p class="hint">${t('visit_prep_hint')}</p>
-    <div class="visit-admin-days-grid">${daySections}</div>
+    <div class="visit-admin-day-block">
+      ${empId ? (rowsHtml || `<div class="hint" style="padding:6px 0;">${t('visit_no_accounts_day')}</div>`) : `<div class="hint" style="padding:6px 0;">${t('visit_no_employees')}</div>`}
+      <button class="plus-tile" id="visitAddAccountBtn" ${empId ? '' : 'disabled'}>${ICON.plus} ${t('visit_add_account_btn')}</button>
+    </div>
   `;
 }
 function attachVisitsTabEvents(){
@@ -6160,16 +6185,19 @@ function attachVisitsTabEvents(){
   if(sel) sel.onchange = ()=>{ adminUI.visitsEmployeeId = sel.value; renderAdminOverlay(); };
   const mfBtn = document.getElementById("visitManageFieldsBtn");
   if(mfBtn) mfBtn.onclick = ()=> openVisitManageFieldsModal();
-  document.querySelectorAll("[data-visit-add-day]").forEach(btn=>{
-    btn.onclick = ()=>{
-      const day = btn.getAttribute("data-visit-add-day");
-      if(!adminUI.visitsEmployeeId) return;
-      if(accountsForEmployeeAndDay(adminUI.visitsEmployeeId, day).length >= VISIT_MAX_PER_DAY){ toast(t('visit_day_full_toast')); return; }
-      openVisitAccountModal(null, day);
-    };
-  });
+  attachVisitScanControl(
+    document.getElementById("visitScanBtn"),
+    document.getElementById("visitScanFileInput"),
+    ()=> adminUI.visitsEmployeeId,
+    ()=> renderAdminOverlay()
+  );
+  const addBtn = document.getElementById("visitAddAccountBtn");
+  if(addBtn) addBtn.onclick = ()=>{
+    if(!adminUI.visitsEmployeeId){ toast(t('visit_no_employees')); return; }
+    openVisitAccountModal(null, adminUI.visitsEmployeeId);
+  };
   document.querySelectorAll("[data-visit-edit]").forEach(btn=>{
-    btn.onclick = ()=> openVisitAccountModal(btn.getAttribute("data-visit-edit"), null);
+    btn.onclick = ()=> openVisitAccountModal(btn.getAttribute("data-visit-edit"));
   });
   document.querySelectorAll("[data-visit-delete]").forEach(btn=>{
     btn.onclick = async ()=>{
@@ -6182,10 +6210,91 @@ function attachVisitsTabEvents(){
     };
   });
 }
-function openVisitAccountModal(accountId, dayForNew){
+async function resizeImageToBase64(file, maxDim){
+  return await new Promise((resolve, reject)=>{
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = ()=>{ img.src = reader.result; };
+    reader.onerror = reject;
+    img.onload = ()=>{
+      let w = img.width, h = img.height;
+      if(w > maxDim || h > maxDim){
+        const scale = maxDim / Math.max(w, h);
+        w = Math.round(w * scale); h = Math.round(h * scale);
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = w; canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL("image/jpeg", 0.85).split(",")[1]);
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+function attachVisitScanControl(scanBtn, scanInput, getEmployeeId, refreshFn){
+  if(!scanBtn || !scanInput) return;
+  scanBtn.onclick = ()=>{
+    const employeeId = getEmployeeId();
+    if(!employeeId){ toast(t('visit_no_employees')); return; }
+    scanInput.click();
+  };
+  scanInput.onchange = async ()=>{
+    const file = scanInput.files[0];
+    if(!file) return;
+    const employeeId = getEmployeeId();
+    if(!employeeId){ scanInput.value = ""; return; }
+    scanBtn.disabled = true;
+    const origText = scanBtn.textContent;
+    scanBtn.textContent = t('visit_scan_loading');
+    try{
+      const base64 = await resizeImageToBase64(file, 1600);
+      const fields = visitFields();
+      const resp = await fetch("/api/scan-visits", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: base64, mediaType: file.type || "image/jpeg", fields })
+      });
+      const result = await resp.json();
+      if(!resp.ok || result.error){
+        throw new Error(result.error ? JSON.stringify(result.error) : "فشل الاستخراج");
+      }
+      const scannedAccounts = Array.isArray(result.accounts) ? result.accounts : [];
+      const prominentField = fields.find(f=>f.prominent) || fields[0];
+      const existing = accountsForEmployee(employeeId);
+      let nextOrder = existing.length;
+      scannedAccounts.forEach(sa=>{
+        const values = sa.values || {};
+        const nameVal = prominentField ? (values[prominentField.id] || "") : "";
+        let target = nameVal ? existing.find(a=>
+          prominentField && ((a.values && a.values[prominentField.id]) || "").trim() === nameVal.trim() && nameVal.trim()
+        ) : null;
+        if(!target){
+          target = { id: uid(), employeeId, order: nextOrder++, values:{}, weeklyTarget:1, visitLog:[], photo:null, locationUrl:"" };
+          state.visits.accounts.push(target);
+          existing.push(target);
+        }
+        target.values = { ...target.values, ...values };
+        if(sa.weeklyTarget != null && !isNaN(parseInt(sa.weeklyTarget,10))){
+          target.weeklyTarget = parseInt(sa.weeklyTarget,10);
+        }
+      });
+      await saveVisitsData();
+      refreshFn();
+      toast(t('toast_visit_scan_done'));
+    }catch(err){
+      console.error(err);
+      toast(t('toast_visit_scan_error') + ": " + (err.message || ""));
+    }finally{
+      scanBtn.disabled = false;
+      scanBtn.textContent = origText;
+      scanInput.value = "";
+    }
+  };
+}
+function openVisitAccountModal(accountId, employeeIdForNew){
   const isNew = !accountId;
   const acc = isNew
-    ? { id: uid(), employeeId: adminUI.visitsEmployeeId, day: dayForNew, order: accountsForEmployeeAndDay(adminUI.visitsEmployeeId, dayForNew).length, values:{}, weeklyTarget:1, visitLog:[], photo:null, locationUrl:"" }
+    ? { id: uid(), employeeId: employeeIdForNew, order: accountsForEmployee(employeeIdForNew).length, values:{}, weeklyTarget:1, visitLog:[], photo:null, locationUrl:"" }
     : state.visits.accounts.find(a=>a.id===accountId);
   if(!acc) return;
   const fields = visitFields();
@@ -6194,12 +6303,6 @@ function openVisitAccountModal(accountId, dayForNew){
   wrap.innerHTML = `
     <div class="modal" style="max-width:460px;">
       <h3>${t('visit_edit_account_title')}</h3>
-      <div class="field">
-        <label>${t('visit_day_col_label')} / ${t('visit_move_day_label')}</label>
-        <select id="visitAccDay">
-          ${VISIT_DAY_KEYS.map(dk=>`<option value="${dk}" ${acc.day===dk?'selected':''}>${visitDayLabel(dk)}</option>`).join("")}
-        </select>
-      </div>
       ${fields.map(f=>`
         <div class="field">
           <label>${escapeHtml(f.label)}${f.prominent?' *':''}</label>
@@ -6220,12 +6323,6 @@ function openVisitAccountModal(accountId, dayForNew){
   wrap.onclick = (e)=>{ if(e.target===wrap) wrap.remove(); };
   document.getElementById("visitAccCancelBtn").onclick = ()=> wrap.remove();
   document.getElementById("visitAccSaveBtn").onclick = async ()=>{
-    const newDay = document.getElementById("visitAccDay").value;
-    if(newDay !== acc.day){
-      const destCount = accountsForEmployeeAndDay(acc.employeeId, newDay).length;
-      if(destCount >= VISIT_MAX_PER_DAY){ toast(t('visit_day_full_toast')); return; }
-      acc.day = newDay;
-    }
     acc.values = acc.values || {};
     fields.forEach(f=>{
       const input = wrap.querySelector(`[data-visit-field="${f.id}"]`);
@@ -6236,7 +6333,7 @@ function openVisitAccountModal(accountId, dayForNew){
     await saveVisitsData();
     toast(t('toast_visit_account_saved'));
     wrap.remove();
-    renderAdminOverlay();
+    if(document.getElementById("adminOverlay")) renderAdminOverlay(); else render();
   };
 }
 function openVisitManageFieldsModal(){
@@ -6282,7 +6379,7 @@ function openVisitManageFieldsModal(){
         await saveVisitsData();
         document.getElementById("visitFieldsList").innerHTML = bodyHtml();
         attachRowEvents();
-        renderAdminOverlay();
+        if(document.getElementById("adminOverlay")) renderAdminOverlay(); else render();
       };
     });
   }
@@ -6297,9 +6394,12 @@ function openVisitManageFieldsModal(){
     input.value = "";
     document.getElementById("visitFieldsList").innerHTML = bodyHtml();
     attachRowEvents();
-    renderAdminOverlay();
+    if(document.getElementById("adminOverlay")) renderAdminOverlay(); else render();
   };
-  document.getElementById("visitFieldsCloseBtn").onclick = ()=>{ wrap.remove(); renderAdminOverlay(); };
+  document.getElementById("visitFieldsCloseBtn").onclick = ()=>{
+    wrap.remove();
+    if(document.getElementById("adminOverlay")) renderAdminOverlay(); else render();
+  };
 }
 
 /* =========================================================
