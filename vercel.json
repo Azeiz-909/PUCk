@@ -2,6 +2,9 @@
   "functions": {
     "api/scan-sheet.js": {
       "maxDuration": 60
+    },
+    "api/scan-visits.js": {
+      "maxDuration": 60
     }
   }
 }
