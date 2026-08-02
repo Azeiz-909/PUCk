@@ -1659,7 +1659,7 @@ function visitCardHtml(acc, fields, showManageControls){
       ${visitCardFieldGridHtml(acc, fields)}
       <div class="visit-card-photo">
         ${acc.photo ? `<img src="${acc.photo}" class="visit-photo-img" data-visit-photo="${acc.id}">` : `<button class="visit-photo-upload-btn" data-visit-photo="${acc.id}">${ICON.camera} ${escapeHtml(t('visit_photo_upload'))}</button>`}
-        <input type="file" accept="image/*" capture="environment" style="display:none;" data-visit-photo-input="${acc.id}">
+        <input type="file" accept="image/*" style="display:none;" data-visit-photo-input="${acc.id}">
       </div>
       <div class="visit-card-actions">
         <button class="visit-loc-btn" data-visit-loc="${acc.id}" title="${acc.locationUrl ? '' : escapeHtml(t('visit_location_missing'))}">${ICON.location} ${escapeHtml(t('visit_location_btn'))}</button>
@@ -2501,7 +2501,7 @@ function attachHomeEvents(){
   const secondaryEditBtn = document.getElementById("secondaryEditBtn");
   if(secondaryEditBtn) secondaryEditBtn.onclick = (e)=>{ e.stopPropagation(); openSecondaryLinkModal(); };
   const homeLayoutEditBtn = document.getElementById("homeLayoutEditBtn");
-  if(homeLayoutEditBtn) homeLayoutEditBtn.onclick = ()=> openHomeLayoutModal("employee");
+  if(homeLayoutEditBtn && !(session.user && userRole(session.user) === "manager")) homeLayoutEditBtn.onclick = ()=> openHomeLayoutModal("employee");
   const addPlanogramImageBtn = document.getElementById("addPlanogramImageBtn");
   if(addPlanogramImageBtn) addPlanogramImageBtn.onclick = ()=> openPlanogramAddImageModal();
   document.querySelectorAll("[data-download-plano]").forEach(btn=>{
@@ -3464,7 +3464,7 @@ function attachManagerScreenEvents(){
     };
   });
   const homeLayoutEditBtnMgr = document.getElementById("homeLayoutEditBtn");
-  if(homeLayoutEditBtnMgr) homeLayoutEditBtnMgr.onclick = ()=> openHomeLayoutModal("manager");
+  if(homeLayoutEditBtnMgr && session.user && userRole(session.user) === "manager") homeLayoutEditBtnMgr.onclick = ()=> openHomeLayoutModal("manager");
   const managerLogoutBtn2 = document.getElementById("managerLogoutBtn2");
   if(managerLogoutBtn2) managerLogoutBtn2.onclick = ()=>{
     session.user = null; session.viewOnly = false;
