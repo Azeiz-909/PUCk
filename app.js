@@ -83,6 +83,9 @@ function canEdit(){ return !!(session.user && !session.viewOnly); }
 let adminUI = { tab: "branches", pendingLogin: null, forceChangeUser: null, selectedBranchForProducts: null, sosBranchId: null, visitsEmployeeId: null };
 let visitUI = {};
 let expandedVisitRowIds = new Set(); /* يحافظ على حالة الفتح/الطي عبر عمليات إعادة الرسم */
+let expandedWarehouseCardIds = new Set(); /* يحافظ على حالة فتح/طي بطاقات المنتجات في المستودع */
+let expandedWarehouseGroupIds = new Set(); /* يحافظ على حالة فتح/طي عناوين الفئات في المستودع */
+let editingWarehouseEntryId = null; /* الإدخال الحالي في وضع التعديل بالمستودع (وضع العرض هو الافتراضي) */
 let pendingDocPhotos = [];
 let pendingDocDeadline = null;
 let pendingDocCountdownInterval = null;
@@ -538,6 +541,7 @@ const I18N = {
     warehouse_date_label: "التاريخ",
     warehouse_size_word: "الحجم",
     warehouse_entry_summary: "إدخال",
+    warehouse_done_editing_btn: "تم",
     toast_warehouse_visibility_updated: "تم تحديث ظهور المنتج",
   },
   en: {
@@ -982,6 +986,7 @@ const I18N = {
     warehouse_date_label: "Date",
     warehouse_size_word: "Size",
     warehouse_entry_summary: "Entry",
+    warehouse_done_editing_btn: "Done",
     toast_warehouse_visibility_updated: "Product visibility updated",
   }
 };
@@ -2747,13 +2752,39 @@ function attachHomeEvents(){
       render();
     };
   });
+  document.querySelectorAll("[data-wh-edit-entry]").forEach(btn=>{
+    btn.onclick = ()=>{
+      editingWarehouseEntryId = btn.getAttribute("data-wh-edit-entry");
+      render();
+    };
+  });
+  document.querySelectorAll("[data-wh-done-entry]").forEach(btn=>{
+    btn.onclick = ()=>{
+      if(editingWarehouseEntryId === btn.getAttribute("data-wh-done-entry")) editingWarehouseEntryId = null;
+      render();
+    };
+  });
+  document.querySelectorAll("[data-wh-card]").forEach(el=>{
+    el.addEventListener("toggle", ()=>{
+      const id = el.getAttribute("data-wh-card");
+      if(el.open) expandedWarehouseCardIds.add(id); else expandedWarehouseCardIds.delete(id);
+    });
+  });
+  document.querySelectorAll("[data-wh-group]").forEach(el=>{
+    el.addEventListener("toggle", ()=>{
+      const id = el.getAttribute("data-wh-group");
+      if(el.open) expandedWarehouseGroupIds.add(id); else expandedWarehouseGroupIds.delete(id);
+    });
+  });
   document.querySelectorAll("[data-wh-manage-branch]").forEach(btn=>{
     btn.onclick = (e)=>{ e.stopPropagation(); openWarehouseManageProductsModal(btn.getAttribute("data-wh-manage-branch")); };
   });
   document.querySelectorAll("[data-wh-add-entry]").forEach(btn=>{
     btn.onclick = async ()=>{
       const productId = btn.getAttribute("data-wh-add-entry");
-      await addWarehouseEntry(view.branchId, productId);
+      expandedWarehouseCardIds.add(productId);
+      const entry = await addWarehouseEntry(view.branchId, productId);
+      editingWarehouseEntryId = entry.id;
       toast(t('toast_warehouse_entry_added'));
       render();
     };
@@ -2761,6 +2792,7 @@ function attachHomeEvents(){
   document.querySelectorAll("[data-wh-remove-entry]").forEach(btn=>{
     btn.onclick = async ()=>{
       const entryId = btn.getAttribute("data-wh-remove-entry");
+      if(editingWarehouseEntryId === entryId) editingWarehouseEntryId = null;
       await removeWarehouseEntry(entryId);
       toast(t('toast_warehouse_entry_removed'));
       render();
@@ -2890,26 +2922,52 @@ async function toggleWarehouseHidden(branchId, productId){
 function warehouseFilledCount(branchId){
   return state.warehouseEntries.filter(e=>e.branchId===branchId && warehouseEntryFilled(e)).length;
 }
+function warehouseEntryDateDisplay(entry){
+  if(!entry.day && !entry.month && !entry.year) return t('monthly_no_selection');
+  const parts = [];
+  if(entry.day) parts.push(entry.day);
+  if(entry.month) parts.push(curMonthsAbbr3()[entry.month-1] || entry.month);
+  if(entry.year) parts.push(entry.year);
+  return parts.join(" ");
+}
 function warehouseEntryRowHtml(entry, idx, editable){
+  const isEditing = editable && editingWarehouseEntryId === entry.id;
+  if(!isEditing){
+    return `
+      <div class="wh-entry-row wh-entry-row-view" data-warehouse-entry-row="${entry.id}">
+        <div class="wh-entry-idx">${idx + 1}</div>
+        <div class="wh-entry-view-info">
+          <span class="wh-entry-view-qty">${entry.qty || 0} ${t('carton_unit_word')}</span>
+          <span class="wh-entry-view-sep">•</span>
+          <span class="wh-entry-view-date">${ICON.calendar} ${escapeHtml(warehouseEntryDateDisplay(entry))}</span>
+        </div>
+        ${editable ? `
+          <button class="m-edit-btn wh-entry-edit-btn" data-wh-edit-entry="${entry.id}" title="${escapeHtml(t('quick_edit_title'))}">${ICON.edit}</button>
+          <button class="m-del-btn wh-entry-del" data-wh-remove-entry="${entry.id}" title="${escapeHtml(t('warehouse_remove_entry_title'))}">${ICON.trash}</button>
+        ` : ''}
+      </div>
+    `;
+  }
   return `
     <div class="wh-entry-row" data-warehouse-entry-row="${entry.id}">
       <div class="wh-entry-idx">${idx + 1}</div>
       <div class="wh-entry-field wh-entry-qty">
         <span class="wh-entry-label">${t('warehouse_entry_label')}</span>
         <div class="m-select-row">
-          <select class="qty-select" data-wh-entry="${entry.id}" data-wh-field="qty" ${editable?'':'disabled'}>${qtyCartonOptionsHtml(entry.qty)}</select>
+          <select class="qty-select" data-wh-entry="${entry.id}" data-wh-field="qty">${qtyCartonOptionsHtml(entry.qty)}</select>
           <span class="carton-lbl">${t('carton_unit_word')}</span>
         </div>
       </div>
       <div class="wh-entry-field wh-entry-date">
         <span class="wh-entry-label">${ICON.calendar} ${t('warehouse_date_label')}</span>
         <div class="m-select-row">
-          <select data-wh-entry="${entry.id}" data-wh-field="day" ${editable?'':'disabled'}>${dayOptionsWithNoneHtml(entry.day)}</select>
-          <select data-wh-entry="${entry.id}" data-wh-field="month" ${editable?'':'disabled'}>${monthOptionsWithNoneHtml(entry.month)}</select>
-          <select data-wh-entry="${entry.id}" data-wh-field="year" ${editable?'':'disabled'}>${yearOptionsWithNoneHtml(entry.year)}</select>
+          <select data-wh-entry="${entry.id}" data-wh-field="day">${dayOptionsWithNoneHtml(entry.day)}</select>
+          <select data-wh-entry="${entry.id}" data-wh-field="month">${monthOptionsWithNoneHtml(entry.month)}</select>
+          <select data-wh-entry="${entry.id}" data-wh-field="year">${yearOptionsWithNoneHtml(entry.year)}</select>
         </div>
       </div>
-      ${editable ? `<button class="m-del-btn wh-entry-del" data-wh-remove-entry="${entry.id}" title="${escapeHtml(t('warehouse_remove_entry_title'))}">${ICON.trash}</button>` : ''}
+      <button class="m-edit-btn wh-entry-done-btn" data-wh-done-entry="${entry.id}" title="${escapeHtml(t('warehouse_done_editing_btn'))}">${ICON.check}</button>
+      <button class="m-del-btn wh-entry-del" data-wh-remove-entry="${entry.id}" title="${escapeHtml(t('warehouse_remove_entry_title'))}">${ICON.trash}</button>
     </div>
   `;
 }
@@ -2926,13 +2984,14 @@ function warehouseProductCardHtml(branchId, product, editable){
   const primaryDir = showEnFirst ? "ltr" : "rtl";
   const secondaryText = showEnFirst ? product.name : product.nameEn;
   const secondaryDir = showEnFirst ? "rtl" : "ltr";
+  const isOpen = filled > 0 || expandedWarehouseCardIds.has(product.id);
   return `
-    <details class="monthly-group wh-product-card ${hidden ? 'wh-hidden-card' : ''}" ${filled>0 ? 'open' : ''}>
+    <details class="monthly-group wh-product-card ${hidden ? 'wh-hidden-card' : ''}" data-wh-card="${product.id}" ${isOpen ? 'open' : ''}>
       <summary>
         <div class="mg-title">
           <div class="ar" dir="${primaryDir}">${escapeHtml(primaryText)}${hidden ? ` <span class="tag">${escapeHtml(t('warehouse_hidden_tag'))}</span>` : ''}</div>
           ${secondaryText ? `<div class="en" dir="${secondaryDir}">${escapeHtml(secondaryText)}</div>` : ''}
-          <div class="m-weight">
+          <div class="wh-tags-row">
             ${product.weightValue ? `<span class="tag">${escapeHtml(t('warehouse_size_word'))}: ${product.weightValue} ${unitLabel(product.weightUnit)}</span>` : ''}
             ${product.sku ? `<span class="tag">${t('sku_word')} ${escapeHtml(product.sku)}</span>` : ''}
           </div>
@@ -2987,8 +3046,62 @@ function renderWarehouseBranchScreen(branchId){
   const branch = state.branches.find(b=>b.id===branchId);
   const editable = canEdit();
   const products = state.products.filter(p=>p.branchId===branchId);
-  const cardsHtml = products.length
-    ? products.map(p=> warehouseProductCardHtml(branchId, p, editable)).join("")
+
+  const groupedIds = new Set();
+  const groupsHtml = allCatalogGroupsList().map(g=>{
+    const items = products.filter(p=> p.catalogItemId && catalogItemGroupId(p.catalogItemId) === g.id);
+    if(!items.length) return "";
+    items.forEach(p=> groupedIds.add(p.id));
+    let filled = 0;
+    const cardsHtml = items.map(p=>{
+      const entries = warehouseEntriesForProduct(branchId, p.id);
+      if(entries.some(warehouseEntryFilled)) filled++;
+      return warehouseProductCardHtml(branchId, p, editable);
+    }).join("");
+    const isOpen = filled > 0 || expandedWarehouseGroupIds.has(g.id);
+    return `
+      <details class="monthly-group wh-category-group" data-wh-group="${g.id}" ${isOpen ? 'open' : ''}>
+        <summary>
+          <div class="mg-title">
+            <div class="ar">${escapeHtml(g.titleAr)}</div>
+            <div class="en">${escapeHtml(g.titleEn)}</div>
+          </div>
+          <div class="mg-meta">
+            <span class="mg-count ${filled>0?'has-filled':''}">${filled}/${items.length}</span>
+            <span class="mg-chevron">${ICON.chevron}</span>
+          </div>
+        </summary>
+        <div class="mg-body"><div class="wh-subcards">${cardsHtml}</div></div>
+      </details>
+    `;
+  }).join("");
+
+  const otherItems = products.filter(p=> !groupedIds.has(p.id));
+  let otherFilled = 0;
+  const otherCardsHtml = otherItems.map(p=>{
+    const entries = warehouseEntriesForProduct(branchId, p.id);
+    if(entries.some(warehouseEntryFilled)) otherFilled++;
+    return warehouseProductCardHtml(branchId, p, editable);
+  }).join("");
+  const otherOpen = otherFilled > 0 || expandedWarehouseGroupIds.has("__other__") || !groupsHtml;
+  const otherGroupHtml = otherItems.length ? `
+    <details class="monthly-group wh-category-group" data-wh-group="__other__" ${otherOpen ? 'open' : ''}>
+      <summary>
+        <div class="mg-title">
+          <div class="ar">${t('monthly_other_group_title')}</div>
+          <div class="en">${t('monthly_other_group_title_en')}</div>
+        </div>
+        <div class="mg-meta">
+          <span class="mg-count ${otherFilled>0?'has-filled':''}">${otherFilled}/${otherItems.length}</span>
+          <span class="mg-chevron">${ICON.chevron}</span>
+        </div>
+      </summary>
+      <div class="mg-body"><div class="wh-subcards">${otherCardsHtml}</div></div>
+    </details>
+  ` : '';
+
+  const cardsHtml = (groupsHtml || otherGroupHtml)
+    ? `${groupsHtml}${otherGroupHtml}`
     : `<div class="branch-empty">${t('warehouse_no_products')}</div>`;
   return `
     <div class="topbar">
