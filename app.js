@@ -1604,6 +1604,9 @@ function bellButtonHtml(){
 ========================================================= */
 function render(){
   const app = document.getElementById("app");
+  /* يحافظ على موضع التمرير الحالي بدل القفز لأعلى الصفحة عند إعادة الرسم
+     (مثلاً عند إضافة/تعديل كرتون في المستودع) */
+  const __scrollY = window.scrollY;
   if(!session.user){
     app.innerHTML = renderLoginScreen();
     attachLoginScreenEvents();
@@ -1636,12 +1639,14 @@ function render(){
   attachHomeEvents();
   attachManagerScreenEvents();
   if(view.screen === "visitPrep") attachVisitPrepScreenEvents();
+  if(__scrollY > 0) window.scrollTo(0, __scrollY);
 }
 
 function navigate(newView){
   view = newView;
   try{ history.pushState({ view: newView }, "", "#" + newView.screen); }catch(e){}
   render();
+  window.scrollTo(0, 0); /* الانتقال لشاشة جديدة يبدأ من الأعلى دائمًا */
 }
 
 function goPlanogram(){
@@ -1667,6 +1672,7 @@ window.addEventListener("popstate", (e)=>{
   if(e.state && e.state.view){ view = e.state.view; }
   else{ view = { screen:"landing", branchId:null }; }
   render();
+  window.scrollTo(0, 0);
 });
 
 /* =========================================================
