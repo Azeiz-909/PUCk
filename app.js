@@ -72,6 +72,8 @@ let state = {
   documentation: [],
   sos: { categories: [], branches: [] },
   visits: { fields: [], accounts: [] },
+  warehouseEntries: [],
+  warehouseHidden: {},
   settings: { fontFamily: "'Tajawal', sans-serif", fontSize: 16, fontWeight: 400, columns: 2, customFonts: [] },
 };
 let view = { screen: "landing", branchId: null };
@@ -515,6 +517,28 @@ const I18N = {
     doc_camera_done_btn: "تم",
     camera_unsupported_error: "المتصفح لا يدعم الوصول للكاميرا",
     camera_permission_error: "تعذر الوصول إلى الكاميرا، يرجى منح الإذن اللازم",
+    warehouse_word: "المستودع",
+    warehouse_page_title: "المستودع",
+    warehouse_hint: "اختر الفرع، ثم اضغط على أي منتج لتسجيل عدد الكراتين وتاريخها. يمكنك تكرار المنتج بعدة كميات وتواريخ مختلفة.",
+    warehouse_no_products: "لا توجد منتجات بعد في هذا الفرع.",
+    warehouse_no_entries: "لا يوجد كراتين مسجلة لهذا المنتج بعد.",
+    warehouse_add_entry_btn: "إضافة عدد كراتين وتاريخ",
+    warehouse_hide_product_btn: "إخفاء المنتج",
+    warehouse_show_product_btn: "إظهار المنتج",
+    warehouse_hidden_tag: "مخفي",
+    warehouse_entry_label: "كرتون",
+    warehouse_entries_count_word: "كرتون مسجل",
+    warehouse_remove_entry_title: "حذف هذا الإدخال",
+    toast_warehouse_entry_added: "تمت إضافة إدخال جديد",
+    toast_warehouse_entry_removed: "تم حذف الإدخال",
+    warehouse_manage_btn: "إدارة المنتجات",
+    warehouse_manage_title: "إدارة منتجات الفرع",
+    warehouse_manage_hint: "فعّل مفتاح المنتج لإظهاره في هذا الفرع، أو أطفئه لإخفائه من القائمة.",
+    warehouse_manage_empty: "لا توجد منتجات في هذا الفرع بعد.",
+    warehouse_date_label: "التاريخ",
+    warehouse_size_word: "الحجم",
+    warehouse_entry_summary: "إدخال",
+    toast_warehouse_visibility_updated: "تم تحديث ظهور المنتج",
   },
   en: {
     control_panel: "Control Panel",
@@ -937,6 +961,28 @@ const I18N = {
     doc_camera_done_btn: "Done",
     camera_unsupported_error: "This browser does not support camera access",
     camera_permission_error: "Could not access the camera. Please grant permission.",
+    warehouse_word: "Warehouse",
+    warehouse_page_title: "Warehouse",
+    warehouse_hint: "Choose a branch, then tap any product to record carton counts and dates. You can repeat a product with multiple quantities and dates.",
+    warehouse_no_products: "No products yet in this branch.",
+    warehouse_no_entries: "No cartons recorded for this product yet.",
+    warehouse_add_entry_btn: "Add carton count & date",
+    warehouse_hide_product_btn: "Hide product",
+    warehouse_show_product_btn: "Show product",
+    warehouse_hidden_tag: "Hidden",
+    warehouse_entry_label: "Carton",
+    warehouse_entries_count_word: "cartons logged",
+    warehouse_remove_entry_title: "Remove this entry",
+    toast_warehouse_entry_added: "New entry added",
+    toast_warehouse_entry_removed: "Entry removed",
+    warehouse_manage_btn: "Manage products",
+    warehouse_manage_title: "Manage branch products",
+    warehouse_manage_hint: "Turn a product on to show it in this branch, or off to hide it from the list.",
+    warehouse_manage_empty: "No products in this branch yet.",
+    warehouse_date_label: "Date",
+    warehouse_size_word: "Size",
+    warehouse_entry_summary: "Entry",
+    toast_warehouse_visibility_updated: "Product visibility updated",
   }
 };
 
@@ -1279,6 +1325,7 @@ async function loadAll(){
     "puck:catalogOverrides", "puck:catalogGroupOverrides", "puck:customCatalogGroups",
     "puck:managerAlertSettings", "puck:messages", "puck:planogramItems",
     "puck:planogramSeen", "puck:documentation", "puck:sos", "puck:visits",
+    "puck:warehouseEntries", "puck:warehouseHidden",
   ];
   const results = await Promise.all(KV_KEYS.map(k => storageGet(k, null)));
   const kv = {};
@@ -1305,6 +1352,8 @@ async function loadAll(){
     "puck:documentation": ()=> [],
     "puck:sos": defaultSosData,
     "puck:visits": defaultVisitsData,
+    "puck:warehouseEntries": ()=> [],
+    "puck:warehouseHidden": ()=> ({}),
   };
   const stateKeyByKvKey = {
     "puck:branches": "branches", "puck:products": "products", "puck:users": "users",
@@ -1316,6 +1365,7 @@ async function loadAll(){
     "puck:managerAlertSettings": "managerAlertSettings", "puck:messages": "messages",
     "puck:planogramItems": "planogramItems", "puck:planogramSeen": "planogramSeen",
     "puck:documentation": "documentation", "puck:sos": "sos", "puck:visits": "visits",
+    "puck:warehouseEntries": "warehouseEntries", "puck:warehouseHidden": "warehouseHidden",
   };
 
   const writesNeeded = [];
@@ -1556,7 +1606,7 @@ function render(){
   }
   /* حماية خصوصية الفروع: موظف لا يمكنه فتح فرع لا يملكه حتى لو
      حاول الوصول إليه عبر رابط مباشر (# في شريط العنوان). */
-  if(userRole(session.user) === "employee" && (view.screen === "branch" || view.screen === "branchExpired" || view.screen === "monthlyBranch") && view.branchId){
+  if(userRole(session.user) === "employee" && (view.screen === "branch" || view.screen === "branchExpired" || view.screen === "monthlyBranch" || view.screen === "warehouseBranch") && view.branchId){
     const allowedIds = new Set(visibleBranchesForCurrentUser().map(b=>b.id));
     if(!allowedIds.has(view.branchId)){
       view = { screen: "home", branchId: null };
@@ -1568,6 +1618,8 @@ function render(){
   else if(view.screen === "branchExpired") app.innerHTML = renderBranchExpiredScreen(view.branchId);
   else if(view.screen === "monthly") app.innerHTML = renderMonthlyScreen();
   else if(view.screen === "monthlyBranch") app.innerHTML = renderMonthlyBranchScreen(view.branchId);
+  else if(view.screen === "warehouse") app.innerHTML = renderWarehouseScreen();
+  else if(view.screen === "warehouseBranch") app.innerHTML = renderWarehouseBranchScreen(view.branchId);
   else if(view.screen === "planogram") app.innerHTML = renderPlanogramScreen();
   else if(view.screen === "documentation") app.innerHTML = renderDocumentationScreen();
   else if(view.screen === "managerDocumentation") app.innerHTML = renderManagerDocumentationScreen();
@@ -1601,6 +1653,8 @@ function goHome(){ navigate({ screen:"home", branchId:null }); }
 function goBranch(id){ navigate({ screen:"branch", branchId:id }); }
 function goMonthly(){ navigate({ screen:"monthly", branchId:null }); }
 function goMonthlyBranch(id){ navigate({ screen:"monthlyBranch", branchId:id }); }
+function goWarehouse(){ navigate({ screen:"warehouse", branchId:null }); }
+function goWarehouseBranch(id){ navigate({ screen:"warehouseBranch", branchId:id }); }
 function goVisitPrep(){ navigate({ screen:"visitPrep", branchId:null }); }
 
 window.addEventListener("popstate", (e)=>{
@@ -1816,7 +1870,7 @@ function openVisitLocationModal(accountId){
 function defaultHomeBoxOrder(role){
   return role === "manager"
     ? ["branches","sos","planogram","employees","documentation","expiryAlerts","notifications"]
-    : ["visitPrep","dailyPrep","secondary","planogram","documentation","home","monthly"];
+    : ["visitPrep","dailyPrep","secondary","planogram","documentation","home","monthly","warehouse"];
 }
 function homeBoxCatalog(role, ctx){
   ctx = ctx || {};
@@ -1839,6 +1893,7 @@ function homeBoxCatalog(role, ctx){
     { id:"documentation", icon:"📸", label:t('documentation_word') },
     { id:"home", icon:"📅", label:t('daily_word') },
     { id:"monthly", icon:"🗓️", label:t('monthly_word') },
+    { id:"warehouse", icon:"📦", label:t('warehouse_word') },
   ];
 }
 function getHomeBoxLayout(role){
@@ -2577,7 +2632,13 @@ function attachHomeEvents(){
       else if(dest === "planogram") goPlanogram();
       else if(dest === "documentation") goDocumentation();
       else if(dest === "visitPrep") goVisitPrep();
+      else if(dest === "warehouse") goWarehouse();
     };
+  });
+  const warehouseBackBtn = document.getElementById("warehouseBackBtn");
+  if(warehouseBackBtn) warehouseBackBtn.onclick = goWarehouse;
+  document.querySelectorAll("[data-warehouse-branch]").forEach(el=>{
+    el.onclick = ()=> goWarehouseBranch(el.getAttribute("data-warehouse-branch"));
   });
   document.querySelectorAll(".branch-card[data-branch]").forEach(el=>{
     el.onclick = ()=> goBranch(el.getAttribute("data-branch"));
@@ -2598,7 +2659,7 @@ function attachHomeEvents(){
     };
   });
   document.querySelectorAll("[data-quick-edit]").forEach(btn=>{
-    btn.onclick = (e)=>{ e.stopPropagation(); openQuickEditProductModal(btn.getAttribute("data-quick-edit")); };
+    btn.onclick = (e)=>{ e.preventDefault(); e.stopPropagation(); openQuickEditProductModal(btn.getAttribute("data-quick-edit")); };
   });
   document.querySelectorAll("[data-manage-notices-inline]").forEach(btn=>{
     btn.onclick = ()=> openBranchNoticesModal(btn.getAttribute("data-manage-notices-inline"));
@@ -2672,6 +2733,37 @@ function attachHomeEvents(){
       const rowKind = btn.getAttribute("data-row-kind");
       if(rowKind === "custom") openMonthlyEditProductModal(rowId);
       else openMonthlyCatalogEditModal(rowId, rowKind);
+    };
+  });
+  document.querySelectorAll("[data-wh-entry][data-wh-field]").forEach(sel=>{
+    sel.onchange = async ()=>{
+      const entryId = sel.getAttribute("data-wh-entry");
+      const field = sel.getAttribute("data-wh-field");
+      let v = parseInt(sel.value, 10);
+      if(isNaN(v)) v = 0;
+      if(field === "qty") v = Math.max(0, Math.min(300, v));
+      const patch = {}; patch[field] = v;
+      await patchWarehouseEntry(entryId, patch);
+      render();
+    };
+  });
+  document.querySelectorAll("[data-wh-manage-branch]").forEach(btn=>{
+    btn.onclick = (e)=>{ e.stopPropagation(); openWarehouseManageProductsModal(btn.getAttribute("data-wh-manage-branch")); };
+  });
+  document.querySelectorAll("[data-wh-add-entry]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const productId = btn.getAttribute("data-wh-add-entry");
+      await addWarehouseEntry(view.branchId, productId);
+      toast(t('toast_warehouse_entry_added'));
+      render();
+    };
+  });
+  document.querySelectorAll("[data-wh-remove-entry]").forEach(btn=>{
+    btn.onclick = async ()=>{
+      const entryId = btn.getAttribute("data-wh-remove-entry");
+      await removeWarehouseEntry(entryId);
+      toast(t('toast_warehouse_entry_removed'));
+      render();
     };
   });
   const responsibleNameInput = document.getElementById("responsibleNameInput");
@@ -2764,6 +2856,201 @@ async function patchMonthlyEntry(branchId, itemId, patch){
   await storageSet("puck:monthlyEntries", state.monthlyEntries);
 }
 function entryIsFilled(entry){ return (entry.shelfQty||0) > 0 || (entry.backQty||0) > 0; }
+
+/* ---------------- WAREHOUSE (المستودع): carton counts + dates per product, repeatable ---------------- */
+function warehouseEntriesForProduct(branchId, productId){
+  return state.warehouseEntries.filter(e=>e.branchId===branchId && e.productId===productId);
+}
+function warehouseEntryFilled(e){ return (e.qty||0) > 0; }
+async function addWarehouseEntry(branchId, productId){
+  const entry = { id: uid(), branchId, productId, qty:0, day:0, month:0, year:0 };
+  state.warehouseEntries.push(entry);
+  await storageSet("puck:warehouseEntries", state.warehouseEntries);
+  return entry;
+}
+async function patchWarehouseEntry(entryId, patch){
+  const entry = state.warehouseEntries.find(e=>e.id===entryId);
+  if(!entry) return;
+  Object.assign(entry, patch);
+  await storageSet("puck:warehouseEntries", state.warehouseEntries);
+}
+async function removeWarehouseEntry(entryId){
+  state.warehouseEntries = state.warehouseEntries.filter(e=>e.id!==entryId);
+  await storageSet("puck:warehouseEntries", state.warehouseEntries);
+}
+function isWarehouseHidden(branchId, productId){
+  return (state.warehouseHidden[branchId] || []).includes(productId);
+}
+async function toggleWarehouseHidden(branchId, productId){
+  const arr = (state.warehouseHidden[branchId] = state.warehouseHidden[branchId] || []);
+  const idx = arr.indexOf(productId);
+  if(idx >= 0) arr.splice(idx, 1); else arr.push(productId);
+  await storageSet("puck:warehouseHidden", state.warehouseHidden);
+}
+function warehouseFilledCount(branchId){
+  return state.warehouseEntries.filter(e=>e.branchId===branchId && warehouseEntryFilled(e)).length;
+}
+function warehouseEntryRowHtml(entry, idx, editable){
+  return `
+    <div class="wh-entry-row" data-warehouse-entry-row="${entry.id}">
+      <div class="wh-entry-idx">${idx + 1}</div>
+      <div class="wh-entry-field wh-entry-qty">
+        <span class="wh-entry-label">${t('warehouse_entry_label')}</span>
+        <div class="m-select-row">
+          <select class="qty-select" data-wh-entry="${entry.id}" data-wh-field="qty" ${editable?'':'disabled'}>${qtyCartonOptionsHtml(entry.qty)}</select>
+          <span class="carton-lbl">${t('carton_unit_word')}</span>
+        </div>
+      </div>
+      <div class="wh-entry-field wh-entry-date">
+        <span class="wh-entry-label">${ICON.calendar} ${t('warehouse_date_label')}</span>
+        <div class="m-select-row">
+          <select data-wh-entry="${entry.id}" data-wh-field="day" ${editable?'':'disabled'}>${dayOptionsWithNoneHtml(entry.day)}</select>
+          <select data-wh-entry="${entry.id}" data-wh-field="month" ${editable?'':'disabled'}>${monthOptionsWithNoneHtml(entry.month)}</select>
+          <select data-wh-entry="${entry.id}" data-wh-field="year" ${editable?'':'disabled'}>${yearOptionsWithNoneHtml(entry.year)}</select>
+        </div>
+      </div>
+      ${editable ? `<button class="m-del-btn wh-entry-del" data-wh-remove-entry="${entry.id}" title="${escapeHtml(t('warehouse_remove_entry_title'))}">${ICON.trash}</button>` : ''}
+    </div>
+  `;
+}
+function warehouseProductCardHtml(branchId, product, editable){
+  const hidden = isWarehouseHidden(branchId, product.id);
+  if(hidden && !editable) return "";
+  const entries = warehouseEntriesForProduct(branchId, product.id);
+  const filled = entries.filter(warehouseEntryFilled).length;
+  const entriesHtml = entries.length
+    ? entries.map((e,i)=> warehouseEntryRowHtml(e, i, editable)).join("")
+    : `<div class="hint" style="padding:6px 2px;">${escapeHtml(t('warehouse_no_entries'))}</div>`;
+  const showEnFirst = (lang === "en" && product.nameEn);
+  const primaryText = showEnFirst ? product.nameEn : product.name;
+  const primaryDir = showEnFirst ? "ltr" : "rtl";
+  const secondaryText = showEnFirst ? product.name : product.nameEn;
+  const secondaryDir = showEnFirst ? "rtl" : "ltr";
+  return `
+    <details class="monthly-group wh-product-card ${hidden ? 'wh-hidden-card' : ''}" ${filled>0 ? 'open' : ''}>
+      <summary>
+        <div class="mg-title">
+          <div class="ar" dir="${primaryDir}">${escapeHtml(primaryText)}${hidden ? ` <span class="tag">${escapeHtml(t('warehouse_hidden_tag'))}</span>` : ''}</div>
+          ${secondaryText ? `<div class="en" dir="${secondaryDir}">${escapeHtml(secondaryText)}</div>` : ''}
+          <div class="m-weight">
+            ${product.weightValue ? `<span class="tag">${escapeHtml(t('warehouse_size_word'))}: ${product.weightValue} ${unitLabel(product.weightUnit)}</span>` : ''}
+            ${product.sku ? `<span class="tag">${t('sku_word')} ${escapeHtml(product.sku)}</span>` : ''}
+          </div>
+        </div>
+        <div class="mg-meta">
+          <span class="mg-count ${filled>0 ? 'has-filled' : ''}">${filled}/${entries.length || 0}</span>
+          ${editable ? `<button class="m-edit-btn" data-quick-edit="${product.id}" title="${escapeHtml(t('quick_edit_title'))}">${ICON.edit}</button>` : ''}
+          <span class="mg-chevron">${ICON.chevron}</span>
+        </div>
+      </summary>
+      <div class="mg-body">
+        <div class="wh-entries-list">${entriesHtml}</div>
+        ${editable ? `
+          <button class="add-product-tile" data-wh-add-entry="${product.id}" style="margin-top:10px;">${ICON.plus} ${escapeHtml(t('warehouse_add_entry_btn'))}</button>
+        ` : ''}
+      </div>
+    </details>
+  `;
+}
+function renderWarehouseScreen(){
+  const myBranches = visibleBranchesForCurrentUser();
+  const editable = canEdit();
+  const branchesHtml = myBranches.length ? myBranches.map(b => {
+    const count = warehouseFilledCount(b.id);
+    return `<div class="branch-card wh-branch-card">
+      <div class="wh-branch-card-inner" data-warehouse-branch="${b.id}">
+        ${renderBranchIconHtml(b)}
+        <div class="name">${escapeHtml(b.name)}</div>
+        ${renderBranchNoticesHtml(b)}
+        <div class="count">${count} ${t('warehouse_entries_count_word')}</div>
+      </div>
+      ${editable ? `<button class="wh-manage-icon-btn" data-wh-manage-branch="${b.id}" title="${escapeHtml(t('warehouse_manage_btn'))}">👁️</button>` : ''}
+    </div>`;
+  }).join("") : `<div class="branch-empty">${t('no_branches_home')}</div>`;
+
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="landingBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}${bellButtonHtml()}
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row">
+      <h2>${t('warehouse_page_title')}</h2>
+    </div>
+    <div class="section-label" style="margin-top:10px;"><span class="line"></span> ${t('branches_section')} <span class="line"></span></div>
+    <div class="branch-grid">${branchesHtml}</div>
+  `;
+}
+function renderWarehouseBranchScreen(branchId){
+  const branch = state.branches.find(b=>b.id===branchId);
+  const editable = canEdit();
+  const products = state.products.filter(p=>p.branchId===branchId);
+  const cardsHtml = products.length
+    ? products.map(p=> warehouseProductCardHtml(branchId, p, editable)).join("")
+    : `<div class="branch-empty">${t('warehouse_no_products')}</div>`;
+  return `
+    <div class="topbar">
+      <button class="back-btn" id="warehouseBackBtn">${ICON.back} ${t('back')}</button>
+      <div style="display:flex; align-items:center; gap:8px;">
+        ${langToggleHtml()}${bellButtonHtml()}
+        ${viewOnlyBackButtonHtml()}<button class="gear-btn" id="gearBtn" title="${t('control_panel')}">${ICON.gear}</button>
+      </div>
+    </div>
+    <div class="branch-title-row">
+      <h2>${escapeHtml(branch ? branch.name : "")} — ${t('warehouse_word')}</h2>
+      ${branch ? renderBranchNoticesHtml(branch) : ''}
+    </div>
+    <div class="monthly-wrap">
+      <div class="wh-branch-toolbar">
+        <p class="monthly-catalog-hint" style="margin:0; text-align:start; flex:1;">${t('warehouse_hint')}</p>
+        ${editable ? `<button class="wh-manage-btn" data-wh-manage-branch="${branchId}">👁️ ${t('warehouse_manage_btn')}</button>` : ''}
+      </div>
+      <div class="monthly-groups">${cardsHtml}</div>
+    </div>
+  `;
+}
+function openWarehouseManageProductsModal(branchId){
+  const branch = state.branches.find(b=>b.id===branchId);
+  const products = state.products.filter(p=>p.branchId===branchId);
+  const rowsHtml = products.length ? products.map(p=>{
+    const hidden = isWarehouseHidden(branchId, p.id);
+    return `
+      <label class="wh-manage-row">
+        <div class="wh-manage-row-info">
+          <div class="wh-manage-row-name">${escapeHtml(p.name)}</div>
+          ${p.sku ? `<div class="wh-manage-row-sku">${t('sku_word')} ${escapeHtml(p.sku)}</div>` : ''}
+        </div>
+        <label class="wh-switch">
+          <input type="checkbox" data-wh-manage-toggle="${p.id}" ${hidden ? '' : 'checked'}>
+          <span class="wh-switch-track"><span class="wh-switch-thumb"></span></span>
+        </label>
+      </label>
+    `;
+  }).join("") : `<div class="branch-empty">${t('warehouse_manage_empty')}</div>`;
+
+  const wrap = document.createElement("div");
+  wrap.className = "overlay";
+  wrap.innerHTML = `
+    <div class="modal">
+      <button class="close-x" id="closeWhManage">&times;</button>
+      <h3>👁️ ${t('warehouse_manage_title')}</h3>
+      <p class="hint">${escapeHtml(branch ? branch.name : "")} — ${t('warehouse_manage_hint')}</p>
+      <div class="wh-manage-list">${rowsHtml}</div>
+    </div>
+  `;
+  document.body.appendChild(wrap);
+  document.getElementById("closeWhManage").onclick = ()=>{ wrap.remove(); render(); };
+  wrap.onclick = (e)=>{ if(e.target===wrap){ wrap.remove(); render(); } };
+  wrap.querySelectorAll("[data-wh-manage-toggle]").forEach(cb=>{
+    cb.onchange = async ()=>{
+      const productId = cb.getAttribute("data-wh-manage-toggle");
+      await toggleWarehouseHidden(branchId, productId);
+      toast(t('toast_warehouse_visibility_updated'));
+    };
+  });
+}
 function unitBilingual(weightUnit, legacy){
   if(legacy){
     return (weightUnit === "كغ") ? "KG" : "G";
